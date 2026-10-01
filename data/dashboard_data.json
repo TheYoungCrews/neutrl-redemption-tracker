@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-01T18:26:57+00:00",
+ "generated_at_utc": "2026-10-01T18:38:48+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26099251,
-  "as_of_ts": 1790879207,
+  "as_of": 26099310,
+  "as_of_ts": 1790879915,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26098084,
@@ -135,89 +135,163 @@
  "restricted_list": [
   {
    "address": "0xbe8dac0a6446a2e7d31f96d0218dcddfbce65bf4",
+   "label": "Holder wallet",
    "type": "sNUSD full-restricted (blacklisted)",
    "block": 23947364,
    "ts": 1764945203,
+   "tx": "0xb7aa499bda9e49ae049eafcd2824b99f9569fd4d7a08060c633d756519121552",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 0.0
   },
   {
    "address": "0xafb2423f447d3e16931164c9970b9741aab1723e",
+   "label": "Mar 19 website-hijack drainer",
+   "type": "sNUSD full-restricted (blacklisted)",
+   "block": 24689942,
+   "ts": 1773904163,
+   "tx": "0xbf0cb39b2ef3e75e3377fe2693c48c3f27bfebd92768dfda0799b02864cda77c",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
+   "snapshot_value": 0.0
+  },
+  {
+   "address": "0xafb2423f447d3e16931164c9970b9741aab1723e",
+   "label": "Mar 19 website-hijack drainer",
    "type": "NUSD denylisted",
    "block": 24689956,
    "ts": 1773904331,
+   "tx": "0xe5e024ee16a0d9ca9c72a88590fce14eca7f3710c2525b7639076eb4afaf9517",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 0.0
   },
   {
    "address": "0xf1a50bbeba19a85db20432c6c201aa89604dfd2b",
+   "label": "Mar 19 website-hijack drainer",
+   "type": "sNUSD full-restricted (blacklisted)",
+   "block": 24689942,
+   "ts": 1773904163,
+   "tx": "0xaf4b743a893d824c589536ac5fa3bda2f68520021d7350bbb26be02271b640ad",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
+   "snapshot_value": 0.0
+  },
+  {
+   "address": "0xf1a50bbeba19a85db20432c6c201aa89604dfd2b",
+   "label": "Mar 19 website-hijack drainer",
    "type": "NUSD denylisted",
    "block": 24689953,
    "ts": 1773904295,
+   "tx": "0x256a703d8a877eb1b728b656225a5e00505c1d670f0e43d121b87f27528857a8",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 0.0
   },
   {
    "address": "0xfd582d41fcc008ff5cbd2996043de3ce25e7543e",
+   "label": "Mar 19 website-hijack drainer",
+   "type": "sNUSD full-restricted (blacklisted)",
+   "block": 24689953,
+   "ts": 1773904295,
+   "tx": "0xfcbe349e1eb4ad4a072e169e71cbf3aa5d22dc26a90a64fe36a83d28f80097a3",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
+   "snapshot_value": 0.0
+  },
+  {
+   "address": "0xfd582d41fcc008ff5cbd2996043de3ce25e7543e",
+   "label": "Mar 19 website-hijack drainer",
    "type": "NUSD denylisted",
    "block": 24689953,
    "ts": 1773904295,
+   "tx": "0x7d6d53254ebc599389a262aee3d88cd59e5c19ad3bbb520d74e5c3be4ea6697b",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 0.0
-  },
-  {
-   "address": "0xe27ead742ea45b7063b69a875c6f99181c323fb6",
-   "type": "sNUSD full-restricted (blacklisted)",
-   "block": 24909313,
-   "ts": 1776546143,
-   "snapshot_value": 12.981353326148588
-  },
-  {
-   "address": "0x6924189eb810b798d3a7c49f2f27b2bdeffa0ca8",
-   "type": "sNUSD full-restricted (blacklisted)",
-   "block": 25902888,
-   "ts": 1788512063,
-   "snapshot_value": 0.0
-  },
-  {
-   "address": "0xb0bfdc336537730ad2c44083c0f7c545aac79a9a",
-   "type": "sNUSD full-restricted (blacklisted)",
-   "block": 25991471,
-   "ts": 1789578995,
-   "snapshot_value": 13202415.626020683
   },
   {
    "address": "0x350f09f8dc8d8ebb6d604acbe24e6b09524c0054",
+   "label": "Neutrl bridge adapter v1 (NUSD)",
    "type": "NUSD denylisted",
    "block": 24909289,
    "ts": 1776545855,
+   "tx": "0xa09dd65009662a7bbc5c309bc5ef89158c1f043a6e9f7e8c698ebb23ab75e512",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 3.88121
   },
   {
+   "address": "0xe27ead742ea45b7063b69a875c6f99181c323fb6",
+   "label": "Neutrl bridge adapter v1 (sNUSD)",
+   "type": "sNUSD full-restricted (blacklisted)",
+   "block": 24909313,
+   "ts": 1776546143,
+   "tx": "0x22c701ebd6d00c109d366f918babdf9999a9d07ffd57d423fa154a9ff27267a5",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
+   "snapshot_value": 12.981353326148588
+  },
+  {
    "address": "0x7e19f0253a564e026c63eeaa9338d6dbddef3b09",
+   "label": "Curve NUSD/USDC pool",
    "type": "NUSD denylisted",
    "block": 25745727,
    "ts": 1786619639,
+   "tx": "0x8c5bb66b6dcbafef7b60b6f31e69040c596b87232626f9f59059771393a90eab",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 14876.579285803282
   },
   {
    "address": "0x000000000004444c5dc75cb358380d2e3de08a90",
+   "label": "Uniswap v4 PoolManager",
    "type": "NUSD denylisted",
    "block": 25753169,
    "ts": 1786709243,
+   "tx": "0x94f290c1c7f8b361732501254d952979d47ad764eb8963bceda8a081c68158ee",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 1576.6666029764838
   },
   {
    "address": "0xba12222222228d8ba445958a75a0704d566bf2c8",
+   "label": "Balancer V2 Vault",
    "type": "NUSD denylisted",
    "block": 25753226,
    "ts": 1786709927,
+   "tx": "0x1e818240efa76644388fef8cf9f3f523afa63bb4489bc3bb2fc6a0ddfd1a824c",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 0.0
   },
   {
    "address": "0x8e14d37b56b3d17e0f3abc3b36aa304868f3476b",
+   "label": "Neutrl bridge adapter v2 (NUSD)",
    "type": "NUSD denylisted",
    "block": 25753385,
    "ts": 1786711835,
+   "tx": "0x0396c05920deb27754bf93a5b6e1026ac15b842b4a9e9316a4b3bd3c69fcdfa5",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
    "snapshot_value": 4.04
+  },
+  {
+   "address": "0x6924189eb810b798d3a7c49f2f27b2bdeffa0ca8",
+   "label": "Holder wallet",
+   "type": "sNUSD full-restricted (blacklisted)",
+   "block": 25902888,
+   "ts": 1788512063,
+   "tx": "0x2784efcd6e93ae97d9ce50cc05aa626bf9cdcd1caeaf706caf5b80d190bf254c",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
+   "snapshot_value": 0.0
+  },
+  {
+   "address": "0xb0bfdc336537730ad2c44083c0f7c545aac79a9a",
+   "label": "Holder wallet",
+   "type": "sNUSD full-restricted (blacklisted)",
+   "block": 25991471,
+   "ts": 1789578995,
+   "tx": "0x40da16b2f066152aaadbae3deb43f183e3ed9411179af3f9d710b58df3490574",
+   "set_by": "0xde7259ab94cd04cd5f855b15368bf0549eeb1504",
+   "snapshot_value": 13202415.626020683
   }
  ],
+ "restricted_meta": {
+  "addresses": 12,
+  "restrictions": 15,
+  "lifted": 0,
+  "set_by": [
+   "0xde7259ab94cd04cd5f855b15368bf0549eeb1504"
+  ]
+ },
  "all_wallets": [
   [
    "0xb0bfdc336537730ad2c44083c0f7c545aac79a9a",
