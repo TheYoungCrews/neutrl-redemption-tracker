@@ -1,6 +1,6 @@
-# Neutrl NUSD / sNUSD redemption dashboard
+# Neutrl Redemption Tracker (NUSD / sNUSD)
 
-Static, single-page dashboard showing how much NUSD/sNUSD has been redeemed through Neutrl's
+Static, single-page tracker, refreshed hourly, showing how much NUSD/sNUSD has been redeemed through Neutrl's
 0.51-USDC redemption contract, compared with positions held at the freeze snapshot.
 
 ## Hourly auto-refresh (GitHub Actions) - since Oct 1, 2026
@@ -20,16 +20,17 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 - Code/template changes: edit here, `git commit` and `git push origin tracker`; the next hourly run (or a manual
   run) publishes them. `./publish_pages.sh --force` ships a local build immediately.
 - Hero deltas: change vs the hourly snapshot ~24h earlier (`data/history_hourly.jsonl`); before 24h of hourly
-  history exists, fallback to the newest older entry in the local daily `data/history.jsonl`; otherwise hidden.
+  history exists, local builds fall back to the newest older entry in the local-only `data/history.jsonl`
+  (not in git, so Actions builds simply hide the deltas until 24h of hourly history exists).
 
 ## Refresh (local)
     ./refresh.sh            # sync code+data from GitHub (tracker branch) and rebuild site/ locally; pushes nothing
     ./refresh.sh --pages    # + publish_pages.sh, which pulls first and pushes ONLY if local data is newer than live
     ./refresh.sh --local --pages   # FALLBACK if Actions is failing: pull logs + compute locally, rebuild, publish
-    ./serve_tunnel.sh       # (legacy) local static server + Cloudflare quick tunnel serving ./site
-    ./refresh.sh --deploy   # also try deploy.sh (anonymous sharehtml upload; returned HTTP 500 on 2026-10-01)
+    ./serve_tunnel.sh       # (legacy, local-only, not in this repo) local static server + Cloudflare quick tunnel serving ./site
+    ./refresh.sh --deploy   # (legacy) also try deploy.sh (local-only; anonymous sharehtml upload; returned HTTP 500 on 2026-10-01)
 
-## Publishing notes
+## Legacy publishing notes (before GitHub Pages; superseded)
 - surge.sh: an account was created from the CLI with a mailinator address (.surge_credentials.json), but surge refuses
   to publish from disposable emails. It would work with a real, non-disposable email (`.tools/node_modules/.bin/surge login`
   then `.tools/node_modules/.bin/surge ./site <name>.surge.sh`).
@@ -43,9 +44,11 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 - `build.py` + `template.html` -> `site/index.html` (data embedded, Chart.js from jsDelivr, pre-rendered with headless Chrome),
   `site/og.png` (1200x630 share card), favicon. Config at the top of build.py (SITE_URL, close date, analytics token)
 - `logstore.py`         log state <-> git-friendly segments; `ci_check.py` pre-publish sanity checks (Actions)
-- `deploy.sh`           alternative anonymous publish to html.duyet.net (sharehtml); was failing with HTTP 500
-- `serve_tunnel.sh`     current public hosting: local static server + Cloudflare quick tunnel
-- `raw/`                verified contract sources pulled from Blockscout, article HTML
+- `publish_pages.sh`    manual/local publish of site/ to the `main` branch (Actions normally does this)
+- `refresh.sh`          local sync/rebuild wrapper (see above)
+- Local-only, not in this repo: `deploy.sh` (legacy anonymous publish to html.duyet.net/sharehtml; was failing with HTTP 500),
+  `serve_tunnel.sh` (legacy hosting: local static server + Cloudflare quick tunnel, replaced by GitHub Pages),
+  `raw/` (verified contract sources pulled from Blockscout, article HTML)
 
 ## Key onchain facts (Ethereum mainnet)
 - NUSD 0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE; sNUSD 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313 (Silo 0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B)
@@ -54,7 +57,7 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 - Freeze: sNUSD Paused() block 25,745,732 (2026-08-13 11:14:59 UTC). Snapshot = end of block 25,745,731.
 - Reopen: sNUSD cooldown -> 1s block 25,997,006; NusdRedemption Unpaused block 25,997,438 (2026-09-17 13:14:23 UTC).
 
-## Daily history (local morning routine)
+## Local daily summary (optional morning routine; separate from the hourly site refresh)
     ./refresh.sh --pages                 # sync latest data from GitHub (no push unless local is newer)
     .venv/bin/python record_history.py   # appends headline numbers to data/history.jsonl (DAILY, local-only, not in git)
                                          # and prints current vs previous daily entry, deltas, big redemptions,

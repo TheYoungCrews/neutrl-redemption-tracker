@@ -107,7 +107,7 @@ LABELS = {
     "0x29ac34026c369d21fe3b2c7735ec986e2880b347": "Pendle SY-NUSD", "0x33305665f69b4642d1275f4ce81c23651674d21c": "Pendle Merkle distributor",
     "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb": "Morpho Blue", "0x4ea52e06f21a1a5d60da88a813c6d0e597d8e7c6": "Euler EVault (esNUSD-3)",
     "0x7e19f0253a564e026c63eeaa9338d6dbddef3b09": "Curve NUSD/USDC pool", "0x000000000004444c5dc75cb358380d2e3de08a90": "Uniswap v4 PoolManager",
-    "0xba12222222228d8ba445958a75a0704d566bf2c8": "Balancer V3 Vault",
+    "0xba12222222228d8ba445958a75a0704d566bf2c8": "Balancer V2 Vault",
     "0x350f09f8dc8d8ebb6d604acbe24e6b09524c0054": "LayerZero OFT adapter (Neutrl bridge)", "0x8e14d37b56b3d17e0f3abc3b36aa304868f3476b": "LayerZero OFT adapter v2 (Neutrl bridge)",
     "0x2a3ac59341131f2a0d03af3a867148b2b9b0dcb8": "LayerZero OFT adapter v2 (Neutrl bridge)", "0xe27ead742ea45b7063b69a875c6f99181c323fb6": "LayerZero OFT adapter (Neutrl bridge)",
     "0x0ae0978b868804929fd4c06b3b22d9197b8cd3c6": "Royco tranche kernel", "0xbdf2d357464727ee136a5f81479554f86759993a": "Royco tranche kernel",

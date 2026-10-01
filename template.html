@@ -89,13 +89,13 @@ input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
 </head>
 <body><div class="wrap">
 <h1>Neutrl Redemption Tracker</h1>
-<p class="lede"><a href="https://www.neutrl.finance/" target="_blank" rel="noopener">Neutrl</a> is a synthetic-dollar protocol (NUSD, staked as sNUSD). It <a href="https://x.com/Neutrl/status/2087863440136147224" target="_blank" rel="noopener">froze</a> NUSD and sNUSD on Aug 13, 2026 after a reserve shortfall. Redemptions reopened Sep 17 at a fixed 0.51 USDC per NUSD and are expected to close Nov 14. This tracker shows, onchain and updated hourly, how many holders from the freeze snapshot have redeemed so far. <a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout" target="_blank" rel="noopener">What happened&nbsp;↗</a></p>
+<p class="lede"><a href="https://www.neutrl.finance/" target="_blank" rel="noopener">Neutrl</a> is a synthetic-dollar protocol (NUSD, staked as sNUSD). It <a href="https://x.com/Neutrl/status/2087863440136147224" target="_blank" rel="noopener">froze</a> NUSD and sNUSD on Aug 13, 2026 after a reserve shortfall. Redemptions reopened Sep 17 at a fixed 0.51 USDC per NUSD and are expected to close Nov 14. This tracker uses onchain data, updated hourly, to show how many freeze-snapshot holders have redeemed so far. <a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout" target="_blank" rel="noopener">What happened&nbsp;↗</a></p>
 <div class="updated" id="updated"></div>
 <div class="hero" id="hero"></div>
 <div class="src" id="srcline"></div>
 <h2 style="margin-top:1.4em">Check your wallet</h2>
 <div class="lookup">
-<form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="0x address or ENS name (e.g. name.eth)" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address"><button class="btn" type="submit">Check</button></form>
+<form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="0x address or ENS name (e.g. name.eth)" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address or ENS name"><button class="btn" type="submit">Check</button></form>
 <div id="qres" class="small" aria-live="polite"></div>
 </div>
 <h2>Snapshot holders: who has redeemed</h2>
@@ -106,23 +106,24 @@ input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
 <h2>Protocol-wide totals (all redeemers)</h2>
 <div class="cards" id="totals"></div>
 
-<h2>Redemptions over time<span class="csvs"><button type="button" class="csv" data-csv="daily" title="Daily redemption data (all days, raw numbers)">Download CSV</button></span></h2>
-<div class="tabs" id="chartmode"><button data-m="cum" class="on">Cumulative</button><button data-m="daily">Daily</button></div>
+<h2>Redemptions over time<span class="csvs"><button type="button" class="csv" data-csv="daily" title="Redemptions per day (all days, raw numbers)">Download CSV</button></span></h2>
+<div class="tabs" id="chartmode"><button data-m="cum" class="on">Cumulative</button><button data-m="daily">Per day</button></div>
 <div class="chartbox"><canvas id="timeChart"></canvas></div>
-<div class="small mut">Days are America/New_York calendar days. "Snapshot wallets" = wallets that held a position at the freeze snapshot. Capital = NUSD burned by redemptions (= the pre-incident $ value of the position at $1/NUSD).</div>
+<div class="small mut">Days are calendar days in New York time (ET). "Snapshot wallets" = wallets that held a position at the freeze snapshot. "Redeemed, $" = NUSD burned by redemptions, valued at the pre-freeze $1 per NUSD.</div>
 
 <h2>By holder size (value at snapshot)<span class="csvs"><button type="button" class="csv" data-csv="buckets" title="Holder-size buckets, both sNUSD-holder and all-holder scopes">Download CSV</button></span></h2>
 <div class="tabs" id="bscope"><button data-s="snusd" class="on">sNUSD holders</button><button data-s="all">All NUSD + sNUSD holders</button></div>
 <div class="tw"><table id="buckets"></table></div>
+<div class="small mut" style="margin-top:6px">"Redeemed $ (capped)" counts each wallet's redemptions only up to its snapshot value. "USDC paid" is everything these wallets received, including for tokens acquired after the freeze, so it can exceed 0.51 × the capped amount.</div>
 <div class="chartbox" style="height:260px;margin-top:10px"><canvas id="bucketChart"></canvas></div>
 
 <h2>Top holders at the snapshot (wallets)<span class="csvs"><button type="button" class="csv" data-csv="top" title="Top 100 wallets with full position breakdown">Download CSV</button><button type="button" class="csv" data-csv="wallets" title="Every snapshot wallet (not only the top 100)">All wallets CSV</button></span></h2>
-<div class="small mut">Value = NUSD + sNUSD × share price + NUSD/sNUSD locked in Neutrl's AssetLock + NUSD pending in the sNUSD cooldown silo, at $1/NUSD. "Now" = same position at the as-of block.</div>
+<div class="small mut">Value = NUSD + sNUSD × share price + NUSD/sNUSD locked in Neutrl's AssetLock + NUSD pending in the sNUSD cooldown silo, at $1/NUSD. "Value now" = the same position at the latest block in this data.</div>
 <div class="tw" style="max-height:70vh"><table id="top"></table></div>
 <div style="margin-top:8px"><button id="more" class="btn2" type="button">Show top 100</button></div>
 
 <h2>Held through protocols at the snapshot (not counted as wallets)<span class="csvs"><button type="button" class="csv" data-csv="contracts" title="All protocol contracts, including ones under $100">Download CSV</button></span></h2>
-<div class="small mut">These contracts hold NUSD/sNUSD for their own users (Pendle PT/YT/LP, Strata srNUSD/jrNUSD, Morpho/Euler lenders, DEX pools, bridges). Their end users are affected but are not looked through here, except Neutrl's AssetLock, which is looked through to individual lockers.</div>
+<div class="small mut">These contracts hold NUSD/sNUSD on behalf of their own users (Pendle PT/YT/LP, Strata srNUSD/jrNUSD, Morpho/Euler lenders, DEX pools, bridges). Those end users are affected, but this tracker does not break these contracts down to individual users. The exception is Neutrl's AssetLock: each locker is counted as a wallet instead. The table lists contracts that held at least $100 at the snapshot; the CSV has all of them.</div>
 <div class="tw" style="max-height:60vh"><table id="contracts"></table></div>
 
 <h2>Redeemers who did not hold at the snapshot<span class="csvs"><button type="button" class="csv" data-csv="outsiders" title="Every redeemer that held nothing at the snapshot">Redeemers CSV</button><button type="button" class="csv" data-csv="sources" title="Inbound NUSD/sNUSD to these redeemers, by sender (all senders)">Senders CSV</button></span></h2>
@@ -134,7 +135,7 @@ input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
 <h2>Methodology, sources and caveats</h2>
 <div id="method" class="small"></div>
 
-<footer><p>Built from public Ethereum data. Not affiliated with Neutrl or Strata. Not financial or legal advice. Every figure is computed from onchain events; nothing is estimated except where it says so.</p><p><a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker" target="_blank" rel="noopener">Source on GitHub</a> · Built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></p></footer>
+<footer><p>Built from public Ethereum data. Not affiliated with Neutrl or Strata. Not financial or legal advice. Every figure is computed from onchain events, except Neutrl's expected close date; estimates are labeled as such.</p><p><a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker" target="_blank" rel="noopener">Source on GitHub</a> · Built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></p></footer>
 </div>
 <script>
 const D=/*__DATA__*/null;
@@ -154,15 +155,15 @@ function daysLeft(){const today=new Date().toLocaleDateString("en-CA",{timeZone:
 function delta(cur,prv,kind){
   if(!P||prv==null||cur==null)return"";const dv=cur-prv,cls=Math.abs(dv)<1e-9?"fl":dv>0?"up":"dn",ar=dv>0?"▲":dv<0?"▼":"■";
   const txt=kind==="pp"?`${dv>=0?"+":"−"}${Math.abs(dv).toFixed(1)} pp`:`${dv>=0?"+":""}${usdc(dv)}`;
-  return `<span class="dl ${kind==="reserve"?"fl":cls}" title="Change since block ${num(P.as_of_block)} (${P.as_of_short})">${ar} ${txt} ${P.label||("since "+P.as_of_short.replace(/,.*$/,""))}</span>`}
+  return `<span class="dl ${kind==="reserve"?"fl":cls}" title="${kind==="pp"?"Change in percentage points (pp)":"Change"} since block ${num(P.as_of_block)} (${P.as_of_short})">${ar} ${txt} ${P.label||("since "+P.as_of_short.replace(/,.*$/,""))}</span>`}
 function hero(){
   const A=D.summary_all,S=D.summary_snusd,t=D.totals,dl=daysLeft(),cd=new Date(CLOSE+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"});
   document.getElementById("hero").innerHTML=`
-  <div class="hs"><div class="hk">Snapshot capital redeemed</div><div class="hv ok">${pct(A.pct_capital)}</div><div class="hsub">of ${usdc(A.affected_usd)} held at the freeze · sNUSD holders <b>${pct(S.pct_capital)}</b></div><div class="bar"><i style="width:${Math.min(100,A.pct_capital)}%"></i></div>${delta(A.pct_capital,P&&P.all_pct_capital,"pp")}</div>
+  <div class="hs"><div class="hk">Snapshot capital redeemed</div><div class="hv ok">${pct(A.pct_capital)}</div><div class="hsub">of ${usdc(A.affected_usd)} held by wallets at the freeze · sNUSD holders <b>${pct(S.pct_capital)}</b></div><div class="bar"><i style="width:${Math.min(100,A.pct_capital)}%"></i></div>${delta(A.pct_capital,P&&P.all_pct_capital,"pp")}</div>
   <div class="hs"><div class="hk">USDC paid out</div><div class="hv">${usdc(t.usdc_paid)}</div><div class="hsub">${num(t.redeem_events)} redemptions by ${num(t.unique_redeemers)} wallets, at 0.51 USDC per NUSD</div>${delta(t.usdc_paid,P&&P.usdc_paid_total,"usd")}</div>
-  <div class="hs"><div class="hk">USDC reserve remaining</div><div class="hv">${usdc(t.usdc_reserve_now)}</div><div class="hsub">in the redemption <a href="${ES}${RESERVE_ADDR}" target="_blank" rel="noopener">AssetReserve</a>, of ${usdc(t.usdc_funded_to_reserve)} deposited</div>${delta(t.usdc_reserve_now,P&&P.usdc_reserve_now,"reserve")}</div>
-  <div class="hs"><div class="hk">Days to expected close</div><div class="hv warn">${dl}</div><div class="hsub">${dl>1?`until the expected close, end of ${cd} (per Neutrl)`:dl===1?`last day: expected close end of ${cd}`:`redemption window expected to have closed (${cd})`}</div></div>`;
-  document.getElementById("srcline").innerHTML=`Source: Ethereum mainnet onchain logs via public RPC, as of block ${blk(B.as_of)}. Redemption contract ${al(REDEEM_ADDR)}, NUSD ${al(NUSD_ADDR)}. Last redemption seen at block ${blk(B.last_redeem)}.${P?"":" 24-hour changes appear once a day of hourly snapshots has accumulated."}`;
+  <div class="hs"><div class="hk">USDC reserve remaining</div><div class="hv">${usdc(t.usdc_reserve_now)}</div><div class="hsub">in the redemption reserve contract (<a href="${ES}${RESERVE_ADDR}" target="_blank" rel="noopener">AssetReserve</a>), of ${usdc(t.usdc_funded_to_reserve)} deposited</div>${delta(t.usdc_reserve_now,P&&P.usdc_reserve_now,"reserve")}</div>
+  <div class="hs"><div class="hk">Days to expected close</div><div class="hv warn">${dl}</div><div class="hsub">${dl>1?`until the end of ${cd}, Neutrl's expected close date`:dl===1?`last day: expected to close at the end of ${cd}`:`redemption window expected to have closed (${cd})`}</div></div>`;
+  document.getElementById("srcline").innerHTML=`Source: Ethereum mainnet onchain event logs via public RPC, as of block ${blk(B.as_of)}. Redemption contract ${al(REDEEM_ADDR)}, NUSD ${al(NUSD_ADDR)}. Last redemption seen at block ${blk(B.last_redeem)}.${P?"":" 24-hour changes will appear here once 24 hours of hourly snapshots have accumulated."}`;
 }
 
 function headline(s){
@@ -170,20 +171,20 @@ function headline(s){
   const who=s==="snusd"?"sNUSD holders":"NUSD + sNUSD holders";
   document.getElementById("headline").innerHTML=`
   <div class="card"><div class="k">Affected wallets</div><div class="v">${num(S.wallets)}</div><div class="s">${who} at the freeze, protocol contracts excluded</div></div>
-  <div class="card"><div class="k">Wallets that redeemed</div><div class="v">${num(S.redeemed_wallets)} <span class="small mut">(${pct(S.pct_wallets)})</span></div><div class="bar"><i style="width:${S.pct_wallets}%"></i></div><div class="s">${pct(N.pct_wallets)} if you ignore ${num(S.wallets-N.wallets)} dust wallets under $1</div></div>
+  <div class="card"><div class="k">Wallets that redeemed</div><div class="v">${num(S.redeemed_wallets)} <span class="small mut">(${pct(S.pct_wallets)})</span></div><div class="bar"><i style="width:${S.pct_wallets}%"></i></div><div class="s">${pct(N.pct_wallets)} excluding ${num(S.wallets-N.wallets)} "dust" wallets that held under $1</div></div>
   <div class="card"><div class="k">Affected capital</div><div class="v">${usdc(S.affected_usd)}</div><div class="s">value at the freeze at $1/NUSD (full position of these wallets)</div></div>
-  <div class="card"><div class="k">Capital redeemed</div><div class="v">${usdc(S.redeemed_usd_capped)} <span class="small mut">(${pct(S.pct_capital)})</span></div><div class="bar"><i style="width:${S.pct_capital}%"></i></div><div class="s">capped at each wallet's snapshot value; uncapped ${usdc(S.redeemed_usd_raw)}</div></div>
-  <div class="card"><div class="k">USDC paid to these wallets</div><div class="v">${usdc(S.usdc_paid)}</div><div class="s">at 0.51 USDC per NUSD</div></div>`;
-  document.getElementById("headnote").innerHTML=`<b>Excluding the one blacklisted wallet</b> (<a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a">0xb0bf…9a9a</a>, ${usdc(S.affected_usd-U.affected_usd)} of sNUSD locked, blacklisted by Neutrl on Sep 16 so it cannot unstake or redeem): affected capital ${usdc(U.affected_usd)}, of which <b>${pct(U.pct_capital)}</b> has been redeemed.`;
+  <div class="card"><div class="k">Capital redeemed</div><div class="v">${usdc(S.redeemed_usd_capped)} <span class="small mut">(${pct(S.pct_capital)})</span></div><div class="bar"><i style="width:${S.pct_capital}%"></i></div><div class="s">counted only up to each wallet's snapshot value (${usdc(S.redeemed_usd_raw)} without this cap)</div></div>
+  <div class="card"><div class="k">USDC paid to these wallets</div><div class="v">${usdc(S.usdc_paid)}</div><div class="s">all their redemptions at 0.51 USDC per NUSD, incl. tokens acquired after the freeze</div></div>`;
+  document.getElementById("headnote").innerHTML=`<b>Excluding the one blacklisted snapshot wallet</b> (<a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a" target="_blank" rel="noopener">0xb0bf…9a9a</a>, ${usdc(S.affected_usd-U.affected_usd)} in sNUSD at the snapshot, locked in AssetLock; blacklisted by Neutrl on Sep 16, so it cannot unstake or redeem): affected capital ${usdc(U.affected_usd)}, of which <b>${pct(U.pct_capital)}</b> has been redeemed.`;
 }
 function totals(){
   const t=D.totals,sn=D.supply.snapshot,now=D.supply.now;
   document.getElementById("totals").innerHTML=`
-  <div class="card"><div class="k">NUSD redeemed (burned)</div><div class="v">${usdc(t.nusd_redeemed)}</div><div class="s">${pct(t.pct_of_nusd_supply_redeemed)} of the ${usdc(sn.nusd_supply)} NUSD supply at the freeze</div></div>
+  <div class="card"><div class="k">NUSD redeemed (burned)</div><div class="v">${num(t.nusd_redeemed/1e6,2)}M</div><div class="s">${pct(t.pct_of_nusd_supply_redeemed)} of the ${num(sn.nusd_supply/1e6,2)}M NUSD supply at the freeze</div></div>
   <div class="card"><div class="k">USDC paid out</div><div class="v">${usd(t.usdc_paid)}</div><div class="s">${num(t.redeem_events)} redemptions</div></div>
-  <div class="card"><div class="k">Unique redeeming wallets</div><div class="v">${num(t.unique_redeemers)}</div><div class="s">${num(t.unique_redeemers-t.outsider_redeemers)} held at the snapshot, ${num(t.outsider_redeemers)} got tokens later</div></div>
+  <div class="card"><div class="k">Unique redeeming wallets</div><div class="v">${num(t.unique_redeemers)}</div><div class="s">${num(t.unique_redeemers-t.outsider_redeemers)} held at the snapshot, ${num(t.outsider_redeemers)} didn't (got tokens later)</div></div>
   <div class="card"><div class="k">USDC left in redemption reserve</div><div class="v">${usdc(t.usdc_reserve_now)}</div><div class="s">${usdc(t.usdc_funded_to_reserve)} deposited so far</div></div>
-  <div class="card"><div class="k">NUSD supply now</div><div class="v">${usdc(now.nusd_supply)}</div><div class="s">sNUSD supply ${num(now.snusd_supply/1e6,2)}M (was ${num(sn.snusd_supply/1e6,2)}M)</div></div>`;
+  <div class="card"><div class="k">NUSD supply now</div><div class="v">${num(now.nusd_supply/1e6,2)}M</div><div class="s">sNUSD supply ${num(now.snusd_supply/1e6,2)}M (was ${num(sn.snusd_supply/1e6,2)}M)</div></div>`;
 }
 let tc;
 function timeChart(m){
@@ -204,7 +205,7 @@ function timeChart(m){
 let bc;
 function buckets(s){
   const rows=D["buckets_"+s];
-  let h=`<tr><th>Size at snapshot</th><th>Wallets</th><th>Redeemed</th><th>% wallets</th><th>Affected $</th><th>Redeemed $ (capped)</th><th>% capital</th><th>USDC paid</th></tr>`;
+  let h=`<tr><th>Size at snapshot</th><th>Wallets</th><th>Wallets redeemed</th><th>% wallets</th><th>Affected $</th><th>Redeemed $ (capped)</th><th>% capital</th><th>USDC paid (uncapped)</th></tr>`;
   for(const r of rows)h+=`<tr><td>${r.bucket}</td><td>${num(r.wallets)}</td><td>${num(r.redeemed_wallets)}</td><td>${pct(r.pct_wallets)}</td><td>${usd(r.affected_usd)}</td><td>${usd(r.redeemed_usd_capped)}</td><td>${pct(r.pct_capital)}</td><td>${usd(r.usdc_paid)}</td></tr>`;
   const S=D["summary_"+s];
   h+=`<tr><td><b>Total</b></td><td><b>${num(S.wallets)}</b></td><td><b>${num(S.redeemed_wallets)}</b></td><td><b>${pct(S.pct_wallets)}</b></td><td><b>${usd(S.affected_usd)}</b></td><td><b>${usd(S.redeemed_usd_capped)}</b></td><td><b>${pct(S.pct_capital)}</b></td><td><b>${usd(S.usdc_paid)}</b></td></tr>`;
@@ -215,7 +216,7 @@ function buckets(s){
 }
 const stCls=s=>s.startsWith("Redeemed")?"ok":s.includes("moved")?"warn":"no";
 function topTable(n){
-  let h=`<tr><th>#</th><th class="tl">Wallet</th><th class="tl">Type</th><th>Value at snapshot</th><th>of which sNUSD</th><th>Redeemed (NUSD)</th><th>USDC received</th><th>Value now</th><th class="tl">Status</th></tr>`;
+  let h=`<tr><th>#</th><th class="tl">Wallet</th><th class="tl">Type</th><th>Value at snapshot</th><th>of which sNUSD</th><th>Redeemed $ (NUSD burned)</th><th>USDC received</th><th>Value now</th><th class="tl">Status</th></tr>`;
   D.top_wallets.slice(0,n).forEach((r,i)=>{h+=`<tr><td>${i+1}</td><td class="tl">${al(r.address)}</td><td class="tl small">${r.label}</td><td>${usd(r.value)}</td><td>${usd(r.snusd_value)}</td><td>${r.redeemed_nusd?usd(r.redeemed_nusd):"–"}</td><td>${r.usdc?usd(r.usdc):"–"}</td><td>${usd(r.remaining_value)}</td><td class="tl ${r.restricted?"bad":stCls(r.status)}">${r.restricted?"Blacklisted: cannot redeem":r.status}</td></tr>`});
   document.getElementById("top").innerHTML=h;
 }
@@ -228,56 +229,56 @@ function contracts(){
 }
 function outsiders(){
   const t=D.totals;
-  let h=`<p>${num(t.outsider_redeemers)} wallets redeemed ${usd(t.outsider_nusd)} of NUSD (${usd(t.outsider_usdc)} USDC) without holding a position at the snapshot. Mostly they received NUSD/sNUSD after the freeze from protocols that unwound (e.g. Pendle SY redemptions, Strata senior-tranche withdrawals settling in sNUSD) or from other wallets. Inbound NUSD/sNUSD these wallets received after the snapshot, by sender (sNUSD valued at the current share price):</p><div class="tw"><table><tr><th class="tl">Sender</th><th>Value received</th></tr>`;
+  let h=`<p>${num(t.outsider_redeemers)} wallets redeemed ${usd(t.outsider_nusd)} of NUSD (for ${usd(t.outsider_usdc)} in USDC) without holding NUSD/sNUSD directly at the snapshot. Most received their tokens after the freeze, either from protocols that were unwinding (e.g. Pendle SY redemptions, Strata senior-tranche withdrawals settling in sNUSD) or from other wallets. NUSD/sNUSD these wallets received after the snapshot, by sender (top 12; sNUSD valued at the current share price; the Senders CSV has all):</p><div class="tw"><table><tr><th class="tl">Sender</th><th>Value received</th></tr>`;
   D.outsider_sources.slice(0,12).forEach(([k,v])=>{h+=`<tr><td class="tl">${k}</td><td>${usd(v)}</td></tr>`});
-  h+=`</table></div><p class="mut">The snapshot-wallet totals above are capped at each wallet's snapshot value, so tokens acquired after the freeze are not counted as "affected capital redeemed".</p>`;
+  h+=`</table></div><p class="mut">The snapshot-wallet totals above are capped at each wallet's snapshot value, so tokens acquired after the freeze are not counted in "Capital redeemed".</p>`;
   document.getElementById("outsiders").innerHTML=h;
 }
 function restricted(){
-  let h=`<p>Neutrl can blacklist addresses on sNUSD (FULL_RESTRICTED_STAKER_ROLE: no unstake or transfer) and denylist them on NUSD (no transfer, which blocks redemption). Current list, from RoleGranted / AddedToDenylist events:</p><div class="tw"><table><tr><th class="tl">Address</th><th class="tl">Restriction</th><th class="tl">Since</th><th>Block</th><th>Value at snapshot</th></tr>`;
+  let h=`<p>Neutrl can blacklist addresses on sNUSD (FULL_RESTRICTED_STAKER_ROLE: no unstake or transfer) and denylist them on NUSD (no transfer, which blocks redemption). Current list, from RoleGranted / AddedToDenylist events:</p><div class="tw"><table><tr><th class="tl">Address</th><th class="tl">Restriction</th><th class="tl">Since (UTC)</th><th>Block</th><th>Value at snapshot</th></tr>`;
   D.restricted_list.forEach(r=>{const dt=new Date(r.ts*1000).toISOString().slice(0,10);h+=`<tr><td class="tl">${al(r.address)}</td><td class="tl">${r.type}</td><td class="tl">${dt}</td><td>${blk(r.block)}</td><td>${usd(r.snapshot_value)}</td></tr>`});
-  h+=`</table></div><p>The largest snapshot holder, <a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a">0xb0bf…9a9a</a>, was minted ~13.0M NUSD directly in April 2026, staked it and locked the sNUSD in AssetLock. It was blacklisted on sNUSD on Sep 16, 2026, the day before redemptions opened. The chain doesn't show why.</p>`;
+  h+=`</table></div><p>The largest snapshot holder, <a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a" target="_blank" rel="noopener">0xb0bf…9a9a</a>, received ~13.0M NUSD directly from a mint in April 2026, staked it, and locked the resulting sNUSD in AssetLock. It was blacklisted on sNUSD on Sep 16, 2026, the day before redemptions reopened. Onchain data does not show why.</p>`;
   document.getElementById("restricted").innerHTML=h;
 }
 function method(){
   const sn=D.supply.snapshot,r=D.rates,wc=D.wallet_count_variants;
   document.getElementById("method").innerHTML=`
 <details class="mdet"><summary>Contracts (Ethereum mainnet, all verified on Etherscan/Blockscout)</summary><ul>
-<li>NUSD (Neutrl USD, 18 dec): ${al("0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE")}</li>
-<li>sNUSD (Staked NUSD, ERC-4626 with cooldown): ${al("0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313")}. Cooldown silo ${al("0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B")}</li>
-<li>NusdRedemption (redemption contract, rate 0.51e18): ${al("0xB3f07D3392102fC23264a78e2A1A8B6421123828")}. USDC AssetReserve ${al("0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed")}</li>
-<li>Neutrl AssetLock (locked NUSD/sNUSD, looked through to lockers): ${al("0x99161BA892ECae335616624c84FAA418F64FF9A6")}</li>
+<li>NUSD (Neutrl USD, 18 decimals): ${al("0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE")}</li>
+<li>sNUSD (Staked NUSD, an ERC-4626 vault with an unstaking cooldown): ${al("0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313")}. Cooldown silo ${al("0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B")}</li>
+<li>NusdRedemption (redemption contract, rate 0.51e18 = 0.51 USDC per NUSD): ${al("0xB3f07D3392102fC23264a78e2A1A8B6421123828")}. USDC AssetReserve ${al("0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed")}</li>
+<li>Neutrl AssetLock (locked NUSD/sNUSD; each locker is counted as a wallet): ${al("0x99161BA892ECae335616624c84FAA418F64FF9A6")}</li>
 <li>Strata sNUSDStrategy (srNUSD/jrNUSD collateral): ${al("0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")}</li></ul>
 </details>
 <details class="mdet"><summary>Timeline (onchain)</summary><ul>
-<li><b>Freeze</b>: sNUSD <span class="mono">Paused()</span> at block ${blk(B.freeze)}, ${T.freeze}. The Curve NUSD/USDC pool was denylisted 5 blocks earlier; the Uniswap v4 PoolManager, Balancer V3 Vault and a LayerZero adapter were denylisted on Aug 14. AssetLock was paused at block ${blk(25745747)}.</li>
+<li><b>Freeze</b>: sNUSD <span class="mono">Paused()</span> at block ${blk(B.freeze)}, ${T.freeze}. The Curve NUSD/USDC pool was denylisted 5 blocks earlier; the Uniswap v4 PoolManager, Balancer V2 Vault and a LayerZero adapter were denylisted on Aug 14. AssetLock was paused at block ${blk(25745747)}.</li>
 <li><b>Snapshot</b> = state at the end of block ${blk(B.snapshot)} (the block before the sNUSD pause), ${T.snapshot}.</li>
-<li><b>Reopening</b>: sNUSD cooldown set to 1 second at block ${blk(B.reopen_cooldown)} (${T.reopen_cooldown}); sNUSD and AssetLock unpaused, AssetLock lock enforcement switched off; NusdRedemption unpaused at block ${blk(B.redeem_open)} (${T.redeem_open}). First redemption at block ${blk(B.first_redeem)}, ${T.first_redeem}.</li></ul>
+<li><b>Reopening</b>: sNUSD cooldown set to 1 second at block ${blk(B.reopen_cooldown)}, ${T.reopen_cooldown}; sNUSD and AssetLock unpaused and AssetLock lock enforcement switched off; NusdRedemption unpaused at block ${blk(B.redeem_open)}, ${T.redeem_open}. First redemption at block ${blk(B.first_redeem)}, ${T.first_redeem}.</li></ul>
 </details>
-<details class="mdet"><summary>How redemption works</summary><p>The holder signs the portal's message onchain (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>, cooldown now 1s) and AssetLock users first unlock. Since reopening, ${num(D.totals.snusd_shares_unstaked_since_reopen)} sNUSD has been unstaked into ${num(D.totals.snusd_nusd_unstaked_since_reopen)} NUSD by ${num(D.totals.snusd_unstakers_since_reopen)} addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
+<details class="mdet"><summary>How redemption works</summary><p>The holder signs a message onchain through Neutrl's redemption portal (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>; the cooldown is now 1 second) and AssetLock users first unlock. Since reopening, ${num(D.totals.snusd_shares_unstaked_since_reopen)} sNUSD has been unstaked into ${num(D.totals.snusd_nusd_unstaked_since_reopen)} NUSD by ${num(D.totals.snusd_unstakers_since_reopen)} addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
 </details>
 <details class="mdet"><summary>Definitions and assumptions</summary><ul>
-<li><b>Position at snapshot</b> = NUSD balance + sNUSD balance × sNUSD share price (${r.snusd_share_rate_snapshot.toFixed(6)} NUSD per sNUSD at the snapshot) + NUSD/sNUSD locked in AssetLock + NUSD pending in the sNUSD cooldown silo. Rebuilt from every Transfer, AssetLocked/Unlocked and UnstakeRequested/Unstaked event since deployment. Checks: the rebuilt NUSD supply (${num(sn.nusd_supply,2)}) matches onchain <span class="mono">totalSupply()</span> at the snapshot, AssetLock and silo balances match the per-user sums, and top balances match archive <span class="mono">balanceOf</span>.</li>
-<li><b>Pre-incident USD value</b>: 1 NUSD = $1.00, which was NUSD's par value before the freeze. sNUSD is valued through its share price. "Redeemed capital" = NUSD burned by <span class="mono">redeem()</span>, i.e. the pre-incident value given up. "USDC paid" = the actual USDC from the <span class="mono">Redeemed</span> events.</li>
-<li><b>Wallets</b> = EOAs (${num(wc.wallets_eoa)}), EIP-7702 delegated EOAs (${num(wc.wallets_7702)}) and Safe multisigs (${num(wc.wallets_safe)}), with AssetLock lockers looked through. ${num(D.totals.protocol_contracts_snapshot)} other contracts (Pendle, Strata, Morpho, Euler, Royco, DEX pools, bridges, routers, Strata cooldown proxies) are excluded from wallet counts. Raw direct holders including contracts at the snapshot: ${num(wc.raw_snusd_direct_holders_incl_contracts)} sNUSD and ${num(wc.raw_nusd_direct_holders_incl_contracts)} NUSD addresses.</li>
+<li><b>Position at snapshot</b> = NUSD balance + sNUSD balance × sNUSD share price (${r.snusd_share_rate_snapshot.toFixed(6)} NUSD per sNUSD at the snapshot) + NUSD/sNUSD locked in AssetLock + NUSD pending in the sNUSD cooldown silo. Rebuilt from every Transfer, AssetLocked/Unlocked and UnstakeRequested/Unstaked event since deployment. Checks: the rebuilt NUSD supply (${num(sn.nusd_supply,2)}) matches onchain <span class="mono">totalSupply()</span> at the snapshot, AssetLock and silo balances match the per-user sums, and top balances match historical (archive-node) <span class="mono">balanceOf</span> calls.</li>
+<li><b>Pre-freeze USD value</b>: 1 NUSD = $1.00, NUSD's target (par) value before the freeze. sNUSD is valued through its share price. "Capital redeemed" = NUSD burned by <span class="mono">redeem()</span>, i.e. the pre-freeze value given up. "USDC paid" = the actual USDC from the <span class="mono">Redeemed</span> events.</li>
+<li><b>Wallets</b> = EOAs, i.e. regular key-controlled wallets (${num(wc.wallets_eoa)}), EIP-7702 delegated EOAs (${num(wc.wallets_7702)}) and Safe multisigs (${num(wc.wallets_safe)}), with each AssetLock locker counted as its own wallet. ${num(D.totals.protocol_contracts_snapshot)} other contracts (Pendle, Strata, Morpho, Euler, Royco, DEX pools, bridges, routers, Strata cooldown proxies) are excluded from wallet counts. Raw direct holders including contracts at the snapshot: ${num(wc.raw_snusd_direct_holders_incl_contracts)} sNUSD and ${num(wc.raw_nusd_direct_holders_incl_contracts)} NUSD addresses.</li>
 <li><b>"sNUSD holders"</b> = wallets with any sNUSD exposure (direct or locked) at the snapshot. Their full position, including any plain NUSD, counts as affected capital, because redemption burns NUSD and can't tell where it came from.</li>
-<li><b>Capped redeemed capital</b>: a wallet's redeemed amount counts toward "% of affected capital" only up to its snapshot value. Extra NUSD it acquired later is reported separately (uncapped figure, outsider section).</li>
-<li><b>Status</b>: "Redeemed" = has a Redeemed event and now holds less than 1% of its snapshot position; "still holds some" = redeemed but kept a remainder; "tokens moved out" = no redemption but now holds less than 5% (sold or moved; it may have redeemed from another address, which can't be linked onchain).</li></ul>
+<li><b>Capped redeemed capital</b>: a wallet's redeemed amount counts toward "% of affected capital" only up to its snapshot value. Extra NUSD it acquired later shows up only in the uncapped figures.</li>
+<li><b>Status</b>: "Redeemed" = has a Redeemed event and now holds less than 1% of its snapshot position; "Redeemed (still holds some)" = redeemed but kept a remainder; "Not redeemed" = no redemption from this address; "Not redeemed (tokens moved out)" = no redemption and now holds less than 5% (sold or moved; it may have redeemed from another address, which can't be linked onchain).</li></ul>
 </details>
 <details class="mdet"><summary>Caveats and unknowns</summary><ul>
 <li><b>Ethereum mainnet only.</b> NUSD bridged elsewhere through the LayerZero OFT adapters is excluded (the adapters held about $70 of NUSD/sNUSD combined at the snapshot, so this is negligible).</li>
-<li><b>Holders behind protocols are not looked through</b> (Pendle PT/YT/LP holders, Strata srNUSD/jrNUSD holders, Morpho/Euler lenders). About ${usdc(D.totals.protocol_contract_value_snapshot)} sat in such contracts at the snapshot. Their users show up as "redeemers not at snapshot" once they withdraw and redeem.</li>
+<li><b>Holders behind protocols are not broken out individually</b> (Pendle PT/YT/LP holders, Strata srNUSD/jrNUSD holders, Morpho/Euler lenders). About ${usdc(D.totals.protocol_contract_value_snapshot)} sat in such contracts at the snapshot. Their users show up under "Redeemers who did not hold at the snapshot" once they withdraw and redeem.</li>
 <li><b>Strata</b>: the Strata sNUSDStrategy held ${num(D.contracts.find(c=>c.address==="0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")?.snusd||0)} sNUSD at the snapshot. Per The Defiant and The Crypto Times, the 0.51 rate writes the junior tranche (jrNUSD) to zero and senior (srNUSD) withdrawals settle in sNUSD. Individual srNUSD/jrNUSD holders are out of scope here.</li>
 <li>One person can control several wallets, and tokens can move between wallets after the snapshot, so wallet counts are not person counts.</li>
-<li>The redemption contract takes the rate as an admin parameter; it has been 0.51 since deployment (one RedemptionRateSet event). Neutrl says the program is expected to run until Nov 14, 2026. ${num(D.totals.signed_not_redeemed)} wallet(s) signed the message but have not redeemed.</li>
-<li>Wallet type is read from current code (EOA / 7702 / Safe). A few unverified contracts may be smart-contract wallets and are excluded as contracts.</li></ul>
+<li>The redemption contract takes the rate as an admin parameter; it has been 0.51 since deployment (one RedemptionRateSet event). Neutrl says the program is expected to run until Nov 14, 2026. ${num(D.totals.signed_not_redeemed)} ${D.totals.signed_not_redeemed===1?"wallet has":"wallets have"} signed the message but not redeemed.</li>
+<li>Wallet type is read from each address's current onchain code (EOA / 7702 / Safe). A few unverified contracts may be smart-contract wallets and are excluded as contracts.</li></ul>
 </details>
 <details class="mdet"><summary>Sources</summary><ul>
-<li><a href="https://www.neutrl.finance/">neutrl.finance</a>; Neutrl on X: <a href="https://x.com/Neutrl/status/2100614848241414280">announcement</a> (quoted in press below)</li>
-<li><a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout">The Defiant, Sep 18 2026</a>; <a href="https://www.cryptotimes.io/2026/09/18/neutrl-opens-nusd-snusd-redemptions-as-on-chain-rate-reads-0-51/">The Crypto Times, Sep 18 2026</a>; <a href="https://crypto.news/neutrl-opens-nusd-redemptions-as-contract-reads-0-51/">crypto.news</a>; <a href="https://www.cryptotimes.io/2026/08/29/neutrl-reveals-only-27m-liquid-against-137m-book-as-redemptions-approach/">The Crypto Times, Aug 29 2026 (pause, $27M liquid)</a></li>
-<li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract">Blockscout</a> / Etherscan.</li></ul>
+<li><a href="https://www.neutrl.finance/" target="_blank" rel="noopener">neutrl.finance</a>; Neutrl on X: <a href="https://x.com/Neutrl/status/2087863440136147224" target="_blank" rel="noopener">pause announcement, Aug 13, 2026</a>; <a href="https://x.com/Neutrl/status/2100614848241414280" target="_blank" rel="noopener">redemption announcement, Sep 17, 2026</a></li>
+<li><a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout" target="_blank" rel="noopener">The Defiant, Sep 18, 2026</a>; <a href="https://www.cryptotimes.io/2026/09/18/neutrl-opens-nusd-snusd-redemptions-as-on-chain-rate-reads-0-51/" target="_blank" rel="noopener">The Crypto Times, Sep 18, 2026</a>; <a href="https://crypto.news/neutrl-opens-nusd-redemptions-as-contract-reads-0-51/" target="_blank" rel="noopener">crypto.news, Sep 18, 2026</a>; <a href="https://www.cryptotimes.io/2026/08/29/neutrl-reveals-only-27m-liquid-against-137m-book-as-redemptions-approach/" target="_blank" rel="noopener">The Crypto Times, Aug 29, 2026 (pause, $27M liquid)</a></li>
+<li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract" target="_blank" rel="noopener">Blockscout</a> / <a href="https://etherscan.io/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828#code" target="_blank" rel="noopener">Etherscan</a>.</li></ul>
 </details>
-<p class="mut">Generated ${D.generated_at_utc} (UTC). Refreshed hourly by a <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/actions/workflows/refresh.yml" target="_blank" rel="noopener">GitHub Actions workflow</a> (pull_logs.py → compute.py → build.py; code and data on the <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/tree/tracker" target="_blank" rel="noopener">tracker branch</a>).</p>`;
+<p class="mut">Page generated ${T.generated||D.generated_at_utc+" (UTC)"}. Refreshed hourly by a <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/actions/workflows/refresh.yml" target="_blank" rel="noopener">GitHub Actions workflow</a> (pull_logs.py → compute.py → build.py; code and data on the <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/tree/tracker" target="_blank" rel="noopener">tracker branch</a>).</p>`;
 }
 // ---- ENS (client-side, keyless): ensideas API -> ensdata API -> onchain ENS registry via public RPC (CORS-enabled)
 function keccak256(bytes){const RC=[1n,0x8082n,0x800000000000808an,0x8000000080008000n,0x808bn,0x80000001n,0x8000000080008081n,0x8000000000008009n,0x8an,0x88n,0x80008009n,0x8000000an,0x8000808bn,0x800000000000008bn,0x8000000000008089n,0x8000000000008003n,0x8000000000008002n,0x8000000000000080n,0x800an,0x800000008000000an,0x8000000080008081n,0x8000000000008080n,0x80000001n,0x8000000080008008n],
@@ -354,20 +355,20 @@ function renderAddr(q,ens,seq){
             ["Position now (not yet redeemed)",u2(w[5])+(w[5]>w[1]*1.01+1?`<div class="mut" style="font-weight:400;font-size:.85em">Includes sNUSD/NUSD received after the snapshot, e.g. from exiting Pendle or Strata positions, which the snapshot counts under those protocols' contracts.</div>`:"")],
             ["Estimated redemption value",(w[8]||rs.length)?`<span class="bad">Can't redeem while restricted</span> <span class="mut" style="font-weight:400">(would be ${RATE&&w[5]>0?"≈ "+u2(w[5]*RATE)+" USDC":"n/a"})</span>`:est(w[5])],
             ["Redeemed share of snapshot position",w[1]>0?pct(Math.min(100,100*w[3]/w[1])):"n/a"]);
-    if(w[3]>w[1]+0.01||w[5]>w[1]*1.01+1)kv.push(["How it's counted",`<span class="mut" style="font-weight:400">As a snapshot wallet, not an outsider redeemer: its redemptions count toward "capital redeemed" only up to its snapshot position (${u2(w[1])}); anything above that appears only in the uncapped total.</span>`]);
+    if(w[3]>w[1]+0.01||w[5]>w[1]*1.01+1)kv.push(["How it's counted",`<span class="mut" style="font-weight:400">As a snapshot wallet: its redemptions count toward "Capital redeemed" only up to its snapshot position (${u2(w[1])}); anything above that appears only in the uncapped totals.</span>`]);
     if(x)kv.push(["Also redeemed tokens received after the freeze",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`]);
   }else if(c){badges.push(`<span class="bdg warn">Protocol contract (excluded from wallet counts)</span>`,`<span class="bdg">${c.label}</span>`);
     kv.push(["Held at the freeze snapshot",u2(c.value)],["Redeemed",c.redeemed_nusd?`${n2(c.redeemed_nusd)} NUSD → ${u2(c.usdc)} USDC`:`<span class="mut">No redemption from this address</span>`],["Holding now",u2(c.remaining_value)]);
     kv.push(["Note",`<span class="mut" style="font-weight:400">This contract holds NUSD/sNUSD for its own users (e.g. Pendle, Strata, Morpho, Euler). If you deposited there, your position sits inside it.</span>`]);
-  }else if(x){badges.push(`<span class="bdg warn">Outsider redeemer: no direct position at the snapshot</span>`);
+  }else if(x){badges.push(`<span class="bdg warn">Redeemer with no direct position at the snapshot</span>`);
     kv.push(["Position at the freeze snapshot",`<span class="mut">None held directly</span>`],["Redeemed",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`],
-      ["How it's counted",`<span class="mut" style="font-weight:400">In "Redeemers who did not hold at the snapshot", not in the snapshot-wallet totals. Typically tokens received after the freeze, e.g. from exiting Pendle or Strata positions, which the snapshot counts under those protocols' contracts.</span>`]);
+      ["How it's counted",`<span class="mut" style="font-weight:400">Counted under "Redeemers who did not hold at the snapshot", not in the snapshot-wallet totals. Usually these are tokens received after the freeze, e.g. from exiting Pendle or Strata positions, which the snapshot counts under those protocols' contracts.</span>`]);
   }
   if(rs.length){cls="lkb";if(!w||!w[8])badges.push(`<span class="bdg bad">Blacklisted / denylisted</span>`);kv.push(["Restriction",`<span class="bad">${rsTxt}</span>`])}
   else if(w&&w[8]){cls="lkb";kv.push(["Restriction",`<span class="bad">${w[8]}</span>`])}
   if(!w&&!c&&!x&&!rs.length){
-    o.innerHTML=`${ensLine}<div class="lk lkw"><div class="lkaddr">${q}</div><div id="revens" class="mut"></div><p style="margin:.5em 0"><b>Not found in the snapshot.</b> This address held no NUSD/sNUSD directly at the freeze (block ${blk(B.snapshot)}) and has not redeemed on Ethereum mainnet (data as of block ${blk(B.as_of)}). If you held through Pendle, Strata, Morpho, Euler or another protocol, your position is inside that protocol's contract and isn't looked through here.</p>${links}</div>`;if(!ens)reverseENS(q,seq);return "none"}
-  o.innerHTML=`${ensLine}<div class="lk ${cls}"><a class="lkaddr" href="${ES}${q}" target="_blank" rel="noopener">${q}</a><div id="revens" class="mut"></div><div class="badges">${badges.join("")}</div><dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl><div class="mut" style="font-size:.78rem">Values at $1 per NUSD (sNUSD via share price). Redemption pays 0.51 USDC per NUSD. Data as of block ${blk(B.as_of)}.</div>${links}</div>`;
+    o.innerHTML=`${ensLine}<div class="lk lkw"><div class="lkaddr">${q}</div><div id="revens" class="mut"></div><p style="margin:.5em 0"><b>Not found in the snapshot.</b> This address held no NUSD/sNUSD directly at the freeze (block ${blk(B.snapshot)}) and has not redeemed on Ethereum mainnet (data as of block ${blk(B.as_of)}). If you held through Pendle, Strata, Morpho, Euler or another protocol, your position is inside that protocol's contract, which this tracker doesn't break down by user.</p>${links}</div>`;if(!ens)reverseENS(q,seq);return "none"}
+  o.innerHTML=`${ensLine}<div class="lk ${cls}"><a class="lkaddr" href="${ES}${q}" target="_blank" rel="noopener">${q}</a><div id="revens" class="mut"></div><div class="badges">${badges.join("")}</div><dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl><div class="mut" style="font-size:.78rem">Dollar values assume $1 per NUSD (sNUSD converted at its share price). Redemption pays 0.51 USDC per NUSD. Data as of block ${blk(B.as_of)}.</div>${links}</div>`;
   if(!ens)reverseENS(q,seq);
   return w?"wallet":c?"contract":x?"outsider":"restricted";
 }

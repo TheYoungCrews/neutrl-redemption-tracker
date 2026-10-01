@@ -23,12 +23,14 @@ ET = ZoneInfo("America/New_York")
 d = json.load(open("data/dashboard_data.json"))
 def fmt_ts(t):
     u = datetime.datetime.fromtimestamp(t, datetime.timezone.utc)
-    return u.astimezone(ET).strftime("%b %-d, %Y %-I:%M %p ET") + " (" + u.strftime("%H:%M UTC") + ")"
+    return u.astimezone(ET).strftime("%b %-d, %Y, %-I:%M %p ET") + " (" + u.strftime("%H:%M UTC") + ")"
 def et(t, f="%b %-d, %Y, %-I:%M %p ET"):
     return datetime.datetime.fromtimestamp(t, datetime.timezone.utc).astimezone(ET).strftime(f)
 b = d["blocks"]
 times = {k: fmt_ts(b[k + "_ts"]) for k in ["snapshot", "freeze", "reopen_cooldown", "redeem_open", "as_of", "first_redeem", "last_redeem"]}
 times["as_of_short"] = et(b["as_of_ts"])
+try: times["generated"] = fmt_ts(datetime.datetime.fromisoformat(d["generated_at_utc"]).timestamp())
+except (KeyError, TypeError, ValueError): pass
 as_of_date = datetime.datetime.fromtimestamp(b["as_of_ts"], datetime.timezone.utc).astimezone(ET).date()
 days_left = max(0, (REDEMPTION_CLOSE - as_of_date).days + 1)  # includes the as-of day; 1 on Nov 14, 0 after
 
@@ -70,13 +72,15 @@ def usdc_short(v):
     return f"${v/1e6:.2f}M" if v >= 1e6 else f"${v/1e3:.1f}k" if v >= 1e3 else f"${v:.0f}"
 SA, SS, T = d["summary_all"], d["summary_snusd"], d["totals"]
 meta_desc = (f"{SA['pct_capital']:.1f}% of snapshot NUSD/sNUSD capital redeemed (sNUSD holders {SS['pct_capital']:.1f}%). "
-             f"{usdc_short(T['usdc_paid'])} USDC paid at 0.51 per NUSD, {usdc_short(T['usdc_reserve_now'])} left in the reserve, "
-             f"{days_left} days left until the expected Nov 14, 2026 close. Onchain data as of {as_of_date.strftime('%b %-d, %Y')}. Check your wallet.")
+             f"{usdc_short(T['usdc_paid'])} USDC paid out at 0.51 USDC per NUSD, {usdc_short(T['usdc_reserve_now'])} left in the reserve, "
+             f"{days_left} days left until the expected Nov 14, 2026 close. Onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly. Check your wallet.")
 og_desc = ("Neutrl froze NUSD and sNUSD on Aug 13, 2026. Redemptions reopened Sep 17 at 0.51 USDC per NUSD and are expected to close Nov 14. "
            "Onchain tracker, updated hourly, of how many freeze-snapshot holders have redeemed.")
 tokens = {"__SITE_URL__": SITE_URL, "__META_DESC__": meta_desc, "__OG_DESC__": og_desc,
           "__OG_IMAGE__": f"{SITE_URL}og.png?v=__OG_HASH__",   # filled in after og.png is rendered
-          "__OG_ALT__": f"Neutrl Redemption Tracker: {SA['pct_capital']:.1f}% of snapshot capital redeemed, {usdc_short(T['usdc_paid'])} USDC paid"}
+          "__OG_ALT__": (f"Neutrl Redemption Tracker share card: {SA['pct_capital']:.1f}% of snapshot capital redeemed (all holders), "
+                         f"{SS['pct_capital']:.1f}% (sNUSD holders); {usdc_short(T['usdc_paid'])} USDC paid out; {usdc_short(T['usdc_reserve_now'])} USDC left in reserve; "
+                         f"{days_left} days left until the expected Nov 14, 2026 close; onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly")}
 tpl = open("template.html").read()
 for k, v in tokens.items():
     tpl = tpl.replace(k, html.escape(v, quote=True))
@@ -159,7 +163,7 @@ if chrome:
     if 'id="headline"' in dom and "Affected wallets" in dom and "const D=" in dom and 'id="hero"' in dom:
         # Chart.js-modified canvases are reset so charts re-initialise cleanly
         dom = re.sub(r'<canvas id="(\w+)"[^>]*>', r'<canvas id="\1">', dom)
-        open("site/index.html", "w").write("<!doctype html>\n" + dom)
+        open("site/index.html", "w").write(dom if dom.lstrip()[:9].lower() == "<!doctype" else "<!doctype html>\n" + dom)
         print("pre-rendered with", chrome, len(dom), "bytes")
     else:
         print("pre-render failed; keeping JS-only page")
