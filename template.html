@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Neutrl Redemption Tracker</title>
 <meta name="description" content="__META_DESC__">
-<meta name="theme-color" content="#0b0f14">
+<meta name="theme-color" content="#0B0A0F">
 <link rel="canonical" href="__SITE_URL__">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -24,119 +24,215 @@
 <meta name="twitter:image" content="__OG_IMAGE__">
 <meta name="twitter:image:alt" content="__OG_ALT__">
 <!--__ANALYTICS__-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#0b0f14;--card:#121922;--card2:#18212c;--line:#243040;--line2:#1b2531;--fg:#e8eef5;--mut:#8d9aaa;--acc:#5aa9ff;--grn:#3fcf6e;--red:#ff6b63;--yel:#e3b341;--r:14px}
-*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{margin:0;background:radial-gradient(1100px 480px at 50% -260px,#163a5f66,transparent 70%),var(--bg);background-repeat:no-repeat;color:var(--fg);
- font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 8px}
-h1{font-size:1.75rem;line-height:1.2;margin:.1em 0 .15em;letter-spacing:-.02em;font-weight:750}
-h2{font-size:1.15rem;margin:2em 0 .7em;border-bottom:1px solid var(--line);padding-bottom:.4em;letter-spacing:-.01em;display:flow-root}h3{font-size:1rem;margin:1em 0 .4em}
-a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
-.mut{color:var(--mut)}.small{font-size:.86rem}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95em}
+:root{--bg:#0B0A0F;--s1:#131119;--s2:#1A1722;--s0:#0F0D14;--line:#2A2633;--line2:#1C1924;--ink:#F2EEE6;--ink2:#C2BCCB;--mut:#8F899B;
+ --green:#5BE49B;--purple:#B69CFF;--dot:#2B2736;--red:#FF8F87;--yel:#E9C46A;--fg:var(--ink);--acc:var(--green);--grn:var(--green);--card:var(--s1);--r:16px;
+ --serif:"Instrument Serif",Georgia,"Times New Roman",serif;--sans:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:radial-gradient(rgba(242,238,230,.07) 1px,transparent 1.2px);background-size:22px 22px;
+ -webkit-mask-image:radial-gradient(900px 600px at 78% 18%,#000,transparent 75%);mask-image:radial-gradient(900px 600px at 78% 18%,#000,transparent 75%)}
+.wrap{position:relative;z-index:1;max-width:1232px;margin:0 auto;padding-left:36px;padding-right:36px}
+a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.mut{color:var(--mut)}.small{font-size:.9rem}.mono{font-family:var(--mono);font-size:.92em}
 .num,td,.v,.hv{font-variant-numeric:tabular-nums}
-.updated{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;color:var(--mut);font-size:.86rem;margin:2px 0 14px}
-.live{display:inline;color:var(--fg);font-weight:600}.live a{white-space:nowrap}.live::before{content:"";display:inline-block;vertical-align:middle;margin:-2px 7px 0 2px;width:8px;height:8px;border-radius:50%;background:var(--grn);box-shadow:0 0 0 3px #3fcf6e33}
-.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.hs{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
-.hk{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
-.hv{font-size:2.3rem;font-weight:780;letter-spacing:-.03em;line-height:1.1;margin:.12em 0 .1em}
-.hsub{color:var(--mut);font-size:.82rem}.dl{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:999px;background:#ffffff0d}
-.dl.up{color:var(--grn);background:#3fcf6e1a}.dl.dn{color:var(--red);background:#ff6b631a}.dl.fl{color:var(--mut)}
-.src{color:var(--mut);font-size:.8rem;margin-top:10px}
-.lede{font-size:1.04rem;line-height:1.6;color:#c9d4e0;max-width:780px;margin:.35em 0 .7em}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
-.card .k{color:var(--mut);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}.card .v{font-size:1.5rem;font-weight:700;margin:.1em 0;letter-spacing:-.02em}.card .s{color:var(--mut);font-size:.82rem}
-.bar{height:8px;background:#222c39;border-radius:4px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;background:var(--grn)}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.tabs button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:40px;cursor:pointer;font:inherit;font-size:.9rem}
-.tabs button.on{background:var(--acc);color:#0b0f14;border-color:var(--acc);font-weight:650}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--r);background:var(--card);max-width:100%}
-table{border-collapse:collapse;width:100%;font-size:.87rem}th,td{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
-th{background:#161f2a;color:var(--mut);font-weight:600;position:sticky;top:0;z-index:1;font-size:.8rem}td:first-child,th:first-child{text-align:left}tr:last-child td{border-bottom:none}
-tbody tr:hover td,tr:hover td{background:#ffffff05}
-.tl{text-align:left!important}.ok{color:var(--grn)}.no{color:var(--mut)}.warn{color:var(--yel)}.bad{color:var(--red)}
-.chartbox canvas{display:block;max-width:100%}.chartbox{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;height:340px}
-.note{background:#161f2a;border-left:3px solid var(--yel);padding:10px 12px;border-radius:8px;margin:10px 0;font-size:.9rem}
-details{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:600}
-ul{padding-left:1.2em}li{margin:.3em 0}
-footer{margin:34px 0 16px;color:var(--mut);font-size:.8rem;border-top:1px solid var(--line);padding-top:14px}footer p{margin:.4em 0}
-details.mdet{border:0;border-top:1px solid var(--line);border-radius:0;background:none;padding:6px 0;margin:0}details.mdet>summary{cursor:pointer;font-weight:600;font-size:1.02em;padding:8px 0;list-style:none;min-height:40px}details.mdet>summary::-webkit-details-marker{display:none}details.mdet>summary::before{content:"\25B8";display:inline-block;width:1.2em;transition:transform .15s}details.mdet[open]>summary::before{transform:rotate(90deg)}
-.csvs{float:right;display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px 8px}.csv{background:var(--card);color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:2px 11px;min-height:30px;font-size:.75rem;font-weight:500;line-height:1.6;font-family:inherit;cursor:pointer}.csv:hover{color:var(--fg);border-color:var(--acc)}
-.lookup{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);padding:14px}
-.lkrow{display:flex;gap:8px}.lkrow input{flex:1;min-width:0}
-input[type=text]{width:100%;min-height:46px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0d131a;color:var(--fg);font:inherit;font-size:16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
-.btn{background:var(--acc);color:#0b0f14;border:0;border-radius:10px;padding:0 18px;min-height:46px;font:inherit;font-weight:650;cursor:pointer}
-.btn2{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:40px;font:inherit;font-size:.88rem;cursor:pointer}
-#qres:empty{display:none}.ensline{margin:0 0 8px;font-size:.95rem;overflow-wrap:anywhere}#revens:empty{display:none}#revens{font-size:.85rem;margin-top:2px}#qres{margin-top:12px}
-.lk{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#0f151d}.lk.lkw{border-color:#e3b34155}.lk.lkb{border-color:#ff6b6366}
-.lkaddr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86rem;overflow-wrap:anywhere;word-break:break-all}
-.badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.bdg{font-size:.75rem;font-weight:650;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
-.bdg.ok{color:var(--grn);border-color:#3fcf6e55}.bdg.bad{color:var(--red);border-color:#ff6b6377}.bdg.warn{color:var(--yel);border-color:#e3b34166}.bdg.info{color:var(--acc);border-color:#5aa9ff66}
-.kv{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:6px 14px;margin:8px 0;font-size:.92rem}.kv dt{color:var(--mut)}.kv dd{margin:0;font-variant-numeric:tabular-nums;font-weight:600}
-.lklinks{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.85rem;margin-top:6px}
-@media(max-width:760px){
- body{font-size:15px}.wrap{padding:14px 12px 6px}h1{font-size:1.45rem}.lede{font-size:1rem}h2{font-size:1.06rem;margin-top:1.7em}
- .hero{grid-template-columns:1fr 1fr;gap:8px}.hs{padding:11px 12px}.hv{font-size:1.65rem}.hk{font-size:.7rem}.hsub{font-size:.76rem}
- .cards{grid-template-columns:repeat(2,1fr);gap:8px}.card .v{font-size:1.2rem}.card{padding:10px}
- .chartbox{height:300px;padding:6px}table{font-size:.84rem}th,td{padding:8px 9px}
- .kv{grid-template-columns:1fr;gap:0}.kv dd{margin-bottom:8px}.csv{min-height:34px;padding:4px 12px}
+b,strong{font-weight:600}
+/* header + status strip */
+header{position:relative;z-index:1;border-bottom:1px solid var(--line2)}
+.top{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);min-width:0}.brand:hover{text-decoration:none}
+.brand svg{width:34px;height:34px;flex:none;display:block}
+.brand b{display:block;font:500 15px/1.2 var(--sans);letter-spacing:-.01em;white-space:nowrap}
+.brand span{display:block;font:400 12.5px/1.3 var(--mono);color:var(--mut);white-space:nowrap}
+.nav{display:flex;align-items:center;gap:26px}.nav a{font:400 13px/1 var(--mono);color:var(--ink2)}.nav a:hover{color:var(--ink)}
+.tickbar{position:relative;z-index:1;border-bottom:1px solid var(--line2);background:rgba(19,17,25,.6)}
+.updated{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding-top:12px;padding-bottom:12px;font:400 12.5px/1.4 var(--mono);color:var(--mut)}
+.updated b{color:var(--ink2);font-weight:400}.updated a{color:var(--ink2)}
+.live{color:var(--green)}.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 4px rgba(91,228,155,.14)}
+.live.stale{color:var(--yel)}.live.stale::before{background:var(--yel);box-shadow:0 0 0 4px rgba(233,196,106,.14)}
+/* intro */
+.intro{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:center;padding-top:44px;padding-bottom:36px}
+.kicker{font:500 12.5px/1.3 var(--mono);color:var(--green);letter-spacing:.02em}
+h1{font:400 74px/1 var(--serif);letter-spacing:-.02em;margin:18px 0 22px;color:var(--ink)}h1 em{font-style:italic;color:var(--ink2)}
+.lede{font-size:17.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:640px}
+.lede a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--green);text-underline-offset:4px;text-decoration-thickness:1.5px}
+.win{margin-top:30px;max-width:640px}.win .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.win .row b{font:500 13px/1 var(--mono);color:var(--ink)}.lbl{font:400 12.5px/1.3 var(--mono);color:var(--mut)}.lbl.today{color:var(--purple)}
+.days{display:flex;gap:3px;margin:12px 0 10px;height:18px}
+.days i{flex:1;border-radius:2px;box-shadow:inset 0 0 0 1px var(--line)}
+.days i.e{background:var(--green);box-shadow:none}.days i.t{background:var(--purple);box-shadow:0 0 0 3px rgba(182,156,255,.18)}
+.ringbox{position:relative;justify-self:end;width:100%;max-width:400px}
+.ringwrap{position:relative}.ringbox svg{display:block;width:100%;height:auto}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.center .n{font:500 62px/1 var(--mono);letter-spacing:-.05em;color:var(--ink)}.center .n span{color:var(--mut);font-size:.42em;letter-spacing:-.02em}
+.center .c{font:400 12.5px/1.4 var(--mono);color:var(--mut);margin-top:8px}
+.center .p{font:500 14px/1 var(--mono);color:var(--green);margin-top:10px;padding:6px 10px;border-radius:999px;background:rgba(91,228,155,.09)}
+.rlegend{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 18px;margin-top:8px;font:400 12px/1.3 var(--mono);color:var(--mut)}
+.rlegend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:0}
+.ringd{text-align:center;margin-top:10px}.ringd:empty{display:none}
+/* hero stat panel */
+.panel{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(26,23,34,.88),rgba(19,17,25,.88));overflow:hidden}
+.hs{padding:24px 26px 22px;border-left:1px solid var(--line);min-width:0;display:flex;flex-direction:column;align-items:flex-start}.hs>.bar{align-self:stretch}.hs:first-child{border-left:0}
+.hk{font:400 12.5px/1.3 var(--mono);color:var(--mut)}
+.hv{font:500 50px/1 var(--mono);letter-spacing:-.055em;margin:16px 0 10px;color:var(--ink);white-space:nowrap}
+.hv small{font-size:.5em;color:var(--mut);letter-spacing:-.02em;margin-left:3px}
+.hs.lead .hv{font-size:66px;color:var(--green)}
+.hsub{font-size:14px;color:var(--ink2);line-height:1.45;flex:1 0 auto}.hsub b{color:var(--ink);font-weight:500}
+.bar{height:8px;margin-top:14px;background:var(--dot);overflow:hidden;
+ -webkit-mask-image:repeating-linear-gradient(90deg,#000 0 calc(5% - 3px),transparent calc(5% - 3px) 5%);mask-image:repeating-linear-gradient(90deg,#000 0 calc(5% - 3px),transparent calc(5% - 3px) 5%)}
+.bar>i{display:block;height:100%;background:var(--green)}.bar.s>i{background:var(--ink2)}
+.hs .bar{margin:16px 0 14px}
+.dl{display:inline-flex;gap:6px;align-items:center;font:500 12.5px/1 var(--mono);color:var(--purple);padding:6px 9px;border-radius:999px;background:rgba(182,156,255,.1)}
+.dl.n{color:var(--ink2);background:rgba(143,137,155,.12)}
+.src{color:var(--mut);font-size:13px;margin-top:14px;line-height:1.5}.src a{color:var(--ink2);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+/* sections */
+h2{font:400 38px/1.1 var(--serif);letter-spacing:-.01em;margin:72px 0 18px;color:var(--ink);display:flow-root}
+h2 .kick{display:block;font:500 12.5px/1.3 var(--mono);color:var(--green);letter-spacing:.02em;margin-bottom:10px}
+h3{font-size:1rem;margin:1em 0 .4em}
+.csvs{float:right;display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px 10px}
+.csv{background:transparent;color:var(--ink2);border:1px solid var(--line);border-radius:999px;padding:4px 13px;min-height:32px;font:400 12.5px/1.4 var(--mono);cursor:pointer;letter-spacing:0}
+.csv::before{content:"↓ ";color:var(--green)}.csv:hover{color:var(--ink);border-color:var(--green)}
+.tabs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;margin:4px 0 14px;max-width:100%;background:rgba(19,17,25,.6)}
+.tabs button{background:transparent;color:var(--ink2);border:0;border-radius:999px;padding:8px 14px;min-height:36px;cursor:pointer;font:400 13px/1.2 var(--sans)}
+.tabs button:hover{color:var(--ink)}.tabs button.on{background:var(--ink);color:var(--bg);font-weight:500}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px;min-width:0}
+.card .k{font:400 12.5px/1.3 var(--mono);color:var(--mut)}
+.card .v{font:500 30px/1.1 var(--mono);letter-spacing:-.045em;margin:12px 0 8px;color:var(--ink)}.card .v .small{font-size:.48em;letter-spacing:-.01em}
+.card .s{color:var(--ink2);font-size:13.5px;line-height:1.45}.card .bar{margin:4px 0 10px}
+.note{background:var(--s1);border-left:3px solid var(--yel);padding:10px 12px;border-radius:8px;margin:10px 0;font-size:.9rem}
+#headnote{color:var(--ink2);font-size:14px;margin-top:12px!important}#headnote b{color:var(--ink)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--r);background:var(--s1);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px 12px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
+th{background:#17141F;color:var(--mut);font:400 12px/1.3 var(--mono);position:sticky;top:0;z-index:1}
+td:first-child,th:first-child{text-align:left}tr:last-child td{border-bottom:none}tr:hover td{background:rgba(242,238,230,.025)}
+td a.mono{color:var(--green)}td a:not(.mono),.kv a,.lk .mut a{color:var(--ink2);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.tl{text-align:left!important}.ok{color:var(--green)}.no{color:var(--mut)}.warn{color:var(--yel)}.bad{color:var(--red)}
+.chartbox{position:relative;background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:14px 12px 8px;height:360px}.chartbox canvas{display:block;max-width:100%}
+.cap{color:var(--mut);font-size:13.5px;line-height:1.5;margin-top:10px}
+.lookup{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line);border-radius:18px;padding:18px}
+.lkrow{display:flex;gap:10px}.lkrow input{flex:1;min-width:0}
+input[type=text]{width:100%;min-height:50px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--s0);color:var(--ink);font:400 16px var(--mono)}
+input[type=text]::placeholder{color:var(--mut)}input[type=text]:focus{outline:2px solid rgba(91,228,155,.35);border-color:var(--green)}
+.btn{background:var(--green);color:#0B0A0F;border:0;border-radius:12px;padding:0 22px;min-height:50px;font:600 15px var(--sans);cursor:pointer}.btn:hover{filter:brightness(1.07)}
+.btn2{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 16px;min-height:40px;font:400 13px var(--mono);cursor:pointer}.btn2:hover{border-color:var(--green)}
+#qres:empty{display:none}.ensline{margin:0 0 8px;font-size:.95rem;overflow-wrap:anywhere}#revens:empty{display:none}#revens{font-size:.85rem;margin-top:2px}#qres{margin-top:14px;font-size:14.5px}
+.lk{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--s0)}.lk.lkw{border-color:rgba(233,196,106,.4)}.lk.lkb{border-color:rgba(255,143,135,.45)}
+.lkaddr{font-family:var(--mono);font-size:.86rem;overflow-wrap:anywhere;word-break:break-all;color:var(--ink)}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.bdg{font:500 12px/1.4 var(--mono);padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink2)}
+.bdg.ok{color:var(--green);border-color:rgba(91,228,155,.4)}.bdg.bad{color:var(--red);border-color:rgba(255,143,135,.5)}.bdg.warn{color:var(--yel);border-color:rgba(233,196,106,.45)}.bdg.info{color:var(--ink);border-color:rgba(242,238,230,.35)}
+.kv{display:grid;grid-template-columns:minmax(160px,auto) 1fr;gap:8px 16px;margin:10px 0;font-size:.95rem}.kv dt{color:var(--mut)}.kv dd{margin:0;font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink)}
+.lklinks{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.88rem;margin-top:8px}
+#outsiders p,#restricted p{color:var(--ink2);line-height:1.6;max-width:900px}#outsiders .tw,#restricted .tw{margin:12px 0}
+details{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:500}
+#method{color:var(--ink2);border-bottom:1px solid var(--line)}#method b{color:var(--ink)}
+details.mdet{border:0;border-top:1px solid var(--line);border-radius:0;background:none;padding:4px 0;margin:0}
+details.mdet>summary{cursor:pointer;font:500 16px/1.4 var(--sans);color:var(--ink);padding:12px 0;list-style:none;min-height:44px;display:flex;align-items:center;gap:10px}
+details.mdet>summary::-webkit-details-marker{display:none}
+details.mdet>summary::before{content:"+";flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1px solid var(--line);border-radius:6px;font:400 14px/1 var(--mono);color:var(--green)}
+details.mdet[open]>summary::before{content:"−"}details.mdet>ul,details.mdet>p{margin-top:0;padding-bottom:10px;line-height:1.6}
+#method>p.mut{margin:16px 0 12px}
+ul{padding-left:1.2em}li{margin:.35em 0}
+footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;border-top:1px solid var(--line2)}footer p{margin:.4em 0;max-width:900px}footer a{color:var(--ink2)}footer a:hover{color:var(--ink)}
+.hide-d{display:none}
+@media(max-width:900px){
+ .wrap{padding-left:20px;padding-right:20px}.nav{display:none}.hide-m{display:none!important}.top{height:64px}
+ .updated{font-size:11.5px;gap:4px 14px}
+ .intro{grid-template-columns:1fr;gap:30px;padding-top:32px;padding-bottom:28px}
+ h1{font-size:40px;margin:14px 0 16px}.lede{font-size:16px}.days{gap:2px;height:16px}
+ .ringbox{max-width:340px;justify-self:center}.center .n{font-size:50px}
+ .panel{grid-template-columns:1fr 1fr;border-radius:14px}
+ .hs{padding:20px 16px 18px;border-top:1px solid var(--line)}.hs.lead{grid-column:1/-1;border-top:0}
+ .hs:nth-child(2),.hs:nth-child(4){border-left:0}.hs:nth-child(4){grid-column:1/-1}
+ .hv{font-size:34px;margin:12px 0 8px}.hs.lead .hv{font-size:60px}.hsub{font-size:13.5px}
+ h2{font-size:30px;margin-top:56px}.csvs{float:none;margin:12px 0 0}
+ .chartbox{height:320px;padding:10px 6px 6px}
 }
-@media(max-width:380px){.hv{font-size:1.45rem}.lkrow{flex-direction:column}}
+@media(max-width:760px){
+ body{font-size:15px}table{font-size:13.5px}th,td{padding:9px 10px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:14px 12px}.card .v{font-size:22px}.card .s{font-size:13px}
+ .kv{grid-template-columns:1fr;gap:0}.kv dd{margin-bottom:10px}.csv{min-height:36px;padding:5px 13px}
+}
+@media(max-width:380px){.hv{font-size:30px}.lkrow{flex-direction:column}.tabs button{padding:8px 11px}}
+.skip{position:absolute;left:-9999px;top:8px;z-index:20}.skip:focus{left:12px;background:var(--ink);color:var(--bg);padding:8px 12px;border-radius:8px}
+
 </style>
 </head>
-<body><div class="wrap">
-<h1>Neutrl Redemption Tracker</h1>
+<body>
+<a href="#lookup" class="skip">Skip to wallet lookup</a>
+<header><div class="wrap top">
+<a class="brand" href="#overview" aria-label="Neutrl Redemption Tracker, back to top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" aria-hidden="true"><rect x=".5" y=".5" width="33" height="33" rx="9" fill="#131119" stroke="#2A2633"/><circle cx="17.00" cy="6.80" r="1.77" fill="#5BE49B"/><circle cx="21.43" cy="7.81" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="10.64" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="14.73" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="19.27" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="21.43" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="17.00" cy="27.20" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="19.27" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="14.73" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="10.64" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="7.81" r="1.77" fill="#3A3546"/><circle cx="17.0" cy="17.0" r="2.55" fill="#F2EEE6"/></svg><div><b>Neutrl Redemption Tracker</b><span>independent, onchain</span></div></a>
+<nav class="nav" aria-label="Sections"><a href="#overview">overview</a><a href="#lookup">wallet lookup</a><a href="#holders">holders</a><a href="#methodology">methodology</a></nav>
+</div></header>
+<div class="tickbar"><div class="wrap updated" id="updated"></div></div>
+<main>
+<section class="wrap intro" id="overview">
+<div>
+<div class="kicker">NUSD / sNUSD · redemptions since the freeze</div>
+<h1>Neutrl froze on Aug&nbsp;13.<br><em>Who has redeemed since?</em></h1>
 <p class="lede"><a href="https://www.neutrl.finance/" target="_blank" rel="noopener">Neutrl</a> is a synthetic-dollar protocol (NUSD, staked as sNUSD). It <a href="https://x.com/Neutrl/status/2087863440136147224" target="_blank" rel="noopener">froze</a> NUSD and sNUSD on Aug 13, 2026 after a reserve shortfall. Redemptions reopened Sep 17 at a fixed 0.51 USDC per NUSD and are expected to close Nov 14. This tracker uses onchain data, updated hourly, to show how many freeze-snapshot holders have redeemed so far. <a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout" target="_blank" rel="noopener">What happened&nbsp;↗</a></p>
-<div class="updated" id="updated"></div>
-<div class="hero" id="hero"></div>
+<div class="win" id="win"></div>
+</div>
+<div class="ringbox">
+<div class="ringwrap"><svg id="ring" viewBox="0 0 440 440" role="img" aria-label="sNUSD snapshot wallets that have redeemed"></svg><div class="center" id="ringc"></div></div>
+<div class="rlegend" id="rlegend"></div>
+<div class="ringd" id="ringd"></div>
+</div>
+</section>
+<section class="wrap">
+<div class="panel" id="hero"></div>
 <div class="src" id="srcline"></div>
-<h2 style="margin-top:1.4em">Check your wallet</h2>
+</section>
+<div class="wrap">
+<h2 id="lookup"><span class="kick" aria-hidden="true">wallet lookup</span>Check your wallet</h2>
 <div class="lookup">
 <form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="0x address or ENS name (e.g. name.eth)" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address or ENS name"><button class="btn" type="submit">Check</button></form>
 <div id="qres" class="small" aria-live="polite"></div>
 </div>
-<h2>Snapshot holders: who has redeemed</h2>
+<h2 id="holders"><span class="kick" aria-hidden="true">holders</span>Snapshot holders: who has redeemed</h2>
 <div class="tabs" id="scope"><button data-s="snusd" class="on">sNUSD holders</button><button data-s="all">All NUSD + sNUSD holders</button></div>
 <div class="cards" id="headline"></div>
 <div class="small mut" id="headnote" style="margin-top:6px"></div>
 
-<h2>Protocol-wide totals (all redeemers)</h2>
+<h2><span class="kick" aria-hidden="true">totals</span>Protocol-wide totals (all redeemers)</h2>
 <div class="cards" id="totals"></div>
 
-<h2>Redemptions over time<span class="csvs"><button type="button" class="csv" data-csv="daily" title="Redemptions per day (all days, raw numbers)">Download CSV</button></span></h2>
+<h2 id="chart"><span class="kick" aria-hidden="true">chart</span>Redemptions over time<span class="csvs"><button type="button" class="csv" data-csv="daily" title="Redemptions per day (all days, raw numbers)">Download CSV</button></span></h2>
 <div class="tabs" id="chartmode"><button data-m="cum" class="on">Cumulative</button><button data-m="daily">Per day</button></div>
 <div class="chartbox"><canvas id="timeChart"></canvas></div>
-<div class="small mut">Days are calendar days in New York time (ET). "Snapshot wallets" = wallets that held a position at the freeze snapshot. "Redeemed, $" = NUSD burned by redemptions, valued at the pre-freeze $1 per NUSD.</div>
+<div class="cap">Days are calendar days in New York time (ET). "Snapshot wallets" = wallets that held a position at the freeze snapshot. "Redeemed, $" = NUSD burned by redemptions, valued at the pre-freeze $1 per NUSD.</div>
 
-<h2>By holder size (value at snapshot)<span class="csvs"><button type="button" class="csv" data-csv="buckets" title="Holder-size buckets, both sNUSD-holder and all-holder scopes">Download CSV</button></span></h2>
+<h2><span class="kick" aria-hidden="true">by size</span>By holder size (value at snapshot)<span class="csvs"><button type="button" class="csv" data-csv="buckets" title="Holder-size buckets, both sNUSD-holder and all-holder scopes">Download CSV</button></span></h2>
 <div class="tabs" id="bscope"><button data-s="snusd" class="on">sNUSD holders</button><button data-s="all">All NUSD + sNUSD holders</button></div>
 <div class="tw"><table id="buckets"></table></div>
-<div class="small mut" style="margin-top:6px">"Redeemed $ (capped)" counts each wallet's redemptions only up to its snapshot value. "USDC paid" is everything these wallets received, including for tokens acquired after the freeze, so it can exceed 0.51 × the capped amount.</div>
-<div class="chartbox" style="height:260px;margin-top:10px"><canvas id="bucketChart"></canvas></div>
+<div class="cap">"Redeemed $ (capped)" counts each wallet's redemptions only up to its snapshot value. "USDC paid" is everything these wallets received, including for tokens acquired after the freeze, so it can exceed 0.51 × the capped amount.</div>
+<div class="chartbox" style="height:280px;margin-top:14px"><canvas id="bucketChart"></canvas></div>
 
-<h2>Top holders at the snapshot (wallets)<span class="csvs"><button type="button" class="csv" data-csv="top" title="Top 100 wallets with full position breakdown">Download CSV</button><button type="button" class="csv" data-csv="wallets" title="Every snapshot wallet (not only the top 100)">All wallets CSV</button></span></h2>
-<div class="small mut">Value = NUSD + sNUSD × share price + NUSD/sNUSD locked in Neutrl's AssetLock + NUSD pending in the sNUSD cooldown silo, at $1/NUSD. "Value now" = the same position at the latest block in this data.</div>
+<h2><span class="kick" aria-hidden="true">top holders</span>Top holders at the snapshot (wallets)<span class="csvs"><button type="button" class="csv" data-csv="top" title="Top 100 wallets with full position breakdown">Download CSV</button><button type="button" class="csv" data-csv="wallets" title="Every snapshot wallet (not only the top 100)">All wallets CSV</button></span></h2>
+<div class="cap" style="margin:-4px 0 14px">Value = NUSD + sNUSD × share price + NUSD/sNUSD locked in Neutrl's AssetLock + NUSD pending in the sNUSD cooldown silo, at $1/NUSD. "Value now" = the same position at the latest block in this data.</div>
 <div class="tw" style="max-height:70vh"><table id="top"></table></div>
-<div style="margin-top:8px"><button id="more" class="btn2" type="button">Show top 100</button></div>
+<div style="margin-top:12px"><button id="more" class="btn2" type="button">Show top 100</button></div>
 
-<h2>Held through protocols at the snapshot (not counted as wallets)<span class="csvs"><button type="button" class="csv" data-csv="contracts" title="All protocol contracts, including ones under $100">Download CSV</button></span></h2>
-<div class="small mut">These contracts hold NUSD/sNUSD on behalf of their own users (Pendle PT/YT/LP, Strata srNUSD/jrNUSD, Morpho/Euler lenders, DEX pools, bridges). Those end users are affected, but this tracker does not break these contracts down to individual users. The exception is Neutrl's AssetLock: each locker is counted as a wallet instead. The table lists contracts that held at least $100 at the snapshot; the CSV has all of them.</div>
+<h2><span class="kick" aria-hidden="true">protocols</span>Held through protocols at the snapshot (not counted as wallets)<span class="csvs"><button type="button" class="csv" data-csv="contracts" title="All protocol contracts, including ones under $100">Download CSV</button></span></h2>
+<div class="cap" style="margin:-4px 0 14px">These contracts hold NUSD/sNUSD on behalf of their own users (Pendle PT/YT/LP, Strata srNUSD/jrNUSD, Morpho/Euler lenders, DEX pools, bridges). Those end users are affected, but this tracker does not break these contracts down to individual users. The exception is Neutrl's AssetLock: each locker is counted as a wallet instead. The table lists contracts that held at least $100 at the snapshot; the CSV has all of them.</div>
 <div class="tw" style="max-height:60vh"><table id="contracts"></table></div>
 
-<h2>Redeemers who did not hold at the snapshot<span class="csvs"><button type="button" class="csv" data-csv="outsiders" title="Every redeemer that held nothing at the snapshot">Redeemers CSV</button><button type="button" class="csv" data-csv="sources" title="Inbound NUSD/sNUSD to these redeemers, by sender (all senders)">Senders CSV</button></span></h2>
+<h2><span class="kick" aria-hidden="true">outside redeemers</span>Redeemers who did not hold at the snapshot<span class="csvs"><button type="button" class="csv" data-csv="outsiders" title="Every redeemer that held nothing at the snapshot">Redeemers CSV</button><button type="button" class="csv" data-csv="sources" title="Inbound NUSD/sNUSD to these redeemers, by sender (all senders)">Senders CSV</button></span></h2>
 <div id="outsiders" class="small"></div>
 
-<h2>Blacklisted / denylisted addresses<span class="csvs"><button type="button" class="csv" data-csv="restricted" title="All blacklisted / denylisted addresses">Download CSV</button></span></h2>
+<h2><span class="kick" aria-hidden="true">restrictions</span>Blacklisted / denylisted addresses<span class="csvs"><button type="button" class="csv" data-csv="restricted" title="All blacklisted / denylisted addresses">Download CSV</button></span></h2>
 <div id="restricted" class="small"></div>
 
-<h2>Methodology, sources and caveats</h2>
+<h2 id="methodology"><span class="kick" aria-hidden="true">methodology</span>Methodology, sources and caveats</h2>
 <div id="method" class="small"></div>
 
-<footer><p>Built from public Ethereum data. Not affiliated with Neutrl or Strata. Not financial or legal advice. Every figure is computed from onchain events, except Neutrl's expected close date; estimates are labeled as such.</p><p><a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker" target="_blank" rel="noopener">Source on GitHub</a> · Built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></p></footer>
 </div>
+</main>
+<footer><div class="wrap"><p>Built from public Ethereum data. Not affiliated with Neutrl or Strata. Not financial or legal advice. Every figure is computed from onchain events, except Neutrl's expected close date; estimates are labeled as such.</p><p><a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker" target="_blank" rel="noopener">Source on GitHub</a> · Built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></p></div></footer>
 <script>
 const D=/*__DATA__*/null;
 const ES="https://etherscan.io/address/", ET="https://etherscan.io/tx/";
@@ -150,20 +246,61 @@ const blk=n=>`<a href="https://etherscan.io/block/${n}" target="_blank" rel="noo
 const NUSD_ADDR="0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",REDEEM_ADDR="0xB3f07D3392102fC23264a78e2A1A8B6421123828",RESERVE_ADDR="0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed";
 const T=D.times,B=D.blocks;
 const P=D.prev||null,SITE=D.site||{},CLOSE=SITE.close_date||"2026-11-14";
-document.getElementById("updated").innerHTML=`<span class="live">Last updated ${T.as_of_short||T.as_of} · block ${blk(B.as_of)}</span><span>Updates hourly</span><span>Snapshot (freeze) block ${blk(B.snapshot)}, ${T.snapshot}</span>`;
+const RATE_TXT=(D.rates&&D.rates.redemption_rate)||0.51;
+(()=>{const fresh=Date.now()/1000-B.as_of_ts<3*3600;
+document.getElementById("updated").innerHTML=`<span class="live${fresh?"":" stale"}">${fresh?"live":"delayed"}</span><span>Last updated <b>${T.as_of_short||T.as_of}</b></span><span class="hide-m">block <b>${blk(B.as_of)}</b></span><span class="hide-m">Updates hourly</span><span>rate <b>${RATE_TXT} USDC per NUSD</b></span><span class="hide-m">Snapshot (freeze) block <b>${blk(B.snapshot)}</b>, ${String(T.snapshot).replace(/, \d{1,2}:\d\d.*$/,"")}</span>`})();
 function daysLeft(){const today=new Date().toLocaleDateString("en-CA",{timeZone:"America/New_York"});return Math.max(0,Math.round((Date.parse(CLOSE)-Date.parse(today))/864e5)+1)} // counts to the END of the close day (ET), today included
+// 24h change chip (purple). Only rendered when build.py found a previous snapshot (P); never invented.
 function delta(cur,prv,kind){
-  if(!P||prv==null||cur==null)return"";const dv=cur-prv,cls=Math.abs(dv)<1e-9?"fl":dv>0?"up":"dn",ar=dv>0?"▲":dv<0?"▼":"■";
-  const txt=kind==="pp"?`${dv>=0?"+":"−"}${Math.abs(dv).toFixed(1)} pp`:`${dv>=0?"+":""}${usdc(dv)}`;
-  return `<span class="dl ${kind==="reserve"?"fl":cls}" title="${kind==="pp"?"Change in percentage points (pp)":"Change"} since block ${num(P.as_of_block)} (${P.as_of_short})">${ar} ${txt} ${P.label||("since "+P.as_of_short.replace(/,.*$/,""))}</span>`}
+  if(!P||prv==null||cur==null)return"";const dv=cur-prv,a=Math.abs(dv),sg=dv>0?"+":dv<0?"−":"±";
+  const txt=kind==="pp"?`${sg}${a.toFixed(a>0&&a<0.1?2:1)} pp`:kind==="wallets"?`${sg}${num(a)} wallet${a===1?"":"s"}`:`${sg}${usdc(a)}`;
+  const lab=P.kind==="24h"?"24h":(P.label||("since "+P.as_of_short.replace(/,.*$/,"")));
+  return `<span class="dl" title="${kind==="pp"?"Change in percentage points (pp)":"Change"} since block ${num(P.as_of_block)} (${P.as_of_short})">${txt} · ${lab}</span>`}
+const big=s=>s.replace(/^(.*?)([Mk])$/,"$1<small>$2</small>");
+const segBar=(p,cls,title)=>`<div class="bar${cls?" "+cls:""}"${title?` title="${title}"`:""} aria-hidden="true"><i style="width:${Math.max(0,Math.min(100,p||0))}%"></i></div>`;
+function win(){
+  const ymd=t=>new Date(t*1000).toLocaleDateString("en-CA",{timeZone:"America/New_York"});
+  const open=ymd(B.redeem_open_ts),today=new Date().toLocaleDateString("en-CA",{timeZone:"America/New_York"});
+  const dd=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5),total=dd(open,CLOSE)+1,idx=dd(open,today),dl=daysLeft();
+  const md=s=>new Date(s+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"UTC"});
+  const cd=new Date(CLOSE+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"});
+  const closeTxt=dl>1?`until the end of ${cd}, Neutrl's expected close date`:dl===1?`last day: expected to close at the end of ${cd}`:`redemption window expected to have closed (${cd})`;
+  let cells="";for(let i=0;i<total;i++)cells+=`<i class="${i<idx?"e":i===idx?"t":""}"></i>`;
+  const dayTxt=idx<0?"not open yet":idx>=total?"closed":`day ${idx+1} of ${total}`;
+  document.getElementById("win").innerHTML=`<div class="row"><span class="lbl">Redemption window<span class="hide-m"> · one block per day</span></span><b title="${closeTxt}">${dl>1?dl+" days left":dl===1?"last day":"closed"}</b></div>
+  <div class="days" role="img" aria-label="Redemption window ${md(open)} to ${cd}: ${dayTxt}; ${dl} day${dl===1?"":"s"} left, ${closeTxt}">${cells}</div>
+  <div class="row"><span class="lbl">${md(open)}<span class="hide-m"> · opened</span></span>${idx>=0&&idx<total?`<span class="lbl today"><span class="hide-m">today · </span>${dayTxt}</span>`:`<span class="lbl">${dayTxt}</span>`}<span class="lbl">${md(CLOSE)}<span class="hide-m"> · expected close</span></span></div>`;
+}
+// ring: one dot per sNUSD snapshot wallet; lit green = has redeemed; purple = first redemption in the 24h before the data's as-of block
+function ringDots(N,cx,cy,r0,r1){
+  const s=Math.sqrt(Math.PI*(r1*r1-r0*r0)/Math.max(N,1)),K=Math.max(1,Math.floor((r1-r0)/s)+1),rs=[];
+  for(let k=0;k<K;k++)rs.push(K===1?(r0+r1)/2:r0+(r1-r0)*k/(K-1));
+  const sum=rs.reduce((a,b)=>a+b,0),cnt=rs.map(r=>Math.floor(N*r/sum));let left=N-cnt.reduce((a,b)=>a+b,0);
+  for(let k=K-1;left>0;k=(k-1+K)%K){cnt[k]++;left--}
+  const dots=[];rs.forEach((r,k)=>{const n=cnt[k];for(let j=0;j<n;j++){const a=((j+(k%2?.5:0))/n)*2*Math.PI;dots.push({x:cx+r*Math.sin(a),y:cy-r*Math.cos(a),a,r})}});
+  dots.sort((p,q)=>p.a-q.a||p.r-q.r);return {dots,dr:Math.min(3.4,s*.26)}}
+function ring(){
+  const S=D.summary_snusd,G=D.ring||{wallets:S.wallets,redeemed:S.redeemed_wallets,latest:0};
+  const N=G.wallets,R=Math.min(G.redeemed,N),L=Math.min(G.latest||0,R);
+  const {dots,dr}=ringDots(N,220,220,116,212);
+  let s="";dots.forEach((d,i)=>{const c=i<R-L?"#5BE49B":i<R?"#B69CFF":"#2B2736";s+=`<circle cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="${(i<R?dr:dr*.85).toFixed(2)}" fill="${c}"/>`});
+  s+=`<line x1="220" y1="${220-116+14}" x2="220" y2="${220-212-6}" stroke="#F2EEE6" stroke-opacity=".35"/><circle cx="220" cy="220" r="98" fill="none" stroke="#26222F"/>`;
+  const el=document.getElementById("ring");el.innerHTML=s;
+  el.setAttribute("aria-label",`${num(R)} of ${num(N)} sNUSD snapshot wallets have redeemed (${pct(S.pct_wallets)})${L?`; ${num(L)} of them first redeemed in the last 24 hours of data`:""}`);
+  document.getElementById("ringc").innerHTML=`<div class="n">${num(R)}<span>/${num(N)}</span></div><div class="c">sNUSD wallets<br>redeemed</div><div class="p">${pct(S.pct_wallets)}</div>`;
+  document.getElementById("rlegend").innerHTML=`<span><i style="background:#5BE49B"></i>redeemed</span>${L?`<span><i style="background:#B69CFF"></i>first redeemed in last 24h</span>`:""}<span><i style="background:#2B2736;box-shadow:inset 0 0 0 1px #4a4458"></i>not yet</span>`;
+  document.getElementById("ringd").innerHTML=delta(S.redeemed_wallets,P&&P.snusd_redeemed_wallets,"wallets");
+}
 function hero(){
-  const A=D.summary_all,S=D.summary_snusd,t=D.totals,dl=daysLeft(),cd=new Date(CLOSE+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"});
+  const A=D.summary_all,S=D.summary_snusd,t=D.totals,sn=D.supply.snapshot,now=D.supply.now,f=t.usdc_funded_to_reserve;
+  const sup=(now.nusd_supply-sn.nusd_supply)/sn.nusd_supply*100;
   document.getElementById("hero").innerHTML=`
-  <div class="hs"><div class="hk">Snapshot capital redeemed</div><div class="hv ok">${pct(A.pct_capital)}</div><div class="hsub">of ${usdc(A.affected_usd)} held by wallets at the freeze · sNUSD holders <b>${pct(S.pct_capital)}</b></div><div class="bar"><i style="width:${Math.min(100,A.pct_capital)}%"></i></div>${delta(A.pct_capital,P&&P.all_pct_capital,"pp")}</div>
-  <div class="hs"><div class="hk">USDC paid out</div><div class="hv">${usdc(t.usdc_paid)}</div><div class="hsub">${num(t.redeem_events)} redemptions by ${num(t.unique_redeemers)} wallets, at 0.51 USDC per NUSD</div>${delta(t.usdc_paid,P&&P.usdc_paid_total,"usd")}</div>
-  <div class="hs"><div class="hk">USDC reserve remaining</div><div class="hv">${usdc(t.usdc_reserve_now)}</div><div class="hsub">in the redemption reserve contract (<a href="${ES}${RESERVE_ADDR}" target="_blank" rel="noopener">AssetReserve</a>), of ${usdc(t.usdc_funded_to_reserve)} deposited</div>${delta(t.usdc_reserve_now,P&&P.usdc_reserve_now,"reserve")}</div>
-  <div class="hs"><div class="hk">Days to expected close</div><div class="hv warn">${dl}</div><div class="hsub">${dl>1?`until the end of ${cd}, Neutrl's expected close date`:dl===1?`last day: expected to close at the end of ${cd}`:`redemption window expected to have closed (${cd})`}</div></div>`;
+  <div class="hs lead"><div class="hk">Snapshot capital redeemed</div><div class="hv">${pct(A.pct_capital)}</div><div class="hsub">of <b>${usdc(A.affected_usd)}</b> held by wallets at the freeze · sNUSD holders <b>${pct(S.pct_capital)}</b></div>${segBar(A.pct_capital)}${delta(A.pct_capital,P&&P.all_pct_capital,"pp")}</div>
+  <div class="hs"><div class="hk">USDC paid out</div><div class="hv">${big(usdc(t.usdc_paid))}</div><div class="hsub">${num(t.redeem_events)} redemptions by ${num(t.unique_redeemers)} wallets, at ${RATE_TXT} USDC per NUSD</div>${segBar(f?100*t.usdc_paid/f:0,"",f?`${pct(100*t.usdc_paid/f)} of the USDC deposited in the reserve`:"")}${delta(t.usdc_paid,P&&P.usdc_paid_total,"usd")}</div>
+  <div class="hs"><div class="hk">USDC reserve remaining</div><div class="hv">${big(usdc(t.usdc_reserve_now))}</div><div class="hsub">in the redemption reserve contract (<a href="${ES}${RESERVE_ADDR}" target="_blank" rel="noopener">AssetReserve</a>), of <b>${usdc(f)}</b> deposited</div>${segBar(f?100*t.usdc_reserve_now/f:0,"s",f?`${pct(100*t.usdc_reserve_now/f)} of the USDC deposited is left`:"")}${delta(t.usdc_reserve_now,P&&P.usdc_reserve_now,"reserve")}</div>
+  <div class="hs"><div class="hk">NUSD supply</div><div class="hv">${num(now.nusd_supply/1e6,2)}<small>M NUSD</small></div><div class="hsub">from <b>${num(sn.nusd_supply/1e6,2)}M NUSD</b> at the freeze</div>${segBar(100*now.nusd_supply/sn.nusd_supply,"s",`${pct(100*now.nusd_supply/sn.nusd_supply)} of the supply at the freeze`)}<span class="dl n">${sup<0?"−":"+"}${Math.abs(sup).toFixed(1)}% since the freeze</span></div>`;
   document.getElementById("srcline").innerHTML=`Source: Ethereum mainnet onchain event logs via public RPC, as of block ${blk(B.as_of)}. Redemption contract ${al(REDEEM_ADDR)}, NUSD ${al(NUSD_ADDR)}. Last redemption seen at block ${blk(B.last_redeem)}.${P?"":" 24-hour changes will appear here once 24 hours of hourly snapshots have accumulated."}`;
+  win();ring();
 }
 
 function headline(s){
@@ -186,21 +323,23 @@ function totals(){
   <div class="card"><div class="k">USDC left in redemption reserve</div><div class="v">${usdc(t.usdc_reserve_now)}</div><div class="s">${usdc(t.usdc_funded_to_reserve)} deposited so far</div></div>
   <div class="card"><div class="k">NUSD supply now</div><div class="v">${num(now.nusd_supply/1e6,2)}M</div><div class="s">sNUSD supply ${num(now.snusd_supply/1e6,2)}M (was ${num(sn.snusd_supply/1e6,2)}M)</div></div>`;
 }
+if(window.Chart){Chart.defaults.font.family='"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace';Chart.defaults.font.size=11;Chart.defaults.color="#8F899B";Chart.defaults.borderColor="#1C1924"}
+const CH={grid:"#1F1C27",tick:"#8F899B",legend:"#C2BCCB",tip:{backgroundColor:"#1A1722",borderColor:"#2A2633",borderWidth:1,titleColor:"#F2EEE6",bodyColor:"#C2BCCB",padding:10,cornerRadius:10,boxPadding:4}};
 let tc;
 function timeChart(m){
   const dd=D.daily,L=dd.map(x=>x.date.slice(5));
   if(tc)tc.destroy();
   const ds=m==="cum"?[
-    {type:"line",label:"Redeemed, $ (NUSD burned), all wallets",data:dd.map(x=>x.cum_nusd),borderColor:"#3fb950",backgroundColor:"#3fb95033",yAxisID:"y",tension:.2,fill:true},
-    {type:"line",label:"…of which snapshot wallets (capped)",data:dd.map(x=>x.cum_snapshot_capital),borderColor:"#2ea043",borderDash:[5,4],yAxisID:"y",tension:.2},
-    {type:"line",label:"USDC paid",data:dd.map(x=>x.cum_usdc),borderColor:"#d29922",yAxisID:"y",tension:.2},
-    {type:"line",label:"Wallets redeemed (all)",data:dd.map(x=>x.cum_wallets),borderColor:"#58a6ff",yAxisID:"y1",tension:.2},
-    {type:"line",label:"…of which snapshot wallets",data:dd.map(x=>x.cum_snapshot_wallets),borderColor:"#58a6ff",borderDash:[5,4],yAxisID:"y1",tension:.2}]
-   :[{type:"bar",label:"Redeemed that day, $ (NUSD burned)",data:dd.map(x=>x.nusd),backgroundColor:"#3fb950aa",yAxisID:"y"},
-     {type:"line",label:"New wallets that day",data:dd.map(x=>x.new_wallets),borderColor:"#58a6ff",yAxisID:"y1",tension:.2}];
+    {type:"line",label:"Redeemed, $ (NUSD burned), all wallets",data:dd.map(x=>x.cum_nusd),borderColor:"#5BE49B",backgroundColor:"rgba(91,228,155,.12)",borderWidth:2.25,pointRadius:0,pointHoverRadius:4,yAxisID:"y",tension:.2,fill:true},
+    {type:"line",label:"…of which snapshot wallets (capped)",data:dd.map(x=>x.cum_snapshot_capital),borderColor:"#5BE49B",borderDash:[5,4],borderWidth:1.5,pointRadius:0,pointHoverRadius:4,yAxisID:"y",tension:.2},
+    {type:"line",label:"USDC paid",data:dd.map(x=>x.cum_usdc),borderColor:"#F2EEE6",borderWidth:2,pointRadius:0,pointHoverRadius:4,yAxisID:"y",tension:.2},
+    {type:"line",label:"Wallets redeemed (all)",data:dd.map(x=>x.cum_wallets),borderColor:"#8F899B",borderWidth:1.5,pointRadius:0,pointHoverRadius:4,yAxisID:"y1",tension:.2},
+    {type:"line",label:"…of which snapshot wallets",data:dd.map(x=>x.cum_snapshot_wallets),borderColor:"#8F899B",borderDash:[5,4],borderWidth:1.5,pointRadius:0,pointHoverRadius:4,yAxisID:"y1",tension:.2}]
+   :[{type:"bar",label:"Redeemed that day, $ (NUSD burned)",data:dd.map(x=>x.nusd),backgroundColor:"rgba(91,228,155,.75)",hoverBackgroundColor:"#5BE49B",borderRadius:3,yAxisID:"y"},
+     {type:"line",label:"New wallets that day",data:dd.map(x=>x.new_wallets),borderColor:"#F2EEE6",backgroundColor:"#F2EEE6",borderWidth:1.75,pointRadius:2,yAxisID:"y1",tension:.2}];
   tc=new Chart(document.getElementById("timeChart"),{data:{labels:L,datasets:ds},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:"index",intersect:false},
-    plugins:{legend:{labels:{color:"#c9d1d9",boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${usd(c.raw)}`:`${c.dataset.label}: ${num(c.raw)}`}}},
-    scales:{x:{ticks:{color:"#8b949e",maxRotation:0,autoSkip:true},grid:{color:"#21262d"}},y:{position:"left",beginAtZero:true,ticks:{color:"#8b949e",callback:v=>usdc(v)},grid:{color:"#21262d"}},y1:{position:"right",beginAtZero:true,ticks:{color:"#8b949e"},grid:{display:false},title:{display:true,text:"wallets",color:"#8b949e"}}}}});
+    plugins:{legend:{labels:{color:CH.legend,boxWidth:12,boxHeight:2,font:{size:11}}},tooltip:{...CH.tip,callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${usd(c.raw)}`:`${c.dataset.label}: ${num(c.raw)}`}}},
+    scales:{x:{ticks:{color:CH.tick,maxRotation:0,autoSkip:true},grid:{color:CH.grid},border:{color:"#2A2633"}},y:{position:"left",beginAtZero:true,ticks:{color:CH.tick,callback:v=>usdc(v)},grid:{color:CH.grid},border:{display:false}},y1:{position:"right",beginAtZero:true,ticks:{color:CH.tick},grid:{display:false},border:{display:false},title:{display:true,text:"wallets",color:CH.tick}}}}});
 }
 let bc;
 function buckets(s){
@@ -211,8 +350,8 @@ function buckets(s){
   h+=`<tr><td><b>Total</b></td><td><b>${num(S.wallets)}</b></td><td><b>${num(S.redeemed_wallets)}</b></td><td><b>${pct(S.pct_wallets)}</b></td><td><b>${usd(S.affected_usd)}</b></td><td><b>${usd(S.redeemed_usd_capped)}</b></td><td><b>${pct(S.pct_capital)}</b></td><td><b>${usd(S.usdc_paid)}</b></td></tr>`;
   document.getElementById("buckets").innerHTML=h;
   if(bc)bc.destroy();
-  bc=new Chart(document.getElementById("bucketChart"),{type:"bar",data:{labels:rows.map(r=>r.bucket),datasets:[{label:"% of wallets redeemed",data:rows.map(r=>r.pct_wallets),backgroundColor:"#58a6ffaa"},{label:"% of capital redeemed",data:rows.map(r=>r.pct_capital),backgroundColor:"#3fb950aa"}]},
-   options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:"#c9d1d9",boxWidth:12}}},scales:{x:{ticks:{color:"#8b949e",maxRotation:0,autoSkip:true},grid:{color:"#21262d"}},y:{max:100,ticks:{color:"#8b949e",callback:v=>v+"%"},grid:{color:"#21262d"}}}}});
+  bc=new Chart(document.getElementById("bucketChart"),{type:"bar",data:{labels:rows.map(r=>r.bucket),datasets:[{label:"% of wallets redeemed",data:rows.map(r=>r.pct_wallets),backgroundColor:"rgba(194,188,203,.55)",hoverBackgroundColor:"#C2BCCB",borderRadius:3},{label:"% of capital redeemed",data:rows.map(r=>r.pct_capital),backgroundColor:"rgba(91,228,155,.8)",hoverBackgroundColor:"#5BE49B",borderRadius:3}]},
+   options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:CH.legend,boxWidth:12}},tooltip:{...CH.tip,callbacks:{label:c=>`${c.dataset.label}: ${pct(c.raw)}`}}},scales:{x:{ticks:{color:CH.tick,maxRotation:0,autoSkip:true},grid:{display:false},border:{color:"#2A2633"}},y:{max:100,ticks:{color:CH.tick,callback:v=>v+"%"},grid:{color:CH.grid},border:{display:false}}}}});
 }
 const stCls=s=>s.startsWith("Redeemed")?"ok":s.includes("moved")?"warn":"no";
 function topTable(n){

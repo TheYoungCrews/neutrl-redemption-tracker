@@ -315,6 +315,9 @@ out = {
     "outsiders": sorted([[u, round(v["nusd"], 2), round(v["usdc"], 2)] for u, v in outsiders.items()], key=lambda x: -x[1]),
     "buckets_all": buckets(wallets), "buckets_snusd": buckets(snusd_wallets),
     "daily": daily,
+    # hero ring: first-redemption timestamp of every REDEEMED sNUSD snapshot wallet (build.py derives the "latest" dots,
+    # i.e. first redemption within 24h of the as-of block)
+    "snusd_wallet_first_redeem_ts": sorted(by_user[r["address"]]["first_ts"] for r in snusd_wallets if r["redeemed"]),
     "outsider_sources": outsider_sources,
     "top_wallets": sorted(wallets, key=lambda r: -r["value"])[:100],
     "contracts": contract_tbl,

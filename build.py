@@ -60,12 +60,22 @@ if prev:
                     "kind": prev_kind, "label": "in 24h" if prev_kind == "24h" else "since " + et(prev["as_of_ts"], "%b %-d"),
                     "all_pct_capital": prev["all"]["pct_capital"], "snusd_pct_capital": prev["snusd"]["pct_capital"],
                     "usdc_paid_total": prev["usdc_paid_total"], "usdc_reserve_now": prev["usdc_reserve_now"],
-                    "unique_redeemers": prev.get("unique_redeemers")}
+                    "unique_redeemers": prev.get("unique_redeemers"),
+                    "snusd_redeemed_wallets": (prev.get("snusd") or {}).get("redeemed_wallets")}
     except (KeyError, TypeError) as e:
         print("history entry unusable, deltas hidden:", e); prev_out = None
 
 payload = dict(d); payload["times"] = times; payload["prev"] = prev_out
 payload["site"] = {"url": SITE_URL, "close_date": REDEMPTION_CLOSE.isoformat()}
+
+# ---------------------------------------------------------------- hero ring (one dot per sNUSD snapshot wallet)
+# redeemed = summary_snusd.redeemed_wallets; latest = redeemed sNUSD wallets whose FIRST redemption is within the 24h
+# before the as-of block (compute.py: snusd_wallet_first_redeem_ts). No timestamps in the data -> no "latest" dots.
+_first = d.get("snusd_wallet_first_redeem_ts") or []
+ring = {"wallets": d["summary_snusd"]["wallets"], "redeemed": d["summary_snusd"]["redeemed_wallets"],
+        "latest": sum(1 for t in _first if t > cur_ts - 24 * 3600), "latest_since_ts": cur_ts - 24 * 3600}
+payload["ring"] = ring
+payload.pop("snusd_wallet_first_redeem_ts", None)   # only the derived counts are embedded in the page
 
 # ---------------------------------------------------------------- meta tags
 def usdc_short(v):
@@ -78,7 +88,8 @@ og_desc = ("Neutrl froze NUSD and sNUSD on Aug 13, 2026. Redemptions reopened Se
            "Onchain tracker, updated hourly, of how many freeze-snapshot holders have redeemed.")
 tokens = {"__SITE_URL__": SITE_URL, "__META_DESC__": meta_desc, "__OG_DESC__": og_desc,
           "__OG_IMAGE__": f"{SITE_URL}og.png?v=__OG_HASH__",   # filled in after og.png is rendered
-          "__OG_ALT__": (f"Neutrl Redemption Tracker share card: {SA['pct_capital']:.1f}% of snapshot capital redeemed (all holders), "
+          "__OG_ALT__": (f"Neutrl Redemption Tracker share card: dot ring of {SS['redeemed_wallets']:,} of {SS['wallets']:,} sNUSD snapshot wallets redeemed; "
+                         f"{SA['pct_capital']:.1f}% of snapshot capital redeemed (all holders), "
                          f"{SS['pct_capital']:.1f}% (sNUSD holders); {usdc_short(T['usdc_paid'])} USDC paid out; {usdc_short(T['usdc_reserve_now'])} USDC left in reserve; "
                          f"{days_left} days left until the expected Nov 14, 2026 close; onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly")}
 tpl = open("template.html").read()
@@ -90,10 +101,18 @@ open("site/index.html", "w").write(page)
 print("wrote site/index.html", len(page), "bytes; as of block", b["as_of"], times["as_of"], "| previous run:",
       f"block {prev_out['as_of_block']} ({prev_out['kind']})" if prev_out else "none (deltas hidden)")
 
-# ---------------------------------------------------------------- favicon (static SVG: three bars, font-independent)
-FAVICON = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0f1720"/>'
-           '<rect x="12" y="34" width="10" height="18" rx="3" fill="#5aa9ff"/><rect x="27" y="22" width="10" height="30" rx="3" fill="#3fcf6e"/>'
-           '<rect x="42" y="12" width="10" height="40" rx="3" fill="#e3b341"/></svg>')
+# ---------------------------------------------------------------- favicon (static SVG: neutral dot-ring mark, font-independent)
+def _mark_svg(size=64, rx=14, bg=True):
+    import math
+    c, r = size / 2, size * 0.30
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}">']
+    if bg: out.append(f'<rect width="{size}" height="{size}" rx="{rx}" fill="#131119"/>')
+    for k in range(14):
+        a = k / 14 * 2 * math.pi
+        out.append(f'<circle cx="{c + r * math.sin(a):.2f}" cy="{c - r * math.cos(a):.2f}" r="{size * 0.055:.2f}" fill="{"#5BE49B" if k < 5 else "#3A3546"}"/>')
+    out.append(f'<circle cx="{c}" cy="{c}" r="{size * 0.08:.2f}" fill="#F2EEE6"/></svg>')
+    return "".join(out)
+FAVICON = _mark_svg()
 open("site/favicon.svg", "w").write(FAVICON)
 
 chrome = shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
@@ -108,35 +127,63 @@ def shoot(html_text, out, w, h):
                    capture_output=True, text=True, timeout=120)
     return png_size(out) if os.path.exists(out) else None
 
-# ---------------------------------------------------------------- social card (1200x630)
+# ---------------------------------------------------------------- social card (1200x630), same look as the page hero
+def ring_svg(n, lit, latest, size=440, r0=116, r1=212):
+    """Dot ring: one dot per sNUSD snapshot wallet; same geometry as ringDots() in template.html."""
+    import math
+    c = size / 2; s = math.sqrt(math.pi * (r1 * r1 - r0 * r0) / max(n, 1)); K = max(1, int((r1 - r0) // s) + 1)
+    rs = [(r0 + r1) / 2] if K == 1 else [r0 + (r1 - r0) * k / (K - 1) for k in range(K)]
+    tot = sum(rs); cnt = [int(n * r // tot) for r in rs]; left = n - sum(cnt); k = K - 1
+    while left > 0: cnt[k] += 1; left -= 1; k = (k - 1) % K
+    dots = []
+    for k, (r, m) in enumerate(zip(rs, cnt)):
+        for j in range(m):
+            a = (j + (0.5 if k % 2 else 0)) / m * 2 * math.pi
+            dots.append((a, r, c + r * math.sin(a), c - r * math.cos(a)))
+    dots.sort(key=lambda t: (t[0], t[1])); dr = min(3.4, s * 0.26); lit = min(lit, n); latest = min(latest, lit)
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}" width="{size}" height="{size}">']
+    for i, (_, _, x, y) in enumerate(dots):
+        col = "#5BE49B" if i < lit - latest else "#B69CFF" if i < lit else "#2B2736"
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{dr if i < lit else dr * .85:.2f}" fill="{col}"/>')
+    out.append(f'<line x1="{c}" y1="{c - r0 + 14}" x2="{c}" y2="{c - r1 - 6}" stroke="#F2EEE6" stroke-opacity=".35"/><circle cx="{c}" cy="{c}" r="98" fill="none" stroke="#26222F"/></svg>')
+    return "".join(out)
+FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600'
+         '&family=Geist+Mono:wght@400;500&display=block" rel="stylesheet">')
 def og_html():
     pa, ps = SA["pct_capital"], SS["pct_capital"]
     host = SITE_URL.split("://", 1)[1].rstrip("/")
-    stat = lambda v, k, s="": f'<div class="st"><div class="v">{v}</div><div class="k">{k}</div>{s}</div>'
-    bar = lambda p, c: f'<div class="bar"><i style="width:{min(p,100):.1f}%;background:{c}"></i></div>'
-    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
+    big = lambda v: re.sub(r"([Mk])$", r"<small>\1</small>", v)
+    days_txt = f"{days_left}" if days_left != 1 else "1"
+    return f"""<!doctype html><html><head><meta charset="utf-8">{FONTS}<style>
 *{{box-sizing:border-box;margin:0}}html,body{{width:1200px;height:630px;overflow:hidden}}
-body{{background:radial-gradient(900px 420px at 85% -10%,#17406a 0%,transparent 60%),radial-gradient(700px 400px at -10% 110%,#123b2a 0%,transparent 60%),#0b0f14;
-color:#e8eef5;font-family:Inter,"IBM Plex Sans",Roboto,sans-serif;padding:56px 64px;display:flex;flex-direction:column}}
-.t{{font-size:50px;font-weight:800;letter-spacing:-.02em}}.s{{font-size:23px;color:#8a97a6;margin-top:6px}}
-.g1{{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:38px}}.g2{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:22px}}
-.st{{background:#131a22cc;border:1px solid #243040;border-radius:18px;padding:20px 24px}}
-.v{{font-size:54px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.05}}.g2 .v{{font-size:40px}}
-.k{{font-size:20px;color:#9fb0c2;margin-top:6px}}.bar{{height:10px;background:#243040;border-radius:6px;overflow:hidden;margin-top:12px}}.bar i{{display:block;height:100%}}
-.f{{margin-top:auto;display:flex;justify-content:space-between;font-size:20px;color:#8a97a6}}.f b{{color:#5aa9ff;font-weight:600}}
+body{{background:radial-gradient(rgba(242,238,230,.06) 1px,transparent 1.2px) 0 0/22px 22px,#0B0A0F;color:#F2EEE6;font-family:Geist,Inter,system-ui,sans-serif;
+padding:48px 60px 40px;display:grid;grid-template-columns:1fr 430px;grid-template-rows:auto 1fr auto;column-gap:30px;-webkit-font-smoothing:antialiased}}
+.brand{{grid-column:1/-1;display:flex;align-items:center;gap:14px}}.brand svg{{width:40px;height:40px}}.brand b{{font-size:21px;font-weight:500;letter-spacing:-.01em}}
+.brand span{{font:400 16px "Geist Mono",monospace;color:#8F899B;margin-left:6px}}
+.l{{align-self:center}}.kick{{font:500 16px "Geist Mono",monospace;color:#5BE49B;letter-spacing:.02em}}
+h1{{font:400 64px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.02em;margin:16px 0 26px}}h1 em{{color:#C2BCCB}}
+.k{{display:flex;align-items:baseline;gap:16px}}.k .v{{font:500 92px/1 "Geist Mono",monospace;letter-spacing:-.06em;color:#5BE49B}}
+.k .t{{font-size:21px;color:#C2BCCB;line-height:1.3}}.k .t b{{color:#F2EEE6;font-weight:500}}
+.row{{display:flex;gap:34px;margin-top:26px}}.row div{{font:400 15px "Geist Mono",monospace;color:#8F899B}}.row b{{display:block;font:500 30px "Geist Mono",monospace;letter-spacing:-.04em;color:#F2EEE6;margin-bottom:4px}}
+.row b small{{font-size:.55em;color:#8F899B;margin-left:2px}}
+.r{{position:relative;align-self:center;width:430px;height:430px}}.r svg{{width:430px;height:430px;display:block}}
+.c{{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}}
+.c .n{{font:500 60px/1 "Geist Mono",monospace;letter-spacing:-.05em}}.c .n span{{color:#8F899B;font-size:.42em}}
+.c .s{{font:400 15px/1.4 "Geist Mono",monospace;color:#8F899B;margin-top:8px}}.c .p{{font:500 16px "Geist Mono",monospace;color:#5BE49B;margin-top:10px;padding:6px 12px;border-radius:999px;background:rgba(91,228,155,.1)}}
+.f{{grid-column:1/-1;display:flex;justify-content:space-between;font:400 16px "Geist Mono",monospace;color:#8F899B;border-top:1px solid #1C1924;padding-top:16px}}.f b{{color:#F2EEE6;font-weight:400}}
 </style></head><body>
-<div class="t">Neutrl Redemption Tracker</div>
-<div class="s">NUSD / sNUSD redemptions at 0.51 USDC &middot; Ethereum mainnet, onchain data</div>
-<div class="g1">{stat(f'<span style="color:#3fcf6e">{pa:.1f}%</span>', "of snapshot capital redeemed &middot; all holders", bar(pa, "#3fcf6e"))}
-{stat(f'<span style="color:#5aa9ff">{ps:.1f}%</span>', "of snapshot capital redeemed &middot; sNUSD holders", bar(ps, "#5aa9ff"))}</div>
-<div class="g2">{stat(usdc_short(T["usdc_paid"]), "USDC paid out")}{stat(usdc_short(T["usdc_reserve_now"]), "USDC left in reserve")}
-{stat(f'<span style="color:#e3b341">{days_left}</span>', "days left until expected close (Nov 14, 2026)")}</div>
-<div class="f"><span>Onchain data as of {as_of_date.strftime("%b %-d, %Y")} &middot; updated hourly</span><b>{html.escape(host)}</b></div>
+<div class="brand">{_mark_svg(40, 10)}<b>Neutrl Redemption Tracker</b><span>independent, onchain</span></div>
+<div class="l"><div class="kick">NUSD / sNUSD &middot; redemptions since the freeze</div>
+<h1>Neutrl froze on Aug&nbsp;13.<br><em>Who has redeemed since?</em></h1>
+<div class="k"><div class="v">{pa:.1f}%</div><div class="t">of snapshot capital redeemed<br>sNUSD holders <b>{ps:.1f}%</b></div></div>
+<div class="row"><div><b>{big(usdc_short(T["usdc_paid"]))}</b>USDC paid out</div><div><b>{big(usdc_short(T["usdc_reserve_now"]))}</b>left in reserve</div><div><b>{days_txt}</b>days left (Nov 14)</div></div></div>
+<div class="r">{ring_svg(ring["wallets"], ring["redeemed"], ring["latest"])}<div class="c"><div class="n">{ring["redeemed"]:,}<span>/{ring["wallets"]:,}</span></div><div class="s">sNUSD wallets<br>redeemed</div><div class="p">{SS["pct_wallets"]:.1f}%</div></div></div>
+<div class="f"><span>Onchain data as of <b>{as_of_date.strftime("%b %-d, %Y")}</b> &middot; updated hourly</span><b>{html.escape(host)}</b></div>
 </body></html>"""
 if chrome:
     sz = shoot(og_html(), "site/og.png", 1200, 630)
     print("og.png", sz, "OK" if sz == (1200, 630) else "WARNING: unexpected size")
-    icon = f'<!doctype html><html><head><style>*{{margin:0}}html,body{{width:180px;height:180px;overflow:hidden;background:#0f1720}}svg{{display:block;width:180px;height:180px}}</style></head><body>{FAVICON.replace(" rx=\"14\"", "")}</body></html>'
+    icon = f'<!doctype html><html><head><style>*{{margin:0}}html,body{{width:180px;height:180px;overflow:hidden;background:#131119}}svg{{display:block;width:180px;height:180px}}</style></head><body>{_mark_svg(180, 0)}</body></html>'
     print("apple-touch-icon.png", shoot(icon, "site/apple-touch-icon.png", 180, 180))
 else:
     print("WARNING: no Chrome found; og.png / apple-touch-icon.png not regenerated")
