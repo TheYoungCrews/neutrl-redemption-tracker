@@ -30,6 +30,7 @@ details{background:var(--card);border:1px solid var(--line);border-radius:10px;p
 ul{padding-left:1.2em}li{margin:.25em 0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:760px){.grid2{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.card .v{font-size:1.2rem}.card{padding:10px}}
 footer{margin:30px 0 10px;color:var(--mut);font-size:.8rem}
+details.mdet{border-top:1px solid rgba(127,127,127,.25);padding:6px 0}details.mdet>summary{cursor:pointer;font-weight:600;font-size:1.05em;padding:4px 0;list-style:none}details.mdet>summary::-webkit-details-marker{display:none}details.mdet>summary::before{content:"\25B8";display:inline-block;width:1.2em;transition:transform .15s}details.mdet[open]>summary::before{transform:rotate(90deg)}
 </style>
 </head>
 <body><div class="wrap">
@@ -85,35 +86,41 @@ footer{margin:30px 0 10px;color:var(--mut);font-size:.8rem}
 
 <h2>Methodology, sources and caveats</h2>
 <div id="method" class="small">
-<h3>Contracts (Ethereum mainnet, all verified on Etherscan/Blockscout)</h3><ul>
+<details class="mdet"><summary>Contracts (Ethereum mainnet, all verified on Etherscan/Blockscout)</summary><ul>
 <li>NUSD (Neutrl USD, 18 dec): <a class="mono" href="https://etherscan.io/address/0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE" target="_blank" rel="noopener">0xE556…1BCE</a></li>
 <li>sNUSD (Staked NUSD, ERC-4626 with cooldown): <a class="mono" href="https://etherscan.io/address/0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313" target="_blank" rel="noopener">0x08EF…E313</a>. Cooldown silo <a class="mono" href="https://etherscan.io/address/0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B" target="_blank" rel="noopener">0x6cdF…bb9B</a></li>
 <li>NusdRedemption (redemption contract, rate 0.51e18): <a class="mono" href="https://etherscan.io/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828" target="_blank" rel="noopener">0xB3f0…3828</a>. USDC AssetReserve <a class="mono" href="https://etherscan.io/address/0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed" target="_blank" rel="noopener">0xfEE6…C1Ed</a></li>
 <li>Neutrl AssetLock (locked NUSD/sNUSD, looked through to lockers): <a class="mono" href="https://etherscan.io/address/0x99161BA892ECae335616624c84FAA418F64FF9A6" target="_blank" rel="noopener">0x9916…F9A6</a></li>
 <li>Strata sNUSDStrategy (srNUSD/jrNUSD collateral): <a class="mono" href="https://etherscan.io/address/0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88" target="_blank" rel="noopener">0x3cef…de88</a></li></ul>
-<h3>Timeline (onchain)</h3><ul>
+</details>
+<details class="mdet"><summary>Timeline (onchain)</summary><ul>
 <li><b>Freeze</b>: sNUSD <span class="mono">Paused()</span> at block 25,745,732, Aug 13, 2026 7:14 AM ET (11:14 UTC). The Curve NUSD/USDC pool was denylisted 5 blocks earlier; the Uniswap v4 PoolManager, Balancer V3 Vault and a LayerZero adapter were denylisted on Aug 14. AssetLock was paused at block 25,745,747.</li>
 <li><b>Snapshot</b> = state at the end of block 25,745,731 (the block before the sNUSD pause), Aug 13, 2026 7:14 AM ET (11:14 UTC).</li>
 <li><b>Reopening</b>: sNUSD cooldown set to 1 second at block 25,997,006 (Sep 17, 2026 7:47 AM ET (11:47 UTC)); sNUSD and AssetLock unpaused, AssetLock lock enforcement switched off; NusdRedemption unpaused at block 25,997,438 (Sep 17, 2026 9:14 AM ET (13:14 UTC)). First redemption at block 25,997,444, Sep 17, 2026 9:15 AM ET (13:15 UTC).</li></ul>
-<h3>How redemption works</h3><p>The holder signs the portal's message onchain (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>, cooldown now 1s) and AssetLock users first unlock. Since reopening, 9,174,174 sNUSD has been unstaked into 9,764,873 NUSD by 31 addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
-<h3>Definitions and assumptions</h3><ul>
+</details>
+<details class="mdet"><summary>How redemption works</summary><p>The holder signs the portal's message onchain (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>, cooldown now 1s) and AssetLock users first unlock. Since reopening, 9,174,174 sNUSD has been unstaked into 9,764,873 NUSD by 31 addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
+</details>
+<details class="mdet"><summary>Definitions and assumptions</summary><ul>
 <li><b>Position at snapshot</b> = NUSD balance + sNUSD balance × sNUSD share price (1.063760 NUSD per sNUSD at the snapshot) + NUSD/sNUSD locked in AssetLock + NUSD pending in the sNUSD cooldown silo. Rebuilt from every Transfer, AssetLocked/Unlocked and UnstakeRequested/Unstaked event since deployment. Checks: the rebuilt NUSD supply (53,390,061.79) matches onchain <span class="mono">totalSupply()</span> at the snapshot, AssetLock and silo balances match the per-user sums, and top balances match archive <span class="mono">balanceOf</span>.</li>
 <li><b>Pre-incident USD value</b>: 1 NUSD = $1.00, which was NUSD's par value before the freeze. sNUSD is valued through its share price. "Redeemed capital" = NUSD burned by <span class="mono">redeem()</span>, i.e. the pre-incident value given up. "USDC paid" = the actual USDC from the <span class="mono">Redeemed</span> events.</li>
 <li><b>Wallets</b> = EOAs (1,278), EIP-7702 delegated EOAs (302) and Safe multisigs (19), with AssetLock lockers looked through. 125 other contracts (Pendle, Strata, Morpho, Euler, Royco, DEX pools, bridges, routers, Strata cooldown proxies) are excluded from wallet counts. Raw direct holders including contracts at the snapshot: 434 sNUSD and 627 NUSD addresses.</li>
 <li><b>"sNUSD holders"</b> = wallets with any sNUSD exposure (direct or locked) at the snapshot. Their full position, including any plain NUSD, counts as affected capital, because redemption burns NUSD and can't tell where it came from.</li>
 <li><b>Capped redeemed capital</b>: a wallet's redeemed amount counts toward "% of affected capital" only up to its snapshot value. Extra NUSD it acquired later is reported separately (uncapped figure, outsider section).</li>
 <li><b>Status</b>: "Redeemed" = has a Redeemed event and now holds less than 1% of its snapshot position; "still holds some" = redeemed but kept a remainder; "tokens moved out" = no redemption but now holds less than 5% (sold or moved; it may have redeemed from another address, which can't be linked onchain).</li></ul>
-<h3>Caveats and unknowns</h3><ul>
+</details>
+<details class="mdet"><summary>Caveats and unknowns</summary><ul>
 <li><b>Ethereum mainnet only.</b> NUSD bridged elsewhere through the LayerZero OFT adapters is excluded (the adapters held about $70 of NUSD/sNUSD combined at the snapshot, so this is negligible).</li>
 <li><b>Holders behind protocols are not looked through</b> (Pendle PT/YT/LP holders, Strata srNUSD/jrNUSD holders, Morpho/Euler lenders). About $14.09M sat in such contracts at the snapshot. Their users show up as "redeemers not at snapshot" once they withdraw and redeem.</li>
 <li><b>Strata</b>: the Strata sNUSDStrategy held 1,600,280 sNUSD at the snapshot. Per The Defiant and The Crypto Times, the 0.51 rate writes the junior tranche (jrNUSD) to zero and senior (srNUSD) withdrawals settle in sNUSD. Individual srNUSD/jrNUSD holders are out of scope here.</li>
 <li>One person can control several wallets, and tokens can move between wallets after the snapshot, so wallet counts are not person counts.</li>
 <li>The redemption contract takes the rate as an admin parameter; it has been 0.51 since deployment (one RedemptionRateSet event). Neutrl says the program is expected to run until Nov 14, 2026. 1 wallet(s) signed the message but have not redeemed.</li>
 <li>Wallet type is read from current code (EOA / 7702 / Safe). A few unverified contracts may be smart-contract wallets and are excluded as contracts.</li></ul>
-<h3>Sources</h3><ul>
+</details>
+<details class="mdet"><summary>Sources</summary><ul>
 <li><a href="https://www.neutrl.finance/">neutrl.finance</a>; Neutrl on X: <a href="https://x.com/Neutrl/status/2100614848241414280">announcement</a> (quoted in press below)</li>
 <li><a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout">The Defiant, Sep 18 2026</a>; <a href="https://www.cryptotimes.io/2026/09/18/neutrl-opens-nusd-snusd-redemptions-as-on-chain-rate-reads-0-51/">The Crypto Times, Sep 18 2026</a>; <a href="https://crypto.news/neutrl-opens-nusd-redemptions-as-contract-reads-0-51/">crypto.news</a>; <a href="https://www.cryptotimes.io/2026/08/29/neutrl-reveals-only-27m-liquid-against-137m-book-as-redemptions-approach/">The Crypto Times, Aug 29 2026 (pause, $27M liquid)</a></li>
 <li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract">Blockscout</a> / Etherscan.</li></ul>
+</details>
 <p class="mut">Generated 2026-10-01T17:12:38+00:00 (UTC). Refresh script: <span class="mono">refresh.sh</span> (pull_logs.py → compute.py → build.py).</p></div>
 
 <footer>Built from public Ethereum data (public RPC eth_getLogs and archive eth_call, plus Blockscout for contract names). Not affiliated with Neutrl or Strata. Not financial or legal advice. Every figure is computed from onchain events; nothing is estimated except where it says so.</footer>
@@ -207,35 +214,41 @@ function restricted(){
 function method(){
   const sn=D.supply.snapshot,r=D.rates,wc=D.wallet_count_variants;
   document.getElementById("method").innerHTML=`
-<h3>Contracts (Ethereum mainnet, all verified on Etherscan/Blockscout)</h3><ul>
+<details class="mdet"><summary>Contracts (Ethereum mainnet, all verified on Etherscan/Blockscout)</summary><ul>
 <li>NUSD (Neutrl USD, 18 dec): ${al("0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE")}</li>
 <li>sNUSD (Staked NUSD, ERC-4626 with cooldown): ${al("0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313")}. Cooldown silo ${al("0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B")}</li>
 <li>NusdRedemption (redemption contract, rate 0.51e18): ${al("0xB3f07D3392102fC23264a78e2A1A8B6421123828")}. USDC AssetReserve ${al("0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed")}</li>
 <li>Neutrl AssetLock (locked NUSD/sNUSD, looked through to lockers): ${al("0x99161BA892ECae335616624c84FAA418F64FF9A6")}</li>
 <li>Strata sNUSDStrategy (srNUSD/jrNUSD collateral): ${al("0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")}</li></ul>
-<h3>Timeline (onchain)</h3><ul>
+</details>
+<details class="mdet"><summary>Timeline (onchain)</summary><ul>
 <li><b>Freeze</b>: sNUSD <span class="mono">Paused()</span> at block ${num(B.freeze)}, ${T.freeze}. The Curve NUSD/USDC pool was denylisted 5 blocks earlier; the Uniswap v4 PoolManager, Balancer V3 Vault and a LayerZero adapter were denylisted on Aug 14. AssetLock was paused at block 25,745,747.</li>
 <li><b>Snapshot</b> = state at the end of block ${num(B.snapshot)} (the block before the sNUSD pause), ${T.snapshot}.</li>
 <li><b>Reopening</b>: sNUSD cooldown set to 1 second at block ${num(B.reopen_cooldown)} (${T.reopen_cooldown}); sNUSD and AssetLock unpaused, AssetLock lock enforcement switched off; NusdRedemption unpaused at block ${num(B.redeem_open)} (${T.redeem_open}). First redemption at block ${num(B.first_redeem)}, ${T.first_redeem}.</li></ul>
-<h3>How redemption works</h3><p>The holder signs the portal's message onchain (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>, cooldown now 1s) and AssetLock users first unlock. Since reopening, ${num(D.totals.snusd_shares_unstaked_since_reopen)} sNUSD has been unstaked into ${num(D.totals.snusd_nusd_unstaked_since_reopen)} NUSD by ${num(D.totals.snusd_unstakers_since_reopen)} addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
-<h3>Definitions and assumptions</h3><ul>
+</details>
+<details class="mdet"><summary>How redemption works</summary><p>The holder signs the portal's message onchain (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>, cooldown now 1s) and AssetLock users first unlock. Since reopening, ${num(D.totals.snusd_shares_unstaked_since_reopen)} sNUSD has been unstaked into ${num(D.totals.snusd_nusd_unstaked_since_reopen)} NUSD by ${num(D.totals.snusd_unstakers_since_reopen)} addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
+</details>
+<details class="mdet"><summary>Definitions and assumptions</summary><ul>
 <li><b>Position at snapshot</b> = NUSD balance + sNUSD balance × sNUSD share price (${r.snusd_share_rate_snapshot.toFixed(6)} NUSD per sNUSD at the snapshot) + NUSD/sNUSD locked in AssetLock + NUSD pending in the sNUSD cooldown silo. Rebuilt from every Transfer, AssetLocked/Unlocked and UnstakeRequested/Unstaked event since deployment. Checks: the rebuilt NUSD supply (${num(sn.nusd_supply,2)}) matches onchain <span class="mono">totalSupply()</span> at the snapshot, AssetLock and silo balances match the per-user sums, and top balances match archive <span class="mono">balanceOf</span>.</li>
 <li><b>Pre-incident USD value</b>: 1 NUSD = $1.00, which was NUSD's par value before the freeze. sNUSD is valued through its share price. "Redeemed capital" = NUSD burned by <span class="mono">redeem()</span>, i.e. the pre-incident value given up. "USDC paid" = the actual USDC from the <span class="mono">Redeemed</span> events.</li>
 <li><b>Wallets</b> = EOAs (${num(wc.wallets_eoa)}), EIP-7702 delegated EOAs (${num(wc.wallets_7702)}) and Safe multisigs (${num(wc.wallets_safe)}), with AssetLock lockers looked through. ${num(D.totals.protocol_contracts_snapshot)} other contracts (Pendle, Strata, Morpho, Euler, Royco, DEX pools, bridges, routers, Strata cooldown proxies) are excluded from wallet counts. Raw direct holders including contracts at the snapshot: ${num(wc.raw_snusd_direct_holders_incl_contracts)} sNUSD and ${num(wc.raw_nusd_direct_holders_incl_contracts)} NUSD addresses.</li>
 <li><b>"sNUSD holders"</b> = wallets with any sNUSD exposure (direct or locked) at the snapshot. Their full position, including any plain NUSD, counts as affected capital, because redemption burns NUSD and can't tell where it came from.</li>
 <li><b>Capped redeemed capital</b>: a wallet's redeemed amount counts toward "% of affected capital" only up to its snapshot value. Extra NUSD it acquired later is reported separately (uncapped figure, outsider section).</li>
 <li><b>Status</b>: "Redeemed" = has a Redeemed event and now holds less than 1% of its snapshot position; "still holds some" = redeemed but kept a remainder; "tokens moved out" = no redemption but now holds less than 5% (sold or moved; it may have redeemed from another address, which can't be linked onchain).</li></ul>
-<h3>Caveats and unknowns</h3><ul>
+</details>
+<details class="mdet"><summary>Caveats and unknowns</summary><ul>
 <li><b>Ethereum mainnet only.</b> NUSD bridged elsewhere through the LayerZero OFT adapters is excluded (the adapters held about $70 of NUSD/sNUSD combined at the snapshot, so this is negligible).</li>
 <li><b>Holders behind protocols are not looked through</b> (Pendle PT/YT/LP holders, Strata srNUSD/jrNUSD holders, Morpho/Euler lenders). About ${usdc(D.totals.protocol_contract_value_snapshot)} sat in such contracts at the snapshot. Their users show up as "redeemers not at snapshot" once they withdraw and redeem.</li>
 <li><b>Strata</b>: the Strata sNUSDStrategy held ${num(D.contracts.find(c=>c.address==="0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")?.snusd||0)} sNUSD at the snapshot. Per The Defiant and The Crypto Times, the 0.51 rate writes the junior tranche (jrNUSD) to zero and senior (srNUSD) withdrawals settle in sNUSD. Individual srNUSD/jrNUSD holders are out of scope here.</li>
 <li>One person can control several wallets, and tokens can move between wallets after the snapshot, so wallet counts are not person counts.</li>
 <li>The redemption contract takes the rate as an admin parameter; it has been 0.51 since deployment (one RedemptionRateSet event). Neutrl says the program is expected to run until Nov 14, 2026. ${num(D.totals.signed_not_redeemed)} wallet(s) signed the message but have not redeemed.</li>
 <li>Wallet type is read from current code (EOA / 7702 / Safe). A few unverified contracts may be smart-contract wallets and are excluded as contracts.</li></ul>
-<h3>Sources</h3><ul>
+</details>
+<details class="mdet"><summary>Sources</summary><ul>
 <li><a href="https://www.neutrl.finance/">neutrl.finance</a>; Neutrl on X: <a href="https://x.com/Neutrl/status/2100614848241414280">announcement</a> (quoted in press below)</li>
 <li><a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout">The Defiant, Sep 18 2026</a>; <a href="https://www.cryptotimes.io/2026/09/18/neutrl-opens-nusd-snusd-redemptions-as-on-chain-rate-reads-0-51/">The Crypto Times, Sep 18 2026</a>; <a href="https://crypto.news/neutrl-opens-nusd-redemptions-as-contract-reads-0-51/">crypto.news</a>; <a href="https://www.cryptotimes.io/2026/08/29/neutrl-reveals-only-27m-liquid-against-137m-book-as-redemptions-approach/">The Crypto Times, Aug 29 2026 (pause, $27M liquid)</a></li>
 <li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract">Blockscout</a> / Etherscan.</li></ul>
+</details>
 <p class="mut">Generated ${D.generated_at_utc} (UTC). Refresh script: <span class="mono">refresh.sh</span> (pull_logs.py → compute.py → build.py).</p>`;
 }
 function lookup(){
