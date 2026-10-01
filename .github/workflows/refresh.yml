@@ -1,0 +1,102 @@
+# Hourly refresh of the Neutrl redemption tracker.
+# Code + incremental data state: branch `tracker`. Served site (GitHub Pages, legacy "deploy from branch"): branch `main`.
+# Keyless public RPC, default GITHUB_TOKEN, no secrets. Any failing step stops the run before anything is
+# committed, so the last good page stays live.
+name: Hourly refresh
+
+on:
+  schedule:
+    - cron: "17 * * * *"      # every hour at :17 (UTC; off the hour to avoid the top-of-hour Actions rush)
+  workflow_dispatch:
+
+permissions:
+  contents: write             # push data to `tracker` and the site to `main`
+  pages: write                # request a Pages build after pushing
+
+concurrency:
+  group: neutrl-refresh
+  cancel-in-progress: false   # never kill a run mid-commit; queue the next one instead
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: America/New_York
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Check out pipeline + data (tracker)
+        uses: actions/checkout@v4
+        with: { ref: tracker, path: tracker, fetch-depth: 1 }
+
+      - name: Check out site (main)
+        uses: actions/checkout@v4
+        with: { ref: main, path: site, fetch-depth: 1 }
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tracker/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          pip install -q -r tracker/requirements.txt
+          which google-chrome && google-chrome --version
+          # Inter for the og.png share card (falls back to another sans font if unavailable)
+          (sudo apt-get install -y -qq --no-install-recommends fonts-inter >/dev/null 2>&1 || true)
+
+      - name: Restore log state
+        working-directory: tracker
+        run: python logstore.py unpack
+
+      - name: Pull new logs (incremental, keyless public RPC)
+        working-directory: tracker
+        run: python pull_logs.py
+
+      - name: Compute metrics
+        working-directory: tracker
+        run: python compute.py > data/last_compute.log && tail -n 5 data/last_compute.log
+
+      - name: Build site (pre-render + og.png)
+        working-directory: tracker
+        run: python build.py
+
+      - name: Sanity checks (refuse to publish broken/partial data)
+        working-directory: tracker
+        run: python ci_check.py
+
+      - name: Record hourly snapshot
+        working-directory: tracker
+        run: python record_history.py --history data/history_hourly.jsonl > /dev/null
+
+      - name: Commit data to tracker
+        working-directory: tracker
+        run: |
+          python logstore.py pack
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A data
+          if git diff --cached --quiet; then echo "no data changes"; exit 0; fi
+          BLOCK=$(python -c 'import json;print(json.load(open("data/dashboard_data.json"))["blocks"]["as_of"])')
+          git commit -qm "Hourly data refresh: block $BLOCK"
+          for i in 1 2 3; do git push -q origin HEAD:tracker && exit 0; git pull -q --rebase origin tracker; done
+          exit 1
+
+      - name: Publish site to main
+        run: |
+          for f in index.html og.png favicon.svg apple-touch-icon.png; do cp "tracker/site/$f" "site/$f"; done
+          cd site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add index.html og.png favicon.svg apple-touch-icon.png
+          if git diff --cached --quiet; then echo "site unchanged"; exit 0; fi
+          BLOCK=$(python -c 'import json;print(json.load(open("../tracker/data/dashboard_data.json"))["blocks"]["as_of"])')
+          git commit -qm "Refresh data $(date '+%Y-%m-%d %H:%M %Z') (block $BLOCK)"
+          for i in 1 2 3; do git push -q origin HEAD:main && echo "published" && exit 0; git pull -q --rebase origin main; done
+          exit 1
+
+      - name: Request Pages build
+        continue-on-error: true
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" --jq .status || true
