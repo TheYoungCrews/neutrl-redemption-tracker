@@ -10,8 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write             # push data to `tracker` and the site to `main`
-  pages: write                # request a Pages build after pushing
+  contents: write             # push data to `tracker` and the site to `main` (the push itself triggers the Pages build)
 
 concurrency:
   group: neutrl-refresh
@@ -26,14 +25,14 @@ jobs:
       PYTHONUNBUFFERED: "1"
     steps:
       - name: Check out pipeline + data (tracker)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with: { ref: tracker, path: tracker, fetch-depth: 1 }
 
       - name: Check out site (main)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with: { ref: main, path: site, fetch-depth: 1 }
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -95,8 +94,3 @@ jobs:
           git commit -qm "Refresh data $(date '+%Y-%m-%d %H:%M %Z') (block $BLOCK)"
           for i in 1 2 3; do git push -q origin HEAD:main && echo "published" && exit 0; git pull -q --rebase origin main; done
           exit 1
-
-      - name: Request Pages build
-        continue-on-error: true
-        env: { GH_TOKEN: "${{ github.token }}" }
-        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" --jq .status || true
