@@ -27,14 +27,6 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
     ./refresh.sh            # sync code+data from GitHub (tracker branch) and rebuild site/ locally; pushes nothing
     ./refresh.sh --pages    # + publish_pages.sh, which pulls first and pushes ONLY if local data is newer than live
     ./refresh.sh --local --pages   # FALLBACK if Actions is failing: pull logs + compute locally, rebuild, publish
-    ./serve_tunnel.sh       # (legacy, local-only, not in this repo) local static server + Cloudflare quick tunnel serving ./site
-    ./refresh.sh --deploy   # (legacy) also try deploy.sh (local-only; anonymous sharehtml upload; returned HTTP 500 on 2026-10-01)
-
-## Legacy publishing notes (before GitHub Pages; superseded)
-- surge.sh: an account was created from the CLI with a mailinator address (.surge_credentials.json), but surge refuses
-  to publish from disposable emails. It would work with a real, non-disposable email (`.tools/node_modules/.bin/surge login`
-  then `.tools/node_modules/.bin/surge ./site <name>.surge.sh`).
-- Netlify anonymous deploys expire after 1 hour and are password-protected, so they are not suitable.
 
 ## Files
 - `rpc.py`              keyless JSON-RPC helper (Tenderly public gateway for wide eth_getLogs ranges; drpc/publicnode fallback)
@@ -46,9 +38,6 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 - `logstore.py`         log state <-> git-friendly segments; `ci_check.py` pre-publish sanity checks (Actions)
 - `publish_pages.sh`    manual/local publish of site/ to the `main` branch (Actions normally does this)
 - `refresh.sh`          local sync/rebuild wrapper (see above)
-- Local-only, not in this repo: `deploy.sh` (legacy anonymous publish to html.duyet.net/sharehtml; was failing with HTTP 500),
-  `serve_tunnel.sh` (legacy hosting: local static server + Cloudflare quick tunnel, replaced by GitHub Pages),
-  `raw/` (verified contract sources pulled from Blockscout, article HTML)
 
 ## Key onchain facts (Ethereum mainnet)
 - NUSD 0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE; sNUSD 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313 (Silo 0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B)
