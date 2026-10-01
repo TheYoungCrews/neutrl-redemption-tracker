@@ -44,10 +44,11 @@ b,strong{font-weight:600}
 /* header + status strip */
 header{position:relative;z-index:1;border-bottom:1px solid var(--line2)}
 .top{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
-.brand{display:flex;align-items:center;gap:12px;color:var(--ink);min-width:0}.brand:hover{text-decoration:none}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);min-width:0}.brand a{color:var(--ink)}.brand a:hover{text-decoration:none}
+.bsub .cr i{font-style:normal}.bsub .cr a{color:var(--mut)}.bsub .cr a:hover,.bsub .cr a:focus-visible{color:var(--green)}
 .brand svg{width:34px;height:34px;flex:none;display:block}
 .brand b{display:block;font:500 15px/1.2 var(--sans);letter-spacing:-.01em;white-space:nowrap}
-.brand span{display:block;font:400 12.5px/1.3 var(--mono);color:var(--mut);white-space:nowrap}
+.brand span.bsub{display:block;font:400 12.5px/1.3 var(--mono);color:var(--mut);white-space:nowrap}
 .nav{display:flex;align-items:center;gap:26px}.nav a{font:400 13px/1 var(--mono);color:var(--ink2)}.nav a:hover{color:var(--ink)}
 .tickbar{position:relative;z-index:1;border-bottom:1px solid var(--line2);background:rgba(19,17,25,.6)}
 .updated{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding-top:12px;padding-bottom:12px;font:400 12.5px/1.4 var(--mono);color:var(--mut)}
@@ -127,6 +128,8 @@ input[type=text]::placeholder{color:var(--mut)}input[type=text]:focus{outline:2p
 .bdg.ok{color:var(--green);border-color:rgba(91,228,155,.4)}.bdg.bad{color:var(--red);border-color:rgba(255,143,135,.5)}.bdg.warn{color:var(--yel);border-color:rgba(233,196,106,.45)}.bdg.info{color:var(--ink);border-color:rgba(242,238,230,.35)}
 .kv{display:grid;grid-template-columns:minmax(160px,auto) 1fr;gap:8px 16px;margin:10px 0;font-size:.95rem}.kv dt{color:var(--mut)}.kv dd{margin:0;font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink)}
 .lklinks{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.88rem;margin-top:8px}
+.rtbl tr.gn td{border-top:0}.rtbl td[rowspan]{vertical-align:top}.rtbl tr.g0 td{border-top:1px solid var(--line)}.rtbl tr:first-child+tr.g0 td{border-top:0}.rtbl td{border-bottom:0}.rtbl .rlab{color:var(--ink);white-space:nowrap}
+.rnote{font-size:13.5px;color:var(--ink2)!important;margin:10px 0 16px!important}
 #outsiders p,#restricted p{color:var(--ink2);line-height:1.6;max-width:900px}#outsiders .tw,#restricted .tw{margin:12px 0}
 details{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:500}
 #method{color:var(--ink2);border-bottom:1px solid var(--line)}#method b{color:var(--ink)}
@@ -140,7 +143,7 @@ ul{padding-left:1.2em}li{margin:.35em 0}
 footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;border-top:1px solid var(--line2)}footer p{margin:.4em 0;max-width:900px}footer a{color:var(--ink2)}footer a:hover{color:var(--ink)}
 .hide-d{display:none}
 @media(max-width:900px){
- .wrap{padding-left:20px;padding-right:20px}.nav{display:none}.hide-m{display:none!important}.top{height:64px}
+ .wrap{padding-left:20px;padding-right:20px}.nav{display:none}.hide-m{display:none!important}.top{height:auto;min-height:64px;padding-top:10px;padding-bottom:10px}
  .updated{font-size:11.5px;gap:4px 14px}
  .intro{grid-template-columns:1fr;gap:30px;padding-top:32px;padding-bottom:28px}
  h1{font-size:40px;margin:14px 0 16px}.lede{font-size:16px}.days{gap:2px;height:16px}
@@ -157,6 +160,7 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:14px 12px}.card .v{font-size:22px}.card .s{font-size:13px}
  .kv{grid-template-columns:1fr;gap:0}.kv dd{margin-bottom:10px}.csv{min-height:36px;padding:5px 13px}
 }
+@media(max-width:560px){.brand span.bsub{white-space:normal}.bsub .cr{display:block}.bsub .cr i{display:none}}
 @media(max-width:380px){.hv{font-size:30px}.lkrow{flex-direction:column}.tabs button{padding:8px 11px}}
 .skip{position:absolute;left:-9999px;top:8px;z-index:20}.skip:focus{left:12px;background:var(--ink);color:var(--bg);padding:8px 12px;border-radius:8px}
 
@@ -165,7 +169,7 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 <body>
 <a href="#lookup" class="skip">Skip to wallet lookup</a>
 <header><div class="wrap top">
-<a class="brand" href="#overview" aria-label="Neutrl Redemption Tracker, back to top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" aria-hidden="true"><rect x=".5" y=".5" width="33" height="33" rx="9" fill="#131119" stroke="#2A2633"/><circle cx="17.00" cy="6.80" r="1.77" fill="#5BE49B"/><circle cx="21.43" cy="7.81" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="10.64" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="14.73" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="19.27" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="21.43" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="17.00" cy="27.20" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="19.27" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="14.73" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="10.64" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="7.81" r="1.77" fill="#3A3546"/><circle cx="17.0" cy="17.0" r="2.55" fill="#F2EEE6"/></svg><div><b>Neutrl Redemption Tracker</b><span>independent, onchain</span></div></a>
+<div class="brand"><a href="#overview" aria-label="Neutrl Redemption Tracker, back to top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" aria-hidden="true"><rect x=".5" y=".5" width="33" height="33" rx="9" fill="#131119" stroke="#2A2633"/><circle cx="17.00" cy="6.80" r="1.77" fill="#5BE49B"/><circle cx="21.43" cy="7.81" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="10.64" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="14.73" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="19.27" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="21.43" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="17.00" cy="27.20" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="19.27" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="14.73" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="10.64" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="7.81" r="1.77" fill="#3A3546"/><circle cx="17.0" cy="17.0" r="2.55" fill="#F2EEE6"/></svg></a><div><a class="bt" href="#overview"><b>Neutrl Redemption Tracker</b></a><span class="bsub">independent, onchain<span class="cr"><i aria-hidden="true"> · </i>built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></span></span></div></div>
 <nav class="nav" aria-label="Sections"><a href="#overview">overview</a><a href="#lookup">wallet lookup</a><a href="#holders">holders</a><a href="#methodology">methodology</a></nav>
 </div></header>
 <div class="tickbar"><div class="wrap updated" id="updated"></div></div>
@@ -374,9 +378,18 @@ function outsiders(){
   document.getElementById("outsiders").innerHTML=h;
 }
 function restricted(){
-  let h=`<p>Neutrl can blacklist addresses on sNUSD (FULL_RESTRICTED_STAKER_ROLE: no unstake or transfer) and denylist them on NUSD (no transfer, which blocks redemption). Current list, from RoleGranted / AddedToDenylist events:</p><div class="tw"><table><tr><th class="tl">Address</th><th class="tl">Restriction</th><th class="tl">Since (UTC)</th><th>Block</th><th>Value at snapshot</th></tr>`;
-  D.restricted_list.forEach(r=>{const dt=new Date(r.ts*1000).toISOString().slice(0,10);h+=`<tr><td class="tl">${al(r.address)}</td><td class="tl">${r.type}</td><td class="tl">${dt}</td><td>${blk(r.block)}</td><td>${usd(r.snapshot_value)}</td></tr>`});
-  h+=`</table></div><p>The largest snapshot holder, <a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a" target="_blank" rel="noopener">0xb0bf…9a9a</a>, received ~13.0M NUSD directly from a mint in April 2026, staked it, and locked the resulting sNUSD in AssetLock. It was blacklisted on sNUSD on Sep 16, 2026, the day before redemptions reopened. Onchain data does not show why.</p>`;
+  const rl=D.restricted_list||[],M=D.restricted_meta||{},OP="0xde7259ab94cd04cd5f855b15368bf0549eeb1504",groups=new Map();
+  rl.forEach(r=>{const k=lc(r.address);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r)});
+  const day=t=>new Date(t*1000).toISOString().slice(0,10),txl=t=>`<a class="mono" href="${ET}${t}" target="_blank" rel="noopener" title="${t}">${t.slice(0,8)}…${t.slice(-4)}</a>`;
+  let h=`<p>Neutrl can blacklist addresses on sNUSD (FULL_RESTRICTED_STAKER_ROLE: no unstake or transfer) and denylist them on NUSD (no transfer, which blocks redemption). Current list, from RoleGranted / AddedToDenylist events:</p><div class="tw"><table class="rtbl"><tr><th class="tl">Address</th><th class="tl">Label</th><th class="tl">Restriction</th><th class="tl">Since (UTC)</th><th>Block</th><th class="tl">Tx</th><th>Value at snapshot</th></tr>`;
+  for(const rs of groups.values()){const n=rs.length,f=rs[0],sp=n>1?` rowspan="${n}"`:"";
+    rs.forEach((r,j)=>{h+=`<tr class="${j===0?"g0":"gn"}">${j===0?`<td class="tl"${sp}>${al(r.address)}</td><td class="tl rlab"${sp}>${r.label?esc(r.label):'<span class="mut">–</span>'}</td>`:""}<td class="tl">${r.type}</td><td class="tl">${day(r.ts)}</td><td>${blk(r.block)}</td><td class="tl">${r.tx?txl(r.tx):"–"}</td>${j===0?`<td${sp}>${usd(f.snapshot_value)}</td>`:""}</tr>`})}
+  h+=`</table></div>`;
+  const setBy=M.set_by||[...new Set(rl.map(r=>r.set_by).filter(Boolean))],allOp=rl.length&&rl.every(r=>lc(r.set_by||"")===OP);
+  const opLink=`<a class="mono" href="${ES}${OP}" target="_blank" rel="noopener" title="${OP}">0xde72…1504</a>`;
+  const lifted=M.lifted==null?null:M.lifted;
+  h+=`<p class="rnote">${allOp?`All restrictions were set by Neutrl's operator wallet ${opLink}.`:`Restrictions were set by ${setBy.map(a=>al(a)).join(", ")||"unknown senders"}.`} ${lifted===0?"None has been lifted, and Neutrl has published no reasons.":lifted?`${num(lifted)} earlier restriction${lifted===1?" has":"s have"} been lifted (not listed). Neutrl has published no reasons.`:"Neutrl has published no reasons."}</p>`;
+  h+=`<p>The largest snapshot holder, <a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a" target="_blank" rel="noopener">0xb0bf…9a9a</a>, received ~13.0M NUSD directly from a mint in April 2026, staked it, and locked the resulting sNUSD in AssetLock. It was blacklisted on sNUSD on Sep 16, 2026, the day before redemptions reopened. Onchain data does not show why.</p>`;
   document.getElementById("restricted").innerHTML=h;
 }
 function method(){
@@ -483,7 +496,7 @@ function renderAddr(q,ens,seq){
   const ensLine=ens?`<div class="ensline"><b>${esc(ens.name)}</b> → <a class="mono" href="${ES}${q}" target="_blank" rel="noopener" title="${q}">${ens.address.slice(0,6)}…${ens.address.slice(-5)}</a></div>`:"";
   const w=LW.get(q),x=LO.get(q),c=LC.get(q),rs=LR.get(q)||[];
   const links=`<div class="lklinks"><a href="${ES}${q}" target="_blank" rel="noopener">View on Etherscan ↗</a><a href="https://etherscan.io/token/${NUSD_ADDR}?a=${q}" target="_blank" rel="noopener">NUSD transfers (incl. redemptions) ↗</a><a href="${shareURL(q)}" id="sharelink">Share link</a></div>`;
-  const rsTxt=rs.map(r=>`${r.type} since ${new Date(r.ts*1000).toISOString().slice(0,10)} (block ${blk(r.block)})`).join("; ");
+  const rsTxt=rs.map(r=>`${r.type} since ${new Date(r.ts*1000).toISOString().slice(0,10)} (block ${blk(r.block)}${r.tx?`, <a href="${ET}${r.tx}" target="_blank" rel="noopener">tx</a>`:""})`).join("; ");
   const badges=[],kv=[];let cls="";
   const RATE=(D.rates&&D.rates.redemption_rate)||null;
   const est=v=>RATE&&v>0?`≈ ${u2(v*RATE)} USDC <span class="mut" style="font-weight:400">(${u2(v)} × ${RATE} USDC per NUSD${w&&w[2]>0?"; sNUSD must be unstaked to NUSD first":""})</span>`:`<span class="mut">n/a</span>`;
@@ -530,7 +543,7 @@ const CSV={
   contracts:{name:"protocol-contracts",rows:()=>D.contracts||[]},
   outsiders:{name:"outside-redeemers",rows:()=>(D.outsiders||[]).map(x=>({address:x[0],redeemed_nusd:x[1],usdc:x[2]}))},
   sources:{name:"outsider-inflow-sources",rows:()=>(D.outsider_sources||[]).map(([k,v])=>({sender:k,value_received:v}))},
-  restricted:{name:"blacklisted-addresses",rows:()=>(D.restricted_list||[]).map(r=>({...r,since_utc:isoUTC(r.ts)}))}
+  restricted:{name:"blacklisted-addresses",rows:()=>(D.restricted_list||[]).map(r=>({address:r.address,label:r.label||"",type:r.type,since_utc:isoUTC(r.ts),block:r.block,ts:r.ts,tx:r.tx||"",etherscan_tx:r.tx?ET+r.tx:"",set_by:r.set_by||"",snapshot_value:r.snapshot_value}))}
 };
 const asofDate=new Date((B.as_of_ts||Date.now()/1000)*1000).toLocaleDateString("en-CA",{timeZone:"America/New_York"});
 function buildCSV(k){const rows=CSV[k].rows(),cols=[],seen=new Set();rows.forEach(r=>Object.keys(r).forEach(c=>{if(!seen.has(c)){seen.add(c);cols.push(c)}}));

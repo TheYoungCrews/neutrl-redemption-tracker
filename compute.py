@@ -175,17 +175,43 @@ for l in L("snusd")["logs"]:
 from Crypto.Hash import keccak
 FULL_RESTRICTED = "0x" + keccak.new(digest_bits=256, data=b"FULL_RESTRICTED_STAKER_ROLE").hexdigest()
 SOFT_RESTRICTED = "0x" + keccak.new(digest_bits=256, data=b"SOFT_RESTRICTED_STAKER_ROLE").hexdigest()
-restricted = {}
+# Neutral labels for restricted addresses (owner-approved, from /workspace/inv/findings_restricted_addresses.md; identities are
+# verified contract names / Neutrl's own adapters / the public Mar 19, 2026 front-end hijack). Unknown new entries stay unlabeled.
+RESTRICTED_LABELS = {
+    "0xe27ead742ea45b7063b69a875c6f99181c323fb6": "Neutrl bridge adapter v1 (sNUSD)",
+    "0x350f09f8dc8d8ebb6d604acbe24e6b09524c0054": "Neutrl bridge adapter v1 (NUSD)",
+    "0x8e14d37b56b3d17e0f3abc3b36aa304868f3476b": "Neutrl bridge adapter v2 (NUSD)",
+    "0x7e19f0253a564e026c63eeaa9338d6dbddef3b09": "Curve NUSD/USDC pool",
+    "0x000000000004444c5dc75cb358380d2e3de08a90": "Uniswap v4 PoolManager",
+    "0xba12222222228d8ba445958a75a0704d566bf2c8": "Balancer V2 Vault",
+    "0xafb2423f447d3e16931164c9970b9741aab1723e": "Mar 19 website-hijack drainer",
+    "0xf1a50bbeba19a85db20432c6c201aa89604dfd2b": "Mar 19 website-hijack drainer",
+    "0xfd582d41fcc008ff5cbd2996043de3ce25e7543e": "Mar 19 website-hijack drainer",
+    "0xbe8dac0a6446a2e7d31f96d0218dcddfbce65bf4": "Holder wallet",
+    "0x6924189eb810b798d3a7c49f2f27b2bdeffa0ca8": "Holder wallet",
+    "0xb0bfdc336537730ad2c44083c0f7c545aac79a9a": "Holder wallet",
+}
+# address -> {"snusd": entry, "nusd": entry}: an address can carry BOTH restrictions (each kept with its own date/tx)
+restricted = collections.defaultdict(dict); restrictions_lifted = 0
 for l in L("snusd")["logs"]:
     sg = TOP.get(l["topics"][0])
     if sg in ("RoleGranted(bytes32,address,address)", "RoleRevoked(bytes32,address,address)") and l["topics"][1] == FULL_RESTRICTED:
         a = a40(l["topics"][2])
-        if sg.startswith("RoleGranted"): restricted[a] = {"type": "sNUSD full-restricted (blacklisted)", "block": bn(l), "ts": ts(bn(l))}
-        else: restricted.pop(a, None)
+        if sg.startswith("RoleGranted"):
+            restricted[a]["snusd"] = {"type": "sNUSD full-restricted (blacklisted)", "block": bn(l), "ts": ts(bn(l)), "tx": l["transactionHash"],
+                                      "set_by": a40(l["topics"][3]) if len(l["topics"]) > 3 else None}
+        else: restricted[a].pop("snusd", None); restrictions_lifted += 1
 for l in L("nusd")["logs"]:
     sg = TOP.get(l["topics"][0]); a = a40(l["topics"][1]) if len(l["topics"]) > 1 else None
-    if sg == "AddedToDenylist(address)": restricted[a] = {"type": "NUSD denylisted", "block": bn(l), "ts": ts(bn(l))}
-    elif sg == "RemovedFromDenylist(address)": restricted.pop(a, None)
+    if sg == "AddedToDenylist(address)": restricted[a]["nusd"] = {"type": "NUSD denylisted", "block": bn(l), "ts": ts(bn(l)), "tx": l["transactionHash"], "set_by": None}
+    elif sg == "RemovedFromDenylist(address)": restricted[a].pop("nusd", None); restrictions_lifted += 1
+restricted = {a: k for a, k in restricted.items() if k}
+for k in restricted.values():          # AddedToDenylist has no sender field: the setter is the tx sender
+    for e in k.values():
+        if e["set_by"] is None:
+            try: e["set_by"] = call("eth_getTransactionByHash", [e["tx"]])["from"].lower()
+            except Exception as ex: print("set_by lookup failed", e["tx"], ex)
+restricted_type = lambda a: "; ".join(e["type"] for e in sorted(restricted.get(a, {}).values(), key=lambda e: e["block"])) or None
 
 # ---------- wallet universe ----------
 def cls(a): return classify(a)
@@ -199,7 +225,7 @@ for a, p in snap.items():
                  "nusd": p["nusd"] / 1e18, "snusd": p["snusd"] / 1e18, "lock_nusd": p["lock_nusd"] / 1e18, "lock_snusd": p["lock_snusd"] / 1e18,
                  "cooldown": p["cooldown"] / 1e18, "redeemed_nusd": red, "usdc": r["usdc"] if r else 0.0,
                  "redeemed": bool(r), "remaining_value": cur, "signed": a in signed,
-                 "restricted": restricted.get(a, {}).get("type")})
+                 "restricted": restricted_type(a)})
 
 def status(r):
     if r["redeemed"]:
@@ -310,7 +336,12 @@ out = {
     "summary_all": S_all, "summary_snusd": S_snusd,
     "summary_all_nodust": S_all_nodust, "summary_snusd_nodust": S_snusd_nodust,
     "summary_all_unrestricted": S_all_unrestricted, "summary_snusd_unrestricted": S_snusd_unrestricted,
-    "restricted_list": [dict(address=a, **v, snapshot_value=snap.get(a, {}).get("value", 0.0)) for a, v in restricted.items()],
+    # one entry per restriction (an address with both restrictions has two entries), grouped by address, oldest first
+    "restricted_list": [dict(address=a, label=RESTRICTED_LABELS.get(a, ""), **e, snapshot_value=snap.get(a, {}).get("value", 0.0))
+                        for a, k in sorted(restricted.items(), key=lambda kv: min(e["block"] for e in kv[1].values()))
+                        for e in sorted(k.values(), key=lambda e: e["block"])],
+    "restricted_meta": {"addresses": len(restricted), "restrictions": sum(len(k) for k in restricted.values()), "lifted": restrictions_lifted,
+                        "set_by": sorted({e["set_by"] for k in restricted.values() for e in k.values() if e["set_by"]})},
     "all_wallets": [[r["address"], round(r["value"], 2), round(r["snusd_value"], 2), round(r["redeemed_nusd"], 2), round(r["usdc"], 2), round(r["remaining_value"], 2), r["status"], r["label"], r["restricted"] or ""] for r in sorted(wallets, key=lambda r: -r["value"])],
     "outsiders": sorted([[u, round(v["nusd"], 2), round(v["usdc"], 2)] for u, v in outsiders.items()], key=lambda x: -x[1]),
     "buckets_all": buckets(wallets), "buckets_snusd": buckets(snusd_wallets),

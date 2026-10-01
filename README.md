@@ -23,6 +23,9 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
   green #5BE49B, purple #B69CFF only for 24h changes, "today" and "latest". Hero ring = one dot per sNUSD snapshot wallet
   (summary_snusd), green = redeemed, purple = first redemption within 24h of the as-of block
   (compute.py `snusd_wallet_first_redeem_ts` -> build.py `ring`). Window bar/days left computed from dates (close end of Nov 14).
+- Restricted addresses: compute.py keeps BOTH restrictions per address (sNUSD blacklist + NUSD denylist), each with block/date/tx and
+  setter (sNUSD: RoleGranted sender; NUSD: tx sender via RPC), plus neutral labels (RESTRICTED_LABELS, from
+  /workspace/inv/findings_restricted_addresses.md) and `restricted_meta` (lifted count, setters) for the note under the table.
 - Hero deltas: change vs the hourly snapshot ~24h earlier (`data/history_hourly.jsonl`); before 24h of hourly
   history exists, local builds fall back to the newest older entry in the local-only `data/history.jsonl`
   (not in git, so Actions builds simply hide the deltas until 24h of hourly history exists).
