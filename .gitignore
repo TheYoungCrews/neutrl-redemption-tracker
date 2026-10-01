@@ -1,0 +1,27 @@
+# WHITELIST: everything is ignored unless listed below (this directory also holds local-only secrets/tools:
+# .surge_credentials.json, .venv, .tools, tunnel/server logs, deploy tokens - none of that may be committed).
+/*
+!/.gitignore
+!/README.md
+!/requirements.txt
+!/build.py
+!/compute.py
+!/pull_logs.py
+!/rpc.py
+!/record_history.py
+!/label_contracts.py
+!/logstore.py
+!/ci_check.py
+!/template.html
+!/refresh.sh
+!/publish_pages.sh
+!/data/
+/data/*
+!/data/topics.json
+!/data/address_meta.json
+!/data/block_ts.json
+!/data/dashboard_data.json
+!/data/history_hourly.jsonl
+!/data/segments/
+# NOT committed: data/logs_*.json (rebuilt by `logstore.py unpack`), data/history.jsonl (local daily log of the
+# morning routine), data/last_compute.log, site/, build_tmp/, raw/, *.bak*

@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neutrl Redemption Tracker</title>
+<meta name="description" content="__META_DESC__">
+<meta name="theme-color" content="#0b0f14">
+<link rel="canonical" href="__SITE_URL__">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neutrl Redemption Tracker">
+<meta property="og:title" content="Neutrl Redemption Tracker: how much NUSD / sNUSD has been redeemed">
+<meta property="og:description" content="__OG_DESC__">
+<meta property="og:url" content="__SITE_URL__">
+<meta property="og:image" content="__OG_IMAGE__">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="__OG_ALT__">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Neutrl Redemption Tracker: how much NUSD / sNUSD has been redeemed">
+<meta name="twitter:description" content="__OG_DESC__">
+<meta name="twitter:image" content="__OG_IMAGE__">
+<meta name="twitter:image:alt" content="__OG_ALT__">
+<!--__ANALYTICS__-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0b0f14;--card:#121922;--card2:#18212c;--line:#243040;--line2:#1b2531;--fg:#e8eef5;--mut:#8d9aaa;--acc:#5aa9ff;--grn:#3fcf6e;--red:#ff6b63;--yel:#e3b341;--r:14px}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:radial-gradient(1100px 480px at 50% -260px,#163a5f66,transparent 70%),var(--bg);background-repeat:no-repeat;color:var(--fg);
+ font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 8px}
+h1{font-size:1.75rem;line-height:1.2;margin:.1em 0 .15em;letter-spacing:-.02em;font-weight:750}
+h2{font-size:1.15rem;margin:2em 0 .7em;border-bottom:1px solid var(--line);padding-bottom:.4em;letter-spacing:-.01em;display:flow-root}h3{font-size:1rem;margin:1em 0 .4em}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+.mut{color:var(--mut)}.small{font-size:.86rem}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95em}
+.num,td,.v,.hv{font-variant-numeric:tabular-nums}
+.updated{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;color:var(--mut);font-size:.86rem;margin:2px 0 14px}
+.live{display:inline;color:var(--fg);font-weight:600}.live a{white-space:nowrap}.live::before{content:"";display:inline-block;vertical-align:middle;margin:-2px 7px 0 2px;width:8px;height:8px;border-radius:50%;background:var(--grn);box-shadow:0 0 0 3px #3fcf6e33}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hs{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
+.hk{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.hv{font-size:2.3rem;font-weight:780;letter-spacing:-.03em;line-height:1.1;margin:.12em 0 .1em}
+.hsub{color:var(--mut);font-size:.82rem}.dl{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:999px;background:#ffffff0d}
+.dl.up{color:var(--grn);background:#3fcf6e1a}.dl.dn{color:var(--red);background:#ff6b631a}.dl.fl{color:var(--mut)}
+.src{color:var(--mut);font-size:.8rem;margin-top:10px}
+.lede{font-size:1.04rem;line-height:1.6;color:#c9d4e0;max-width:780px;margin:.35em 0 .7em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.card .k{color:var(--mut);font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}.card .v{font-size:1.5rem;font-weight:700;margin:.1em 0;letter-spacing:-.02em}.card .s{color:var(--mut);font-size:.82rem}
+.bar{height:8px;background:#222c39;border-radius:4px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;background:var(--grn)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.tabs button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:40px;cursor:pointer;font:inherit;font-size:.9rem}
+.tabs button.on{background:var(--acc);color:#0b0f14;border-color:var(--acc);font-weight:650}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--r);background:var(--card);max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.87rem}th,td{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
+th{background:#161f2a;color:var(--mut);font-weight:600;position:sticky;top:0;z-index:1;font-size:.8rem}td:first-child,th:first-child{text-align:left}tr:last-child td{border-bottom:none}
+tbody tr:hover td,tr:hover td{background:#ffffff05}
+.tl{text-align:left!important}.ok{color:var(--grn)}.no{color:var(--mut)}.warn{color:var(--yel)}.bad{color:var(--red)}
+.chartbox canvas{display:block;max-width:100%}.chartbox{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;height:340px}
+.note{background:#161f2a;border-left:3px solid var(--yel);padding:10px 12px;border-radius:8px;margin:10px 0;font-size:.9rem}
+details{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+ul{padding-left:1.2em}li{margin:.3em 0}
+footer{margin:34px 0 16px;color:var(--mut);font-size:.8rem;border-top:1px solid var(--line);padding-top:14px}footer p{margin:.4em 0}
+details.mdet{border:0;border-top:1px solid var(--line);border-radius:0;background:none;padding:6px 0;margin:0}details.mdet>summary{cursor:pointer;font-weight:600;font-size:1.02em;padding:8px 0;list-style:none;min-height:40px}details.mdet>summary::-webkit-details-marker{display:none}details.mdet>summary::before{content:"\25B8";display:inline-block;width:1.2em;transition:transform .15s}details.mdet[open]>summary::before{transform:rotate(90deg)}
+.csvs{float:right;display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px 8px}.csv{background:var(--card);color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:2px 11px;min-height:30px;font-size:.75rem;font-weight:500;line-height:1.6;font-family:inherit;cursor:pointer}.csv:hover{color:var(--fg);border-color:var(--acc)}
+.lookup{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.lkrow{display:flex;gap:8px}.lkrow input{flex:1;min-width:0}
+input[type=text]{width:100%;min-height:46px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0d131a;color:var(--fg);font:inherit;font-size:16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
+.btn{background:var(--acc);color:#0b0f14;border:0;border-radius:10px;padding:0 18px;min-height:46px;font:inherit;font-weight:650;cursor:pointer}
+.btn2{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:40px;font:inherit;font-size:.88rem;cursor:pointer}
+#qres:empty{display:none}#qres{margin-top:12px}
+.lk{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#0f151d}.lk.lkw{border-color:#e3b34155}.lk.lkb{border-color:#ff6b6366}
+.lkaddr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86rem;overflow-wrap:anywhere;word-break:break-all}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.bdg{font-size:.75rem;font-weight:650;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+.bdg.ok{color:var(--grn);border-color:#3fcf6e55}.bdg.bad{color:var(--red);border-color:#ff6b6377}.bdg.warn{color:var(--yel);border-color:#e3b34166}.bdg.info{color:var(--acc);border-color:#5aa9ff66}
+.kv{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:6px 14px;margin:8px 0;font-size:.92rem}.kv dt{color:var(--mut)}.kv dd{margin:0;font-variant-numeric:tabular-nums;font-weight:600}
+.lklinks{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.85rem;margin-top:6px}
+@media(max-width:760px){
+ body{font-size:15px}.wrap{padding:14px 12px 6px}h1{font-size:1.45rem}.lede{font-size:1rem}h2{font-size:1.06rem;margin-top:1.7em}
+ .hero{grid-template-columns:1fr 1fr;gap:8px}.hs{padding:11px 12px}.hv{font-size:1.65rem}.hk{font-size:.7rem}.hsub{font-size:.76rem}
+ .cards{grid-template-columns:repeat(2,1fr);gap:8px}.card .v{font-size:1.2rem}.card{padding:10px}
+ .chartbox{height:300px;padding:6px}table{font-size:.84rem}th,td{padding:8px 9px}
+ .kv{grid-template-columns:1fr;gap:0}.kv dd{margin-bottom:8px}.csv{min-height:34px;padding:4px 12px}
+}
+@media(max-width:380px){.hv{font-size:1.45rem}.lkrow{flex-direction:column}}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Neutrl Redemption Tracker</h1>
+<p class="lede"><a href="https://www.neutrl.finance/" target="_blank" rel="noopener">Neutrl</a> is a synthetic-dollar protocol (NUSD, staked as sNUSD). It <a href="https://x.com/Neutrl/status/2087863440136147224" target="_blank" rel="noopener">froze</a> NUSD and sNUSD on Aug 13, 2026 after a reserve shortfall. Redemptions reopened Sep 17 at a fixed 0.51 USDC per NUSD and are expected to close Nov 14. This tracker shows, onchain and updated hourly, how many holders from the freeze snapshot have redeemed so far. <a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout" target="_blank" rel="noopener">What happened&nbsp;↗</a></p>
+<div class="updated" id="updated"></div>
+<div class="hero" id="hero"></div>
+<div class="src" id="srcline"></div>
+<h2 style="margin-top:1.4em">Check your wallet</h2>
+<div class="lookup">
+<form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="Paste your 0x address…" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address"><button class="btn" type="submit">Check</button></form>
+<div id="qres" class="small" aria-live="polite"></div>
+</div>
+<h2>Snapshot holders: who has redeemed</h2>
+<div class="tabs" id="scope"><button data-s="snusd" class="on">sNUSD holders</button><button data-s="all">All NUSD + sNUSD holders</button></div>
+<div class="cards" id="headline"></div>
+<div class="small mut" id="headnote" style="margin-top:6px"></div>
+
+<h2>Protocol-wide totals (all redeemers)</h2>
+<div class="cards" id="totals"></div>
+
+<h2>Redemptions over time<span class="csvs"><button type="button" class="csv" data-csv="daily" title="Daily redemption data (all days, raw numbers)">Download CSV</button></span></h2>
+<div class="tabs" id="chartmode"><button data-m="cum" class="on">Cumulative</button><button data-m="daily">Daily</button></div>
+<div class="chartbox"><canvas id="timeChart"></canvas></div>
+<div class="small mut">Days are America/New_York calendar days. "Snapshot wallets" = wallets that held a position at the freeze snapshot. Capital = NUSD burned by redemptions (= the pre-incident $ value of the position at $1/NUSD).</div>
+
+<h2>By holder size (value at snapshot)<span class="csvs"><button type="button" class="csv" data-csv="buckets" title="Holder-size buckets, both sNUSD-holder and all-holder scopes">Download CSV</button></span></h2>
+<div class="tabs" id="bscope"><button data-s="snusd" class="on">sNUSD holders</button><button data-s="all">All NUSD + sNUSD holders</button></div>
+<div class="tw"><table id="buckets"></table></div>
+<div class="chartbox" style="height:260px;margin-top:10px"><canvas id="bucketChart"></canvas></div>
+
+<h2>Top holders at the snapshot (wallets)<span class="csvs"><button type="button" class="csv" data-csv="top" title="Top 100 wallets with full position breakdown">Download CSV</button><button type="button" class="csv" data-csv="wallets" title="Every snapshot wallet (not only the top 100)">All wallets CSV</button></span></h2>
+<div class="small mut">Value = NUSD + sNUSD × share price + NUSD/sNUSD locked in Neutrl's AssetLock + NUSD pending in the sNUSD cooldown silo, at $1/NUSD. "Now" = same position at the as-of block.</div>
+<div class="tw" style="max-height:70vh"><table id="top"></table></div>
+<div style="margin-top:8px"><button id="more" class="btn2" type="button">Show top 100</button></div>
+
+<h2>Held through protocols at the snapshot (not counted as wallets)<span class="csvs"><button type="button" class="csv" data-csv="contracts" title="All protocol contracts, including ones under $100">Download CSV</button></span></h2>
+<div class="small mut">These contracts hold NUSD/sNUSD for their own users (Pendle PT/YT/LP, Strata srNUSD/jrNUSD, Morpho/Euler lenders, DEX pools, bridges). Their end users are affected but are not looked through here, except Neutrl's AssetLock, which is looked through to individual lockers.</div>
+<div class="tw" style="max-height:60vh"><table id="contracts"></table></div>
+
+<h2>Redeemers who did not hold at the snapshot<span class="csvs"><button type="button" class="csv" data-csv="outsiders" title="Every redeemer that held nothing at the snapshot">Redeemers CSV</button><button type="button" class="csv" data-csv="sources" title="Inbound NUSD/sNUSD to these redeemers, by sender (all senders)">Senders CSV</button></span></h2>
+<div id="outsiders" class="small"></div>
+
+<h2>Blacklisted / denylisted addresses<span class="csvs"><button type="button" class="csv" data-csv="restricted" title="All blacklisted / denylisted addresses">Download CSV</button></span></h2>
+<div id="restricted" class="small"></div>
+
+<h2>Methodology, sources and caveats</h2>
+<div id="method" class="small"></div>
+
+<footer><p>Built from public Ethereum data. Not affiliated with Neutrl or Strata. Not financial or legal advice. Every figure is computed from onchain events; nothing is estimated except where it says so.</p><p><a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker" target="_blank" rel="noopener">Source on GitHub</a> · Built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></p></footer>
+</div>
+<script>
+const D=/*__DATA__*/null;
+const ES="https://etherscan.io/address/", ET="https://etherscan.io/tx/";
+const usd=(v,d=0)=>v==null?"unknown":"$"+Number(v).toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d});
+const usdc=v=>{v=Number(v);const a=Math.abs(v),s=v<0?"−":"";return s+(a>=1e6?"$"+(a/1e6).toFixed(2)+"M":a>=1e3?"$"+(a/1e3).toFixed(1)+"k":"$"+a.toFixed(0))};
+const num=(v,d=0)=>Number(v).toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d});
+const pct=v=>v==null?"n/a":v.toFixed(1)+"%";
+const sh=a=>a.slice(0,6)+"…"+a.slice(-4);
+const al=a=>`<a class="mono" href="${ES}${a}" target="_blank" rel="noopener" title="${a}">${sh(a)}</a>`;
+const blk=n=>`<a href="https://etherscan.io/block/${n}" target="_blank" rel="noopener">${num(n)}</a>`;
+const NUSD_ADDR="0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",REDEEM_ADDR="0xB3f07D3392102fC23264a78e2A1A8B6421123828",RESERVE_ADDR="0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed";
+const T=D.times,B=D.blocks;
+const P=D.prev||null,SITE=D.site||{},CLOSE=SITE.close_date||"2026-11-14";
+document.getElementById("updated").innerHTML=`<span class="live">Last updated ${T.as_of_short||T.as_of} · block ${blk(B.as_of)}</span><span>Updates hourly</span><span>Snapshot (freeze) block ${blk(B.snapshot)}, ${T.snapshot}</span>`;
+function daysLeft(){const today=new Date().toLocaleDateString("en-CA",{timeZone:"America/New_York"});return Math.max(0,Math.round((Date.parse(CLOSE)-Date.parse(today))/864e5)+1)} // counts to the END of the close day (ET), today included
+function delta(cur,prv,kind){
+  if(!P||prv==null||cur==null)return"";const dv=cur-prv,cls=Math.abs(dv)<1e-9?"fl":dv>0?"up":"dn",ar=dv>0?"▲":dv<0?"▼":"■";
+  const txt=kind==="pp"?`${dv>=0?"+":"−"}${Math.abs(dv).toFixed(1)} pp`:`${dv>=0?"+":""}${usdc(dv)}`;
+  return `<span class="dl ${kind==="reserve"?"fl":cls}" title="Change since block ${num(P.as_of_block)} (${P.as_of_short})">${ar} ${txt} ${P.label||("since "+P.as_of_short.replace(/,.*$/,""))}</span>`}
+function hero(){
+  const A=D.summary_all,S=D.summary_snusd,t=D.totals,dl=daysLeft(),cd=new Date(CLOSE+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"});
+  document.getElementById("hero").innerHTML=`
+  <div class="hs"><div class="hk">Snapshot capital redeemed</div><div class="hv ok">${pct(A.pct_capital)}</div><div class="hsub">of ${usdc(A.affected_usd)} held at the freeze · sNUSD holders <b>${pct(S.pct_capital)}</b></div><div class="bar"><i style="width:${Math.min(100,A.pct_capital)}%"></i></div>${delta(A.pct_capital,P&&P.all_pct_capital,"pp")}</div>
+  <div class="hs"><div class="hk">USDC paid out</div><div class="hv">${usdc(t.usdc_paid)}</div><div class="hsub">${num(t.redeem_events)} redemptions by ${num(t.unique_redeemers)} wallets, at 0.51 USDC per NUSD</div>${delta(t.usdc_paid,P&&P.usdc_paid_total,"usd")}</div>
+  <div class="hs"><div class="hk">USDC reserve remaining</div><div class="hv">${usdc(t.usdc_reserve_now)}</div><div class="hsub">in the redemption <a href="${ES}${RESERVE_ADDR}" target="_blank" rel="noopener">AssetReserve</a>, of ${usdc(t.usdc_funded_to_reserve)} deposited</div>${delta(t.usdc_reserve_now,P&&P.usdc_reserve_now,"reserve")}</div>
+  <div class="hs"><div class="hk">Days to expected close</div><div class="hv warn">${dl}</div><div class="hsub">${dl>1?`until the expected close, end of ${cd} (per Neutrl)`:dl===1?`last day: expected close end of ${cd}`:`redemption window expected to have closed (${cd})`}</div></div>`;
+  document.getElementById("srcline").innerHTML=`Source: Ethereum mainnet onchain logs via public RPC, as of block ${blk(B.as_of)}. Redemption contract ${al(REDEEM_ADDR)}, NUSD ${al(NUSD_ADDR)}. Last redemption seen at block ${blk(B.last_redeem)}.${P?"":" 24-hour changes appear once a day of hourly snapshots has accumulated."}`;
+}
+
+function headline(s){
+  const S=D["summary_"+s],U=D["summary_"+s+"_unrestricted"],N=D["summary_"+s+"_nodust"];
+  const who=s==="snusd"?"sNUSD holders":"NUSD + sNUSD holders";
+  document.getElementById("headline").innerHTML=`
+  <div class="card"><div class="k">Affected wallets</div><div class="v">${num(S.wallets)}</div><div class="s">${who} at the freeze, protocol contracts excluded</div></div>
+  <div class="card"><div class="k">Wallets that redeemed</div><div class="v">${num(S.redeemed_wallets)} <span class="small mut">(${pct(S.pct_wallets)})</span></div><div class="bar"><i style="width:${S.pct_wallets}%"></i></div><div class="s">${pct(N.pct_wallets)} if you ignore ${num(S.wallets-N.wallets)} dust wallets under $1</div></div>
+  <div class="card"><div class="k">Affected capital</div><div class="v">${usdc(S.affected_usd)}</div><div class="s">value at the freeze at $1/NUSD (full position of these wallets)</div></div>
+  <div class="card"><div class="k">Capital redeemed</div><div class="v">${usdc(S.redeemed_usd_capped)} <span class="small mut">(${pct(S.pct_capital)})</span></div><div class="bar"><i style="width:${S.pct_capital}%"></i></div><div class="s">capped at each wallet's snapshot value; uncapped ${usdc(S.redeemed_usd_raw)}</div></div>
+  <div class="card"><div class="k">USDC paid to these wallets</div><div class="v">${usdc(S.usdc_paid)}</div><div class="s">at 0.51 USDC per NUSD</div></div>`;
+  document.getElementById("headnote").innerHTML=`<b>Excluding the one blacklisted wallet</b> (<a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a">0xb0bf…9a9a</a>, ${usdc(S.affected_usd-U.affected_usd)} of sNUSD locked, blacklisted by Neutrl on Sep 16 so it cannot unstake or redeem): affected capital ${usdc(U.affected_usd)}, of which <b>${pct(U.pct_capital)}</b> has been redeemed.`;
+}
+function totals(){
+  const t=D.totals,sn=D.supply.snapshot,now=D.supply.now;
+  document.getElementById("totals").innerHTML=`
+  <div class="card"><div class="k">NUSD redeemed (burned)</div><div class="v">${usdc(t.nusd_redeemed)}</div><div class="s">${pct(t.pct_of_nusd_supply_redeemed)} of the ${usdc(sn.nusd_supply)} NUSD supply at the freeze</div></div>
+  <div class="card"><div class="k">USDC paid out</div><div class="v">${usd(t.usdc_paid)}</div><div class="s">${num(t.redeem_events)} redemptions</div></div>
+  <div class="card"><div class="k">Unique redeeming wallets</div><div class="v">${num(t.unique_redeemers)}</div><div class="s">${num(t.unique_redeemers-t.outsider_redeemers)} held at the snapshot, ${num(t.outsider_redeemers)} got tokens later</div></div>
+  <div class="card"><div class="k">USDC left in redemption reserve</div><div class="v">${usdc(t.usdc_reserve_now)}</div><div class="s">${usdc(t.usdc_funded_to_reserve)} deposited so far</div></div>
+  <div class="card"><div class="k">NUSD supply now</div><div class="v">${usdc(now.nusd_supply)}</div><div class="s">sNUSD supply ${num(now.snusd_supply/1e6,2)}M (was ${num(sn.snusd_supply/1e6,2)}M)</div></div>`;
+}
+let tc;
+function timeChart(m){
+  const dd=D.daily,L=dd.map(x=>x.date.slice(5));
+  if(tc)tc.destroy();
+  const ds=m==="cum"?[
+    {type:"line",label:"Redeemed, $ (NUSD burned), all wallets",data:dd.map(x=>x.cum_nusd),borderColor:"#3fb950",backgroundColor:"#3fb95033",yAxisID:"y",tension:.2,fill:true},
+    {type:"line",label:"…of which snapshot wallets (capped)",data:dd.map(x=>x.cum_snapshot_capital),borderColor:"#2ea043",borderDash:[5,4],yAxisID:"y",tension:.2},
+    {type:"line",label:"USDC paid",data:dd.map(x=>x.cum_usdc),borderColor:"#d29922",yAxisID:"y",tension:.2},
+    {type:"line",label:"Wallets redeemed (all)",data:dd.map(x=>x.cum_wallets),borderColor:"#58a6ff",yAxisID:"y1",tension:.2},
+    {type:"line",label:"…of which snapshot wallets",data:dd.map(x=>x.cum_snapshot_wallets),borderColor:"#58a6ff",borderDash:[5,4],yAxisID:"y1",tension:.2}]
+   :[{type:"bar",label:"Redeemed that day, $ (NUSD burned)",data:dd.map(x=>x.nusd),backgroundColor:"#3fb950aa",yAxisID:"y"},
+     {type:"line",label:"New wallets that day",data:dd.map(x=>x.new_wallets),borderColor:"#58a6ff",yAxisID:"y1",tension:.2}];
+  tc=new Chart(document.getElementById("timeChart"),{data:{labels:L,datasets:ds},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:"index",intersect:false},
+    plugins:{legend:{labels:{color:"#c9d1d9",boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${usd(c.raw)}`:`${c.dataset.label}: ${num(c.raw)}`}}},
+    scales:{x:{ticks:{color:"#8b949e",maxRotation:0,autoSkip:true},grid:{color:"#21262d"}},y:{position:"left",beginAtZero:true,ticks:{color:"#8b949e",callback:v=>usdc(v)},grid:{color:"#21262d"}},y1:{position:"right",beginAtZero:true,ticks:{color:"#8b949e"},grid:{display:false},title:{display:true,text:"wallets",color:"#8b949e"}}}}});
+}
+let bc;
+function buckets(s){
+  const rows=D["buckets_"+s];
+  let h=`<tr><th>Size at snapshot</th><th>Wallets</th><th>Redeemed</th><th>% wallets</th><th>Affected $</th><th>Redeemed $ (capped)</th><th>% capital</th><th>USDC paid</th></tr>`;
+  for(const r of rows)h+=`<tr><td>${r.bucket}</td><td>${num(r.wallets)}</td><td>${num(r.redeemed_wallets)}</td><td>${pct(r.pct_wallets)}</td><td>${usd(r.affected_usd)}</td><td>${usd(r.redeemed_usd_capped)}</td><td>${pct(r.pct_capital)}</td><td>${usd(r.usdc_paid)}</td></tr>`;
+  const S=D["summary_"+s];
+  h+=`<tr><td><b>Total</b></td><td><b>${num(S.wallets)}</b></td><td><b>${num(S.redeemed_wallets)}</b></td><td><b>${pct(S.pct_wallets)}</b></td><td><b>${usd(S.affected_usd)}</b></td><td><b>${usd(S.redeemed_usd_capped)}</b></td><td><b>${pct(S.pct_capital)}</b></td><td><b>${usd(S.usdc_paid)}</b></td></tr>`;
+  document.getElementById("buckets").innerHTML=h;
+  if(bc)bc.destroy();
+  bc=new Chart(document.getElementById("bucketChart"),{type:"bar",data:{labels:rows.map(r=>r.bucket),datasets:[{label:"% of wallets redeemed",data:rows.map(r=>r.pct_wallets),backgroundColor:"#58a6ffaa"},{label:"% of capital redeemed",data:rows.map(r=>r.pct_capital),backgroundColor:"#3fb950aa"}]},
+   options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:"#c9d1d9",boxWidth:12}}},scales:{x:{ticks:{color:"#8b949e",maxRotation:0,autoSkip:true},grid:{color:"#21262d"}},y:{max:100,ticks:{color:"#8b949e",callback:v=>v+"%"},grid:{color:"#21262d"}}}}});
+}
+const stCls=s=>s.startsWith("Redeemed")?"ok":s.includes("moved")?"warn":"no";
+function topTable(n){
+  let h=`<tr><th>#</th><th class="tl">Wallet</th><th class="tl">Type</th><th>Value at snapshot</th><th>of which sNUSD</th><th>Redeemed (NUSD)</th><th>USDC received</th><th>Value now</th><th class="tl">Status</th></tr>`;
+  D.top_wallets.slice(0,n).forEach((r,i)=>{h+=`<tr><td>${i+1}</td><td class="tl">${al(r.address)}</td><td class="tl small">${r.label}</td><td>${usd(r.value)}</td><td>${usd(r.snusd_value)}</td><td>${r.redeemed_nusd?usd(r.redeemed_nusd):"–"}</td><td>${r.usdc?usd(r.usdc):"–"}</td><td>${usd(r.remaining_value)}</td><td class="tl ${r.restricted?"bad":stCls(r.status)}">${r.restricted?"Blacklisted: cannot redeem":r.status}</td></tr>`});
+  document.getElementById("top").innerHTML=h;
+}
+function contracts(){
+  let h=`<tr><th class="tl">Contract</th><th class="tl">Label</th><th>Value at snapshot</th><th>Value now</th></tr>`;
+  D.contracts.filter(r=>r.value>=100).forEach(r=>{h+=`<tr><td class="tl">${al(r.address)}</td><td class="tl small">${r.label}</td><td>${usd(r.value)}</td><td>${usd(r.remaining_value)}</td></tr>`});
+  const tot=D.contracts.reduce((a,r)=>a+r.value,0);
+  h+=`<tr><td class="tl"><b>All ${D.contracts.length} contracts</b></td><td></td><td><b>${usd(tot)}</b></td><td><b>${usd(D.contracts.reduce((a,r)=>a+r.remaining_value,0))}</b></td></tr>`;
+  document.getElementById("contracts").innerHTML=h;
+}
+function outsiders(){
+  const t=D.totals;
+  let h=`<p>${num(t.outsider_redeemers)} wallets redeemed ${usd(t.outsider_nusd)} of NUSD (${usd(t.outsider_usdc)} USDC) without holding a position at the snapshot. Mostly they received NUSD/sNUSD after the freeze from protocols that unwound (e.g. Pendle SY redemptions, Strata senior-tranche withdrawals settling in sNUSD) or from other wallets. Inbound NUSD/sNUSD these wallets received after the snapshot, by sender (sNUSD valued at the current share price):</p><div class="tw"><table><tr><th class="tl">Sender</th><th>Value received</th></tr>`;
+  D.outsider_sources.slice(0,12).forEach(([k,v])=>{h+=`<tr><td class="tl">${k}</td><td>${usd(v)}</td></tr>`});
+  h+=`</table></div><p class="mut">The snapshot-wallet totals above are capped at each wallet's snapshot value, so tokens acquired after the freeze are not counted as "affected capital redeemed".</p>`;
+  document.getElementById("outsiders").innerHTML=h;
+}
+function restricted(){
+  let h=`<p>Neutrl can blacklist addresses on sNUSD (FULL_RESTRICTED_STAKER_ROLE: no unstake or transfer) and denylist them on NUSD (no transfer, which blocks redemption). Current list, from RoleGranted / AddedToDenylist events:</p><div class="tw"><table><tr><th class="tl">Address</th><th class="tl">Restriction</th><th class="tl">Since</th><th>Block</th><th>Value at snapshot</th></tr>`;
+  D.restricted_list.forEach(r=>{const dt=new Date(r.ts*1000).toISOString().slice(0,10);h+=`<tr><td class="tl">${al(r.address)}</td><td class="tl">${r.type}</td><td class="tl">${dt}</td><td>${blk(r.block)}</td><td>${usd(r.snapshot_value)}</td></tr>`});
+  h+=`</table></div><p>The largest snapshot holder, <a href="${ES}0xb0bfdc336537730ad2c44083c0f7c545aac79a9a">0xb0bf…9a9a</a>, was minted ~13.0M NUSD directly in April 2026, staked it and locked the sNUSD in AssetLock. It was blacklisted on sNUSD on Sep 16, 2026, the day before redemptions opened. The chain doesn't show why.</p>`;
+  document.getElementById("restricted").innerHTML=h;
+}
+function method(){
+  const sn=D.supply.snapshot,r=D.rates,wc=D.wallet_count_variants;
+  document.getElementById("method").innerHTML=`
+<details class="mdet"><summary>Contracts (Ethereum mainnet, all verified on Etherscan/Blockscout)</summary><ul>
+<li>NUSD (Neutrl USD, 18 dec): ${al("0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE")}</li>
+<li>sNUSD (Staked NUSD, ERC-4626 with cooldown): ${al("0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313")}. Cooldown silo ${al("0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B")}</li>
+<li>NusdRedemption (redemption contract, rate 0.51e18): ${al("0xB3f07D3392102fC23264a78e2A1A8B6421123828")}. USDC AssetReserve ${al("0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed")}</li>
+<li>Neutrl AssetLock (locked NUSD/sNUSD, looked through to lockers): ${al("0x99161BA892ECae335616624c84FAA418F64FF9A6")}</li>
+<li>Strata sNUSDStrategy (srNUSD/jrNUSD collateral): ${al("0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")}</li></ul>
+</details>
+<details class="mdet"><summary>Timeline (onchain)</summary><ul>
+<li><b>Freeze</b>: sNUSD <span class="mono">Paused()</span> at block ${blk(B.freeze)}, ${T.freeze}. The Curve NUSD/USDC pool was denylisted 5 blocks earlier; the Uniswap v4 PoolManager, Balancer V3 Vault and a LayerZero adapter were denylisted on Aug 14. AssetLock was paused at block ${blk(25745747)}.</li>
+<li><b>Snapshot</b> = state at the end of block ${blk(B.snapshot)} (the block before the sNUSD pause), ${T.snapshot}.</li>
+<li><b>Reopening</b>: sNUSD cooldown set to 1 second at block ${blk(B.reopen_cooldown)} (${T.reopen_cooldown}); sNUSD and AssetLock unpaused, AssetLock lock enforcement switched off; NusdRedemption unpaused at block ${blk(B.redeem_open)} (${T.redeem_open}). First redemption at block ${blk(B.first_redeem)}, ${T.first_redeem}.</li></ul>
+</details>
+<details class="mdet"><summary>How redemption works</summary><p>The holder signs the portal's message onchain (<span class="mono">signMessage()</span>), then calls <span class="mono">redeem()</span>, which burns the caller's <i>entire</i> NUSD balance and pays <span class="mono">balance × 0.51</span> USDC from the AssetReserve, emitting <span class="mono">Redeemed(user, nusdAmount, usdcAmount)</span>. sNUSD holders first unstake (<span class="mono">cooldownShares</span> then <span class="mono">unstake</span>, cooldown now 1s) and AssetLock users first unlock. Since reopening, ${num(D.totals.snusd_shares_unstaked_since_reopen)} sNUSD has been unstaked into ${num(D.totals.snusd_nusd_unstaked_since_reopen)} NUSD by ${num(D.totals.snusd_unstakers_since_reopen)} addresses. Every redemption is attributed to the wallet named in its <span class="mono">Redeemed</span> event.</p>
+</details>
+<details class="mdet"><summary>Definitions and assumptions</summary><ul>
+<li><b>Position at snapshot</b> = NUSD balance + sNUSD balance × sNUSD share price (${r.snusd_share_rate_snapshot.toFixed(6)} NUSD per sNUSD at the snapshot) + NUSD/sNUSD locked in AssetLock + NUSD pending in the sNUSD cooldown silo. Rebuilt from every Transfer, AssetLocked/Unlocked and UnstakeRequested/Unstaked event since deployment. Checks: the rebuilt NUSD supply (${num(sn.nusd_supply,2)}) matches onchain <span class="mono">totalSupply()</span> at the snapshot, AssetLock and silo balances match the per-user sums, and top balances match archive <span class="mono">balanceOf</span>.</li>
+<li><b>Pre-incident USD value</b>: 1 NUSD = $1.00, which was NUSD's par value before the freeze. sNUSD is valued through its share price. "Redeemed capital" = NUSD burned by <span class="mono">redeem()</span>, i.e. the pre-incident value given up. "USDC paid" = the actual USDC from the <span class="mono">Redeemed</span> events.</li>
+<li><b>Wallets</b> = EOAs (${num(wc.wallets_eoa)}), EIP-7702 delegated EOAs (${num(wc.wallets_7702)}) and Safe multisigs (${num(wc.wallets_safe)}), with AssetLock lockers looked through. ${num(D.totals.protocol_contracts_snapshot)} other contracts (Pendle, Strata, Morpho, Euler, Royco, DEX pools, bridges, routers, Strata cooldown proxies) are excluded from wallet counts. Raw direct holders including contracts at the snapshot: ${num(wc.raw_snusd_direct_holders_incl_contracts)} sNUSD and ${num(wc.raw_nusd_direct_holders_incl_contracts)} NUSD addresses.</li>
+<li><b>"sNUSD holders"</b> = wallets with any sNUSD exposure (direct or locked) at the snapshot. Their full position, including any plain NUSD, counts as affected capital, because redemption burns NUSD and can't tell where it came from.</li>
+<li><b>Capped redeemed capital</b>: a wallet's redeemed amount counts toward "% of affected capital" only up to its snapshot value. Extra NUSD it acquired later is reported separately (uncapped figure, outsider section).</li>
+<li><b>Status</b>: "Redeemed" = has a Redeemed event and now holds less than 1% of its snapshot position; "still holds some" = redeemed but kept a remainder; "tokens moved out" = no redemption but now holds less than 5% (sold or moved; it may have redeemed from another address, which can't be linked onchain).</li></ul>
+</details>
+<details class="mdet"><summary>Caveats and unknowns</summary><ul>
+<li><b>Ethereum mainnet only.</b> NUSD bridged elsewhere through the LayerZero OFT adapters is excluded (the adapters held about $70 of NUSD/sNUSD combined at the snapshot, so this is negligible).</li>
+<li><b>Holders behind protocols are not looked through</b> (Pendle PT/YT/LP holders, Strata srNUSD/jrNUSD holders, Morpho/Euler lenders). About ${usdc(D.totals.protocol_contract_value_snapshot)} sat in such contracts at the snapshot. Their users show up as "redeemers not at snapshot" once they withdraw and redeem.</li>
+<li><b>Strata</b>: the Strata sNUSDStrategy held ${num(D.contracts.find(c=>c.address==="0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")?.snusd||0)} sNUSD at the snapshot. Per The Defiant and The Crypto Times, the 0.51 rate writes the junior tranche (jrNUSD) to zero and senior (srNUSD) withdrawals settle in sNUSD. Individual srNUSD/jrNUSD holders are out of scope here.</li>
+<li>One person can control several wallets, and tokens can move between wallets after the snapshot, so wallet counts are not person counts.</li>
+<li>The redemption contract takes the rate as an admin parameter; it has been 0.51 since deployment (one RedemptionRateSet event). Neutrl says the program is expected to run until Nov 14, 2026. ${num(D.totals.signed_not_redeemed)} wallet(s) signed the message but have not redeemed.</li>
+<li>Wallet type is read from current code (EOA / 7702 / Safe). A few unverified contracts may be smart-contract wallets and are excluded as contracts.</li></ul>
+</details>
+<details class="mdet"><summary>Sources</summary><ul>
+<li><a href="https://www.neutrl.finance/">neutrl.finance</a>; Neutrl on X: <a href="https://x.com/Neutrl/status/2100614848241414280">announcement</a> (quoted in press below)</li>
+<li><a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout">The Defiant, Sep 18 2026</a>; <a href="https://www.cryptotimes.io/2026/09/18/neutrl-opens-nusd-snusd-redemptions-as-on-chain-rate-reads-0-51/">The Crypto Times, Sep 18 2026</a>; <a href="https://crypto.news/neutrl-opens-nusd-redemptions-as-contract-reads-0-51/">crypto.news</a>; <a href="https://www.cryptotimes.io/2026/08/29/neutrl-reveals-only-27m-liquid-against-137m-book-as-redemptions-approach/">The Crypto Times, Aug 29 2026 (pause, $27M liquid)</a></li>
+<li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract">Blockscout</a> / Etherscan.</li></ul>
+</details>
+<p class="mut">Generated ${D.generated_at_utc} (UTC). Refreshed hourly by a <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/actions/workflows/refresh.yml" target="_blank" rel="noopener">GitHub Actions workflow</a> (pull_logs.py → compute.py → build.py; code and data on the <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/tree/tracker" target="_blank" rel="noopener">tracker branch</a>).</p>`;
+}
+const lc=x=>String(x).toLowerCase();
+const LW=new Map(D.all_wallets.map(r=>[lc(r[0]),r])),LO=new Map(D.outsiders.map(r=>[lc(r[0]),r])),LC=new Map(D.contracts.map(r=>[lc(r.address),r])),LR=new Map();
+D.restricted_list.forEach(r=>{const k=lc(r.address);if(!LR.has(k))LR.set(k,[]);LR.get(k).push(r)});
+const u2=v=>usd(v,2),n2=v=>num(v,2);
+function setAddrURL(a){try{const u=new URL(location.href);if(a)u.searchParams.set("address",a);else u.searchParams.delete("address");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}}
+function shareURL(a){return (SITE.url||location.href.split("?")[0])+"?address="+a}
+function lookup(strict){
+  const inp=document.getElementById("q"),o=document.getElementById("qres"),q=inp.value.trim().toLowerCase();
+  if(!q){o.innerHTML="";setAddrURL(null);return null}
+  if(!/^0x[0-9a-f]{40}$/.test(q)){
+    if(strict)setAddrURL(null);
+    o.innerHTML=(strict||q.length>=42||!/^(0|0x[0-9a-f]*)$/.test(q))?'<div class="lk lkw">That isn\'t a valid Ethereum address. Paste the full address: <span class="mono">0x</span> followed by 40 hex characters.</div>':"";return null}
+  setAddrURL(q);
+  const w=LW.get(q),x=LO.get(q),c=LC.get(q),rs=LR.get(q)||[];
+  const links=`<div class="lklinks"><a href="${ES}${q}" target="_blank" rel="noopener">View on Etherscan ↗</a><a href="https://etherscan.io/token/${NUSD_ADDR}?a=${q}" target="_blank" rel="noopener">NUSD transfers (incl. redemptions) ↗</a><a href="${shareURL(q)}" id="sharelink">Share link</a></div>`;
+  const rsTxt=rs.map(r=>`${r.type} since ${new Date(r.ts*1000).toISOString().slice(0,10)} (block ${blk(r.block)})`).join("; ");
+  const badges=[],kv=[];let cls="";
+  if(w){badges.push(`<span class="bdg info">Held at the snapshot</span>`,`<span class="bdg">${w[7]}</span>`);
+    const st=w[8]?"bad":stCls(w[6]);badges.push(`<span class="bdg ${st}">${w[8]?"Blacklisted / denylisted: cannot redeem":w[6]}</span>`);
+    kv.push(["Position at the freeze snapshot",`${u2(w[1])}${w[2]?` <span class="mut">(sNUSD part ${u2(w[2])})</span>`:""}`],
+            ["Redeemed",w[3]?`${n2(w[3])} NUSD → ${u2(w[4])} USDC`:`<span class="mut">No redemption from this address</span>`],
+            ["Position now (not yet redeemed)",u2(w[5])],
+            ["Redeemed share of snapshot position",w[1]>0?pct(Math.min(100,100*w[3]/w[1])):"n/a"]);
+    if(x)kv.push(["Also redeemed tokens received after the freeze",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`]);
+  }else if(c){badges.push(`<span class="bdg warn">Protocol contract (excluded from wallet counts)</span>`,`<span class="bdg">${c.label}</span>`);
+    kv.push(["Held at the freeze snapshot",u2(c.value)],["Redeemed",c.redeemed_nusd?`${n2(c.redeemed_nusd)} NUSD → ${u2(c.usdc)} USDC`:`<span class="mut">No redemption from this address</span>`],["Holding now",u2(c.remaining_value)]);
+    kv.push(["Note",`<span class="mut" style="font-weight:400">This contract holds NUSD/sNUSD for its own users (e.g. Pendle, Strata, Morpho, Euler). If you deposited there, your position sits inside it.</span>`]);
+  }else if(x){badges.push(`<span class="bdg warn">Not a snapshot holder (outsider redeemer)</span>`);
+    kv.push(["Position at the freeze snapshot",`<span class="mut">None held directly (or only through a protocol such as Pendle/Strata)</span>`],["Redeemed",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`]);
+  }
+  if(rs.length){cls="lkb";if(!w||!w[8])badges.push(`<span class="bdg bad">Blacklisted / denylisted</span>`);kv.push(["Restriction",`<span class="bad">${rsTxt}</span>`])}
+  else if(w&&w[8]){cls="lkb";kv.push(["Restriction",`<span class="bad">${w[8]}</span>`])}
+  if(!w&&!c&&!x&&!rs.length){
+    o.innerHTML=`<div class="lk lkw"><div class="lkaddr">${q}</div><p style="margin:.5em 0"><b>Not found in the snapshot.</b> This address held no NUSD/sNUSD directly at the freeze (block ${blk(B.snapshot)}) and has not redeemed on Ethereum mainnet (data as of block ${blk(B.as_of)}). If you held through Pendle, Strata, Morpho, Euler or another protocol, your position is inside that protocol's contract and isn't looked through here.</p>${links}</div>`;return "none"}
+  o.innerHTML=`<div class="lk ${cls}"><a class="lkaddr" href="${ES}${q}" target="_blank" rel="noopener">${q}</a><div class="badges">${badges.join("")}</div><dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl><div class="mut" style="font-size:.78rem">Values at $1 per NUSD (sNUSD via share price). Redemption pays 0.51 USDC per NUSD. Data as of block ${blk(B.as_of)}.</div>${links}</div>`;
+  return w?"wallet":c?"contract":x?"outsider":"restricted";
+}
+document.getElementById("q").addEventListener("input",()=>lookup(false));
+document.getElementById("qform").addEventListener("submit",e=>{e.preventDefault();lookup(true)});
+document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("#sharelink");if(a&&navigator.clipboard){e.preventDefault();navigator.clipboard.writeText(a.href).then(()=>{a.textContent="Link copied ✓"},()=>{location.href=a.href})}});
+const tab=(id,fn,attr)=>document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>{document.querySelectorAll(`#${id} button`).forEach(x=>x.classList.remove("on"));b.classList.add("on");fn(b.dataset[attr])});
+tab("scope",headline,"s");tab("bscope",buckets,"s");tab("chartmode",timeChart,"m");
+let shown=50;document.getElementById("more").onclick=e=>{shown=shown===50?100:50;e.target.textContent=shown===50?"Show top 100":"Show top 50";topTable(shown)};
+// ---- CSV export: full underlying arrays from the embedded dataset, generated client-side ----
+const csvCell=v=>{if(v==null)return"";if(typeof v==="number")return Number.isFinite(v)?String(v):"";if(typeof v==="boolean")return v?"true":"false";
+  if(typeof v==="object")v=JSON.stringify(v);v=String(v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;
+  return /[",\r\n]/.test(v)||/^\s|\s$/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const isoUTC=t=>t?new Date(t*1000).toISOString().replace(".000Z","Z"):"";
+const CSV={
+  daily:{name:"redemptions-daily",rows:()=>D.daily||[]},
+  buckets:{name:"holder-size-buckets",rows:()=>[["snusd",D.buckets_snusd],["all",D.buckets_all]].flatMap(([sc,a])=>(a||[]).map(r=>({holder_scope:sc,bucket:r.bucket,...r})))},
+  top:{name:"top-holders",rows:()=>(D.top_wallets||[]).map((r,i)=>({rank:i+1,...r}))},
+  wallets:{name:"all-wallets",rows:()=>(D.all_wallets||[]).map(w=>({address:w[0],value:w[1],snusd_value:w[2],redeemed_nusd:w[3],usdc:w[4],remaining_value:w[5],status:w[6],label:w[7],restricted:w[8]||null}))},
+  contracts:{name:"protocol-contracts",rows:()=>D.contracts||[]},
+  outsiders:{name:"outside-redeemers",rows:()=>(D.outsiders||[]).map(x=>({address:x[0],redeemed_nusd:x[1],usdc:x[2]}))},
+  sources:{name:"outsider-inflow-sources",rows:()=>(D.outsider_sources||[]).map(([k,v])=>({sender:k,value_received:v}))},
+  restricted:{name:"blacklisted-addresses",rows:()=>(D.restricted_list||[]).map(r=>({...r,since_utc:isoUTC(r.ts)}))}
+};
+const asofDate=new Date((B.as_of_ts||Date.now()/1000)*1000).toLocaleDateString("en-CA",{timeZone:"America/New_York"});
+function buildCSV(k){const rows=CSV[k].rows(),cols=[],seen=new Set();rows.forEach(r=>Object.keys(r).forEach(c=>{if(!seen.has(c)){seen.add(c);cols.push(c)}}));
+  const text=[cols.join(","),...rows.map(r=>cols.map(c=>csvCell(r[c])).join(","))].join("\r\n")+"\r\n";
+  return {filename:`neutrl-${CSV[k].name}-${asofDate}.csv`,rows:rows.length,cols,text}}
+function downloadCSV(k){const c=buildCSV(k),a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+c.text],{type:"text/csv;charset=utf-8"}));
+  a.download=c.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("button[data-csv]");if(b&&CSV[b.dataset.csv]){e.preventDefault();downloadCSV(b.dataset.csv)}});
+window.neutrlCSV={keys:Object.keys(CSV),build:buildCSV,download:downloadCSV};
+// Charts: re-measure once layout/fonts have settled so the first paint uses the real container size
+function fitCharts(){for(const c of [tc,bc])if(c&&c.canvas&&c.canvas.isConnected){c.resize();c.update("none")}}
+requestAnimationFrame(()=>requestAnimationFrame(fitCharts));window.addEventListener("load",fitCharts);window.addEventListener("pageshow",fitCharts);
+window.addEventListener("orientationchange",()=>setTimeout(fitCharts,200));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitCharts);
+hero();headline("snusd");totals();timeChart("cum");buckets("snusd");topTable(50);contracts();outsiders();restricted();method();
+(()=>{const a=new URLSearchParams(location.search).get("address");if(a){const i=document.getElementById("q");i.value=a.trim();lookup(true);requestAnimationFrame(()=>document.querySelector(".lookup").scrollIntoView({block:"center"}))}})();
+</script>
+</body></html>
