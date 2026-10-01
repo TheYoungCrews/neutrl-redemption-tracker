@@ -70,7 +70,7 @@ input[type=text]{width:100%;min-height:46px;padding:10px 12px;border-radius:10px
 input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
 .btn{background:var(--acc);color:#0b0f14;border:0;border-radius:10px;padding:0 18px;min-height:46px;font:inherit;font-weight:650;cursor:pointer}
 .btn2{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:40px;font:inherit;font-size:.88rem;cursor:pointer}
-#qres:empty{display:none}#qres{margin-top:12px}
+#qres:empty{display:none}.ensline{margin:0 0 8px;font-size:.95rem;overflow-wrap:anywhere}#revens:empty{display:none}#revens{font-size:.85rem;margin-top:2px}#qres{margin-top:12px}
 .lk{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#0f151d}.lk.lkw{border-color:#e3b34155}.lk.lkb{border-color:#ff6b6366}
 .lkaddr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86rem;overflow-wrap:anywhere;word-break:break-all}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.bdg{font-size:.75rem;font-weight:650;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
@@ -95,7 +95,7 @@ input[type=text]:focus{outline:2px solid #5aa9ff66;border-color:var(--acc)}
 <div class="src" id="srcline"></div>
 <h2 style="margin-top:1.4em">Check your wallet</h2>
 <div class="lookup">
-<form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="Paste your 0x address…" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address"><button class="btn" type="submit">Check</button></form>
+<form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="0x address or ENS name (e.g. name.eth)" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address"><button class="btn" type="submit">Check</button></form>
 <div id="qres" class="small" aria-live="polite"></div>
 </div>
 <h2>Snapshot holders: who has redeemed</h2>
@@ -279,6 +279,35 @@ function method(){
 </details>
 <p class="mut">Generated ${D.generated_at_utc} (UTC). Refreshed hourly by a <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/actions/workflows/refresh.yml" target="_blank" rel="noopener">GitHub Actions workflow</a> (pull_logs.py → compute.py → build.py; code and data on the <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/tree/tracker" target="_blank" rel="noopener">tracker branch</a>).</p>`;
 }
+// ---- ENS (client-side, keyless): ensideas API -> ensdata API -> onchain ENS registry via public RPC (CORS-enabled)
+function keccak256(bytes){const RC=[1n,0x8082n,0x800000000000808an,0x8000000080008000n,0x808bn,0x80000001n,0x8000000080008081n,0x8000000000008009n,0x8an,0x88n,0x80008009n,0x8000000an,0x8000808bn,0x800000000000008bn,0x8000000000008089n,0x8000000000008003n,0x8000000000008002n,0x8000000000000080n,0x800an,0x800000008000000an,0x8000000080008081n,0x8000000000008080n,0x80000001n,0x8000000080008008n],
+  RO=[0,1,62,28,27,36,44,6,55,20,3,10,43,25,39,41,45,15,21,8,18,2,61,56,14],M=(1n<<64n)-1n,rot=(v,n)=>n?((v<<BigInt(n))|(v>>BigInt(64-n)))&M:v,rate=136;
+  const p=new Uint8Array(Math.ceil((bytes.length+1)/rate)*rate);p.set(bytes);p[bytes.length]^=1;p[p.length-1]^=0x80;const s=new Array(25).fill(0n);
+  for(let o=0;o<p.length;o+=rate){for(let i=0;i<rate/8;i++){let v=0n;for(let k=7;k>=0;k--)v=(v<<8n)|BigInt(p[o+i*8+k]);s[i]^=v}
+    for(let r=0;r<24;r++){const C=[0,1,2,3,4].map(x=>s[x]^s[x+5]^s[x+10]^s[x+15]^s[x+20]);
+      for(let x=0;x<5;x++){const d=C[(x+4)%5]^rot(C[(x+1)%5],1);for(let y=0;y<25;y+=5)s[x+y]^=d}
+      const b=new Array(25);for(let x=0;x<5;x++)for(let y=0;y<5;y++)b[y+5*((2*x+3*y)%5)]=rot(s[x+5*y],RO[x+5*y]);
+      for(let x=0;x<5;x++)for(let y=0;y<5;y++)s[x+5*y]=b[x+5*y]^((~b[(x+1)%5+5*y])&M&b[(x+2)%5+5*y]);s[0]^=RC[r]}}
+  let h="";for(let i=0;i<4;i++){let v=s[i];for(let k=0;k<8;k++){h+=Number(v&0xffn).toString(16).padStart(2,"0");v>>=8n}}return h}
+const hexBytes=h=>Uint8Array.from(h.match(/../g)||[],x=>parseInt(x,16));
+function namehash(name){let n="0".repeat(64);if(name)for(const l of name.split(".").reverse())n=keccak256(hexBytes(n+keccak256(new TextEncoder().encode(l))));return n}
+const esc=s=>String(s).replace(/[&<>"'`]/g,c=>"&#"+c.charCodeAt(0)+";");
+const ENS_RE=/^(?:[^\s.\/?#<>"'`&]+\.)+[a-z0-9-]{2,}$/i;
+const ENS_REGISTRY="0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",ENS_RPCS=["https://eth.drpc.org","https://ethereum-rpc.publicnode.com"];
+const isAddr=a=>typeof a==="string"&&/^0x[0-9a-fA-F]{40}$/.test(a)&&!/^0x0{40}$/.test(a);
+async function fetchJSON(url,opt={},ms=6000){const c=new AbortController(),tm=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{...opt,signal:c.signal});if(!r.ok)throw new Error("HTTP "+r.status);return await r.json()}finally{clearTimeout(tm)}}
+async function ethCall(to,data){let last;for(const u of ENS_RPCS){try{const j=await fetchJSON(u,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:"eth_call",params:[{to,data},"latest"]})},8000);if(j.error)throw new Error(j.error.message);return j.result}catch(e){last=e}}throw last}
+async function ensViaRPC(name){const node=namehash(name.toLowerCase()),r=await ethCall(ENS_REGISTRY,"0x0178b8bf"+node),res="0x"+String(r).slice(-40);
+  if(!isAddr(res))return null;const a=await ethCall(res,"0x3b3b57de"+node);if(!a||a.length<42)return null;const ad="0x"+a.slice(-40);return isAddr(ad)?ad:null}
+const toChecksum=a=>{a=a.toLowerCase().slice(2);const h=keccak256(new TextEncoder().encode(a));return "0x"+[...a].map((c,i)=>parseInt(h[i],16)>=8?c.toUpperCase():c).join("")};
+async function resolveENS(name){let nf=0,err=0,apiErr=false;
+  try{const j=await fetchJSON("https://api.ensideas.com/ens/resolve/"+encodeURIComponent(name));if(isAddr(j&&j.address))return {address:j.address,src:"ensideas"};nf++}catch(e){err++;apiErr=true}
+  if(apiErr){try{const j=await fetchJSON("https://api.ensdata.net/"+encodeURIComponent(name));if(isAddr(j&&j.address))return {address:j.address,src:"ensdata"};nf++}catch(e){err++}}
+  try{const a=await ensViaRPC(name);if(a)return {address:toChecksum(a),src:"rpc"};nf++}catch(e){err++}
+  return nf?{address:null}:{error:true}}
+async function reverseENS(addr,seq){try{const j=await fetchJSON("https://api.ensideas.com/ens/resolve/"+addr,{},5000);if(seq!==lkSeq)return;
+  if(j&&j.name&&isAddr(j.address)&&j.address.toLowerCase()===addr){const el=document.getElementById("revens");if(el)el.innerHTML=`Primary ENS name: <b>${esc(j.name)}</b>`}}catch(e){}}
+let lkSeq=0,ensTimer=null;
 const lc=x=>String(x).toLowerCase();
 const LW=new Map(D.all_wallets.map(r=>[lc(r[0]),r])),LO=new Map(D.outsiders.map(r=>[lc(r[0]),r])),LC=new Map(D.contracts.map(r=>[lc(r.address),r])),LR=new Map();
 D.restricted_list.forEach(r=>{const k=lc(r.address);if(!LR.has(k))LR.set(k,[]);LR.get(k).push(r)});
@@ -287,33 +316,59 @@ function setAddrURL(a){try{const u=new URL(location.href);if(a)u.searchParams.se
 function shareURL(a){return (SITE.url||location.href.split("?")[0])+"?address="+a}
 function lookup(strict){
   const inp=document.getElementById("q"),o=document.getElementById("qres"),q=inp.value.trim().toLowerCase();
-  if(!q){o.innerHTML="";setAddrURL(null);return null}
-  if(!/^0x[0-9a-f]{40}$/.test(q)){
+  clearTimeout(ensTimer);
+  if(!q){lkSeq++;o.innerHTML="";setAddrURL(null);return null}
+  if(!/^0x/.test(q)&&ENS_RE.test(q)){
+    if(strict)return lookupENS(q);
+    ensTimer=setTimeout(()=>lookupENS(q),700);return "ens-pending"}
+  if(!/^0x[0-9a-f]{40}$/.test(q)){lkSeq++;
     if(strict)setAddrURL(null);
-    o.innerHTML=(strict||q.length>=42||!/^(0|0x[0-9a-f]*)$/.test(q))?'<div class="lk lkw">That isn\'t a valid Ethereum address. Paste the full address: <span class="mono">0x</span> followed by 40 hex characters.</div>':"";return null}
-  setAddrURL(q);
+    o.innerHTML=(strict||(/^0x/.test(q)&&q.length>=42))?'<div class="lk lkw">That isn\'t a valid Ethereum address or ENS name. Paste a full address (<span class="mono">0x</span> followed by 40 hex characters) or an ENS name such as <span class="mono">name.eth</span>.</div>':"";return null}
+  return renderAddr(q,null);
+}
+async function lookupENS(name){
+  const seq=++lkSeq,o=document.getElementById("qres");
+  o.innerHTML=`<div class="lk"><span class="mut">Resolving <b>${esc(name)}</b>…</span></div>`;setAddrURL(name);
+  let r;try{r=await resolveENS(name)}catch(e){r={error:true}}
+  if(seq!==lkSeq)return "stale";
+  if(r.address)return renderAddr(r.address.toLowerCase(),{name,address:r.address,src:r.src},seq);
+  o.innerHTML=r.error?`<div class="lk lkw">Couldn't resolve <b>${esc(name)}</b> right now (ENS lookup services unreachable). Try again, or paste the 0x address.</div>`
+    :`<div class="lk lkw"><b>${esc(name)}</b> doesn't resolve to an Ethereum address (no such ENS name, or no ETH address record set). Check the spelling, or paste the 0x address.</div>`;
+  return r.error?"ens-error":"ens-notfound";
+}
+function renderAddr(q,ens,seq){
+  if(seq==null)seq=++lkSeq;
+  const o=document.getElementById("qres");
+  setAddrURL(ens?ens.name:q);
+  const ensLine=ens?`<div class="ensline"><b>${esc(ens.name)}</b> → <a class="mono" href="${ES}${q}" target="_blank" rel="noopener" title="${q}">${ens.address.slice(0,6)}…${ens.address.slice(-5)}</a></div>`:"";
   const w=LW.get(q),x=LO.get(q),c=LC.get(q),rs=LR.get(q)||[];
   const links=`<div class="lklinks"><a href="${ES}${q}" target="_blank" rel="noopener">View on Etherscan ↗</a><a href="https://etherscan.io/token/${NUSD_ADDR}?a=${q}" target="_blank" rel="noopener">NUSD transfers (incl. redemptions) ↗</a><a href="${shareURL(q)}" id="sharelink">Share link</a></div>`;
   const rsTxt=rs.map(r=>`${r.type} since ${new Date(r.ts*1000).toISOString().slice(0,10)} (block ${blk(r.block)})`).join("; ");
   const badges=[],kv=[];let cls="";
+  const RATE=(D.rates&&D.rates.redemption_rate)||null;
+  const est=v=>RATE&&v>0?`≈ ${u2(v*RATE)} USDC <span class="mut" style="font-weight:400">(${u2(v)} × ${RATE} USDC per NUSD${w&&w[2]>0?"; sNUSD must be unstaked to NUSD first":""})</span>`:`<span class="mut">n/a</span>`;
   if(w){badges.push(`<span class="bdg info">Held at the snapshot</span>`,`<span class="bdg">${w[7]}</span>`);
     const st=w[8]?"bad":stCls(w[6]);badges.push(`<span class="bdg ${st}">${w[8]?"Blacklisted / denylisted: cannot redeem":w[6]}</span>`);
     kv.push(["Position at the freeze snapshot",`${u2(w[1])}${w[2]?` <span class="mut">(sNUSD part ${u2(w[2])})</span>`:""}`],
             ["Redeemed",w[3]?`${n2(w[3])} NUSD → ${u2(w[4])} USDC`:`<span class="mut">No redemption from this address</span>`],
-            ["Position now (not yet redeemed)",u2(w[5])],
+            ["Position now (not yet redeemed)",u2(w[5])+(w[5]>w[1]*1.01+1?`<div class="mut" style="font-weight:400;font-size:.85em">Includes sNUSD/NUSD received after the snapshot, e.g. from exiting Pendle or Strata positions, which the snapshot counts under those protocols' contracts.</div>`:"")],
+            ["Estimated redemption value",(w[8]||rs.length)?`<span class="bad">Can't redeem while restricted</span> <span class="mut" style="font-weight:400">(would be ${RATE&&w[5]>0?"≈ "+u2(w[5]*RATE)+" USDC":"n/a"})</span>`:est(w[5])],
             ["Redeemed share of snapshot position",w[1]>0?pct(Math.min(100,100*w[3]/w[1])):"n/a"]);
+    if(w[3]>w[1]+0.01||w[5]>w[1]*1.01+1)kv.push(["How it's counted",`<span class="mut" style="font-weight:400">As a snapshot wallet, not an outsider redeemer: its redemptions count toward "capital redeemed" only up to its snapshot position (${u2(w[1])}); anything above that appears only in the uncapped total.</span>`]);
     if(x)kv.push(["Also redeemed tokens received after the freeze",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`]);
   }else if(c){badges.push(`<span class="bdg warn">Protocol contract (excluded from wallet counts)</span>`,`<span class="bdg">${c.label}</span>`);
     kv.push(["Held at the freeze snapshot",u2(c.value)],["Redeemed",c.redeemed_nusd?`${n2(c.redeemed_nusd)} NUSD → ${u2(c.usdc)} USDC`:`<span class="mut">No redemption from this address</span>`],["Holding now",u2(c.remaining_value)]);
     kv.push(["Note",`<span class="mut" style="font-weight:400">This contract holds NUSD/sNUSD for its own users (e.g. Pendle, Strata, Morpho, Euler). If you deposited there, your position sits inside it.</span>`]);
-  }else if(x){badges.push(`<span class="bdg warn">Not a snapshot holder (outsider redeemer)</span>`);
-    kv.push(["Position at the freeze snapshot",`<span class="mut">None held directly (or only through a protocol such as Pendle/Strata)</span>`],["Redeemed",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`]);
+  }else if(x){badges.push(`<span class="bdg warn">Outsider redeemer: no direct position at the snapshot</span>`);
+    kv.push(["Position at the freeze snapshot",`<span class="mut">None held directly</span>`],["Redeemed",`${n2(x[1])} NUSD → ${u2(x[2])} USDC`],
+      ["How it's counted",`<span class="mut" style="font-weight:400">In "Redeemers who did not hold at the snapshot", not in the snapshot-wallet totals. Typically tokens received after the freeze, e.g. from exiting Pendle or Strata positions, which the snapshot counts under those protocols' contracts.</span>`]);
   }
   if(rs.length){cls="lkb";if(!w||!w[8])badges.push(`<span class="bdg bad">Blacklisted / denylisted</span>`);kv.push(["Restriction",`<span class="bad">${rsTxt}</span>`])}
   else if(w&&w[8]){cls="lkb";kv.push(["Restriction",`<span class="bad">${w[8]}</span>`])}
   if(!w&&!c&&!x&&!rs.length){
-    o.innerHTML=`<div class="lk lkw"><div class="lkaddr">${q}</div><p style="margin:.5em 0"><b>Not found in the snapshot.</b> This address held no NUSD/sNUSD directly at the freeze (block ${blk(B.snapshot)}) and has not redeemed on Ethereum mainnet (data as of block ${blk(B.as_of)}). If you held through Pendle, Strata, Morpho, Euler or another protocol, your position is inside that protocol's contract and isn't looked through here.</p>${links}</div>`;return "none"}
-  o.innerHTML=`<div class="lk ${cls}"><a class="lkaddr" href="${ES}${q}" target="_blank" rel="noopener">${q}</a><div class="badges">${badges.join("")}</div><dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl><div class="mut" style="font-size:.78rem">Values at $1 per NUSD (sNUSD via share price). Redemption pays 0.51 USDC per NUSD. Data as of block ${blk(B.as_of)}.</div>${links}</div>`;
+    o.innerHTML=`${ensLine}<div class="lk lkw"><div class="lkaddr">${q}</div><div id="revens" class="mut"></div><p style="margin:.5em 0"><b>Not found in the snapshot.</b> This address held no NUSD/sNUSD directly at the freeze (block ${blk(B.snapshot)}) and has not redeemed on Ethereum mainnet (data as of block ${blk(B.as_of)}). If you held through Pendle, Strata, Morpho, Euler or another protocol, your position is inside that protocol's contract and isn't looked through here.</p>${links}</div>`;if(!ens)reverseENS(q,seq);return "none"}
+  o.innerHTML=`${ensLine}<div class="lk ${cls}"><a class="lkaddr" href="${ES}${q}" target="_blank" rel="noopener">${q}</a><div id="revens" class="mut"></div><div class="badges">${badges.join("")}</div><dl class="kv">${kv.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl><div class="mut" style="font-size:.78rem">Values at $1 per NUSD (sNUSD via share price). Redemption pays 0.51 USDC per NUSD. Data as of block ${blk(B.as_of)}.</div>${links}</div>`;
+  if(!ens)reverseENS(q,seq);
   return w?"wallet":c?"contract":x?"outsider":"restricted";
 }
 document.getElementById("q").addEventListener("input",()=>lookup(false));

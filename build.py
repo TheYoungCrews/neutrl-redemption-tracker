@@ -49,7 +49,8 @@ if hourly:
     if cur_ts - h["as_of_ts"] <= 36 * 3600: prev, prev_kind = h, "24h"
 if prev is None:
     for h in read_jsonl("data/history.jsonl"):
-        if h.get("as_of_block", 1 << 62) < b["as_of"]: prev, prev_kind = h, "daily"   # append-only: last match = most recent
+        if h.get("as_of_block", 1 << 62) < b["as_of"] and cur_ts - h.get("as_of_ts", cur_ts) >= 12 * 3600:
+            prev, prev_kind = h, "daily"   # append-only: last match = most recent (>= 12h old, so it is a real "previous day")
 prev_out = None
 if prev:
     try:
