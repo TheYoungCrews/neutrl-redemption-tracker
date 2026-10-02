@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-02T02:18:38+00:00",
+ "generated_at_utc": "2026-10-02T09:50:51+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26101602,
-  "as_of_ts": 1790907503,
+  "as_of": 26103856,
+  "as_of_ts": 1790934635,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26101458,
@@ -38,14 +38,14 @@
   "now": {
    "silo_nusd_balance": 1265173.2776306244,
    "silo_cooldowns_sum": 1265173.2776306244,
-   "assetlock_snusd_balance": 13010199.92535304,
-   "assetlock_snusd_locks_sum": 13010199.92535304,
-   "assetlock_nusd_balance": 8418494.88835852,
-   "assetlock_nusd_locks_sum": 8418494.88835852,
+   "assetlock_snusd_balance": 13010070.836856594,
+   "assetlock_snusd_locks_sum": 13010070.836856594,
+   "assetlock_nusd_balance": 8418601.307734977,
+   "assetlock_nusd_locks_sum": 8418601.307734977,
    "nusd_supply": 39849757.3852414,
-   "snusd_supply": 22729887.943366062,
-   "snusd_vault_nusd": 24193400.932350107,
-   "snusd_raw_holders": 419,
+   "snusd_supply": 22729843.39249385,
+   "snusd_vault_nusd": 24193353.51297365,
+   "snusd_raw_holders": 421,
    "nusd_raw_holders": 609
   }
  },
@@ -65,8 +65,8 @@
   "usdc_funded_to_reserve": 13009297.016202,
   "usdc_out_of_reserve": 6905555.243547,
   "usdc_reserve_now": 6103741.772655,
-  "snusd_shares_unstaked_since_reopen": 9175188.859779118,
-  "snusd_nusd_unstaked_since_reopen": 9765953.236010337,
+  "snusd_shares_unstaked_since_reopen": 9175288.841609232,
+  "snusd_nusd_unstaked_since_reopen": 9766059.655386796,
   "snusd_unstakers_since_reopen": 32,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -11134,7 +11134,7 @@
    0.0,
    0.0,
    0.0,
-   348.96,
+   289.96,
    "Not redeemed",
    "EOA",
    ""
@@ -19069,6 +19069,18 @@
    "cum_nusd": 13540304.399779502,
    "cum_usdc": 6905555.243546998,
    "cum_snapshot_capital": 9673844.142578267
+  },
+  {
+   "date": "2026-10-02",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 644,
+   "cum_snapshot_wallets": 466,
+   "cum_nusd": 13540304.399779502,
+   "cum_usdc": 6905555.243546998,
+   "cum_snapshot_capital": 9673844.142578267
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -19220,7 +19232,7 @@
   ],
   [
    "Euler EVault (esNUSD-3)",
-   45355.38877985871
+   45414.38877985871
   ],
   [
    "Morpho Blue",
