@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-02T09:50:51+00:00",
+ "generated_at_utc": "2026-10-02T12:17:07+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26103856,
-  "as_of_ts": 1790934635,
+  "as_of": 26104583,
+  "as_of_ts": 1790943407,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26101458,
@@ -23550,6 +23550,94 @@
    "status": "Not redeemed"
   }
  ],
+ "strata": {
+  "contracts": {
+   "srNUSD": "0x65a44528e8868166401ea08b549e19552af589db",
+   "jrNUSD": "0xfc807058a352b61aeef6a38e2d0fc3990225e772",
+   "strategy": "0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88",
+   "cdo": "0x7b6c960cf185fb27ecb91c174fae065978bedd10",
+   "docs": "https://docs.strata.markets/technical-documentation/contracts-details"
+  },
+  "wipe_block": 26013480,
+  "wipe_ts": 1789844063,
+  "settlement_asset": "sNUSD/NUSD",
+  "usdc_paid_via_strata": 0.0,
+  "deposits_enabled": {
+   "srNUSD": false,
+   "jrNUSD": false
+  },
+  "withdrawals_enabled": {
+   "srNUSD": true,
+   "jrNUSD": false
+  },
+  "senior": {
+   "symbol": "srNUSD",
+   "address": "0x65a44528e8868166401ea08b549e19552af589db",
+   "snapshot": {
+    "supply": 1347230.3971957224,
+    "assets_nusd": 1382676.541511266,
+    "exchange_rate_nusd": 1.0263103804585505
+   },
+   "at_wipe": {
+    "supply": 1347230.3971957224,
+    "assets_nusd": 1670177.0471096763,
+    "exchange_rate_nusd": 1.2397115226810287
+   },
+   "now": {
+    "supply": 214486.17279989718,
+    "assets_nusd": 265900.97987578675,
+    "exchange_rate_nusd": 1.2397115226810287
+   },
+   "withdrawals_since_wipe": {
+    "events": 111,
+    "assets_nusd": 1404276.0672338894,
+    "shares": 1132744.2243958253,
+    "unique_owners": 105
+   },
+   "supply_change_since_wipe": -1132744.2243958253
+  },
+  "junior": {
+   "symbol": "jrNUSD",
+   "address": "0xfc807058a352b61aeef6a38e2d0fc3990225e772",
+   "first_loss": true,
+   "wiped": true,
+   "snapshot": {
+    "supply": 275451.687324428,
+    "assets_nusd": 286570.21720314195,
+    "exchange_rate_nusd": 1.0403647187160574
+   },
+   "at_wipe": {
+    "supply": 275451.687324428,
+    "assets_nusd": 1.0,
+    "exchange_rate_nusd": 3.630400705522e-06
+   },
+   "now": {
+    "supply": 275451.687324428,
+    "assets_nusd": 1.0,
+    "exchange_rate_nusd": 3.630400705522e-06
+   },
+   "withdrawals_since_wipe": {
+    "events": 0,
+    "assets_nusd": 0.0,
+    "shares": 0.0,
+    "unique_owners": 0
+   },
+   "supply_change_since_wipe": 0.0,
+   "note": "Junior is first-loss. After the wipe accounting update, onchain jrNUSD/NUSD is ~0; outstanding shares remain but claim essentially nothing. Not a Neutrl-portal redemption %."
+  },
+  "strategy": {
+   "address": "0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88",
+   "snusd_balance_snapshot": 1600280.2269591026,
+   "snusd_balance_at_wipe": 1569767.9374652926,
+   "snusd_balance_now": 250439.67357095616,
+   "nusd_value_snapshot": 1702314.1864743622,
+   "nusd_value_at_wipe": 1670840.8407675575,
+   "nusd_value_now": 266564.77353366814,
+   "senior_coverage_now": 1.002496394177229,
+   "senior_coverage_at_wipe": 1.000397439097268,
+   "note": "Coverage = strategy sNUSD \u00d7 sNUSD share rate / srNUSD totalAssets (NUSD units). After junior write-down, residual collateral is allocated to senior."
+  }
+ },
  "wallet_count_variants": {
   "raw_snusd_direct_holders_incl_contracts": 434,
   "raw_nusd_direct_holders_incl_contracts": 627,

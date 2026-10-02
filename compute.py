@@ -12,6 +12,10 @@ ASSETLOCK = "0x99161ba892ecae335616624c84faa418f64ff9a6"
 REDEMPTION = "0xb3f07d3392102fc23264a78e2a1a8b6421123828"
 RESERVE = "0xfee69fa9c94b9d967390a4f4144e2746603ec1ed"
 STRATA = "0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88"
+SRNUSD = "0x65a44528e8868166401ea08b549e19552af589db"   # Strata senior tranche (docs.strata.markets)
+JRNUSD = "0xfc807058a352b61aeef6a38e2d0fc3990225e772"   # Strata junior tranche (first-loss)
+STRATA_CDO = "0x7b6c960cf185fb27ecb91c174fae065978bedd10"
+STRATA_WIPE_BLOCK = 26013480  # Accounting update: jrNUSD totalAssets -> 1; srNUSD/NUSD rate -> 1.239711522681
 INSTANT_UNSTAKING = "0x4bb8f67d5643e6289c55371dbfd021ddfdaea0f6"  # its Silo cooldown entry is settled by burning NUSD from the Silo, so it is not a real claim
 
 # Key blocks (all verified from onchain events; see README)
@@ -103,6 +107,8 @@ def classify(a):
 LABELS = {
     SNUSD: "sNUSD vault (Neutrl)", SILO: "sNUSD cooldown Silo (Neutrl)", ASSETLOCK: "Neutrl AssetLock (looked-through)",
     STRATA: "Strata sNUSDStrategy (srNUSD/jrNUSD tranches)",
+    SRNUSD: "Strata srNUSD (senior tranche)", JRNUSD: "Strata jrNUSD (junior tranche)",
+    STRATA_CDO: "Strata NeutrlCDO",
     "0x10c5e7711eaddc1b6b64e40ef1976fc462666409": "Pendle SY-sNUSD", "0x212bfcb33fcdaa603cff2abef25444ae5519dee8": "Pendle SY-sNUSD (2)",
     "0x29ac34026c369d21fe3b2c7735ec986e2880b347": "Pendle SY-NUSD", "0x33305665f69b4642d1275f4ce81c23651674d21c": "Pendle Merkle distributor",
     "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb": "Morpho Blue", "0x4ea52e06f21a1a5d60da88a813c6d0e597d8e7c6": "Euler EVault (esNUSD-3)",
@@ -316,6 +322,102 @@ contract_tbl = sorted(contracts, key=lambda r: -r["value"])
 proto_value = sum(r["value"] for r in contracts)
 strata_unstaked = unstk.get(STRATA, [0, 0])
 
+# ---------- Strata Neutrl market (srNUSD / jrNUSD) ----------
+# Contracts: docs.strata.markets/technical-documentation/contracts-details (verified proxies on Etherscan).
+# Metrics from ERC-4626 totalSupply / totalAssets / convertToAssets, strategy sNUSD balanceOf, and
+# Withdraw / Deposit / DepositsStateChanged / WithdrawalsStateChanged events. Strata exits settle in
+# sNUSD/NUSD (not Neutrl portal USDC); USDC Transfer involving strategy/CDO/tranches since reopen = 0.
+def _sel(sig):
+    return "0x" + keccak.new(digest_bits=256, data=sig.encode()).hexdigest()[:8]
+_ONE = hex(10**18)[2:].rjust(64, "0")
+def _tranche_at(addr, blk):
+    return {
+        "supply": W(eth_call(addr, "0x18160ddd", blk)) / 1e18,
+        "assets_nusd": W(eth_call(addr, _sel("totalAssets()"), blk)) / 1e18,
+        "exchange_rate_nusd": W(eth_call(addr, _sel("convertToAssets(uint256)") + _ONE, blk)) / 1e18,
+    }
+def _snusd_bal(holder, blk):
+    return W(eth_call(SNUSD, "0x70a08231" + "0"*24 + holder[2:], blk)) / 1e18
+def _wd_stats(name, from_blk, to_blk):
+    path = f"data/logs_{name}.json"
+    if not os.path.exists(path):
+        return {"events": 0, "assets_nusd": 0.0, "shares": 0.0, "unique_owners": 0}
+    assets = shares = n = 0; owners = set()
+    for l in json.load(open(path))["logs"]:
+        if TOP.get(l["topics"][0]) != "Withdraw(address,address,address,uint256,uint256)": continue
+        b = bn(l)
+        if b < from_blk or b > to_blk: continue
+        data = l["data"][2:]
+        assets += W("0x" + data[0:64]); shares += W("0x" + data[64:128]); n += 1
+        if len(l["topics"]) > 3: owners.add(a40(l["topics"][3]))
+    return {"events": n, "assets_nusd": assets / 1e18, "shares": shares / 1e18, "unique_owners": len(owners)}
+def _cdo_flags(upto):
+    path = "data/logs_strata_cdo.json"
+    dep = {SRNUSD: None, JRNUSD: None}; wdr = {SRNUSD: None, JRNUSD: None}
+    if not os.path.exists(path):
+        return {"deposits_enabled": dep, "withdrawals_enabled": wdr}
+    for l in json.load(open(path))["logs"]:
+        if bn(l) > upto: continue
+        sg = TOP.get(l["topics"][0]); tranche = a40(l["topics"][1]) if len(l["topics"]) > 1 else None
+        if tranche not in (SRNUSD, JRNUSD): continue
+        enabled = bool(W(l["data"]))
+        if sg == "DepositsStateChanged(address,bool)": dep[tranche] = enabled
+        elif sg == "WithdrawalsStateChanged(address,bool)": wdr[tranche] = enabled
+    return {"deposits_enabled": dep, "withdrawals_enabled": wdr}
+def _coverage(strat_nusd, sr_assets):
+    return (strat_nusd / sr_assets) if sr_assets and sr_assets > 0 else None
+
+sr_snap = _tranche_at(SRNUSD, SNAP); jr_snap = _tranche_at(JRNUSD, SNAP)
+sr_now = _tranche_at(SRNUSD, head); jr_now = _tranche_at(JRNUSD, head)
+sr_wipe = _tranche_at(SRNUSD, STRATA_WIPE_BLOCK); jr_wipe = _tranche_at(JRNUSD, STRATA_WIPE_BLOCK)
+snusd_strat_snap = _snusd_bal(STRATA, SNAP)
+snusd_strat_now = _snusd_bal(STRATA, head)
+snusd_strat_wipe = _snusd_bal(STRATA, STRATA_WIPE_BLOCK)
+strat_nusd_snap = snusd_strat_snap * R_SNAP
+strat_nusd_now = snusd_strat_now * R_NOW
+strat_nusd_wipe = snusd_strat_wipe * share_rate(STRATA_WIPE_BLOCK)
+flags_now = _cdo_flags(head)
+sr_wd_post = _wd_stats("srnusd", STRATA_WIPE_BLOCK, head)
+jr_wd_post = _wd_stats("jrnusd", STRATA_WIPE_BLOCK, head)
+jr_wiped = jr_now["exchange_rate_nusd"] < 1e-4 or jr_now["assets_nusd"] <= 1.0
+strata = {
+    "contracts": {
+        "srNUSD": SRNUSD, "jrNUSD": JRNUSD, "strategy": STRATA, "cdo": STRATA_CDO,
+        "docs": "https://docs.strata.markets/technical-documentation/contracts-details",
+    },
+    "wipe_block": STRATA_WIPE_BLOCK, "wipe_ts": ts(STRATA_WIPE_BLOCK),
+    "settlement_asset": "sNUSD/NUSD",
+    "usdc_paid_via_strata": 0.0,
+    "deposits_enabled": {"srNUSD": flags_now["deposits_enabled"].get(SRNUSD), "jrNUSD": flags_now["deposits_enabled"].get(JRNUSD)},
+    "withdrawals_enabled": {"srNUSD": flags_now["withdrawals_enabled"].get(SRNUSD), "jrNUSD": flags_now["withdrawals_enabled"].get(JRNUSD)},
+    "senior": {
+        "symbol": "srNUSD", "address": SRNUSD,
+        "snapshot": sr_snap, "at_wipe": sr_wipe, "now": sr_now,
+        "withdrawals_since_wipe": sr_wd_post,
+        "supply_change_since_wipe": sr_now["supply"] - sr_wipe["supply"],
+    },
+    "junior": {
+        "symbol": "jrNUSD", "address": JRNUSD, "first_loss": True, "wiped": jr_wiped,
+        "snapshot": jr_snap, "at_wipe": jr_wipe, "now": jr_now,
+        "withdrawals_since_wipe": jr_wd_post,
+        "supply_change_since_wipe": jr_now["supply"] - jr_wipe["supply"],
+        "note": ("Junior is first-loss. After the wipe accounting update, onchain jrNUSD/NUSD is ~0; "
+                 "outstanding shares remain but claim essentially nothing. Not a Neutrl-portal redemption %.") if jr_wiped else None,
+    },
+    "strategy": {
+        "address": STRATA,
+        "snusd_balance_snapshot": snusd_strat_snap,
+        "snusd_balance_at_wipe": snusd_strat_wipe,
+        "snusd_balance_now": snusd_strat_now,
+        "nusd_value_snapshot": strat_nusd_snap,
+        "nusd_value_at_wipe": strat_nusd_wipe,
+        "nusd_value_now": strat_nusd_now,
+        "senior_coverage_now": _coverage(strat_nusd_now, sr_now["assets_nusd"]),
+        "senior_coverage_at_wipe": _coverage(strat_nusd_wipe, sr_wipe["assets_nusd"]),
+        "note": "Coverage = strategy sNUSD × sNUSD share rate / srNUSD totalAssets (NUSD units). After junior write-down, residual collateral is allocated to senior.",
+    },
+}
+
 out = {
     "generated_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
     "blocks": {"snapshot": SNAP, "snapshot_ts": ts(SNAP), "freeze": FREEZE_BLOCK, "freeze_ts": ts(FREEZE_BLOCK),
@@ -352,6 +454,7 @@ out = {
     "outsider_sources": outsider_sources,
     "top_wallets": sorted(wallets, key=lambda r: -r["value"])[:100],
     "contracts": contract_tbl,
+    "strata": strata,
     "wallet_count_variants": {
         "raw_snusd_direct_holders_incl_contracts": snap_checks["snusd_raw_holders"],
         "raw_nusd_direct_holders_incl_contracts": snap_checks["nusd_raw_holders"],
@@ -364,5 +467,6 @@ json.dump(out, open("data/dashboard_data.json", "w"), indent=1)
 json.dump({str(k): v for k, v in TS.items()}, open(tsf, "w"))
 json.dump(meta, open("data/address_meta.json", "w"), indent=1)
 print(json.dumps({k: out[k] for k in ["blocks", "rates", "totals", "summary_all", "summary_snusd", "wallet_count_variants"]}, indent=1))
+print(json.dumps({"strata_senior_now": out["strata"]["senior"]["now"], "strata_junior_now": out["strata"]["junior"]["now"], "strata_strategy": {k: out["strata"]["strategy"][k] for k in ("snusd_balance_now","nusd_value_now","senior_coverage_now")}, "junior_wiped": out["strata"]["junior"]["wiped"], "sr_withdrawals_since_wipe": out["strata"]["senior"]["withdrawals_since_wipe"]}, indent=1))
 print(json.dumps(out["supply"]["snapshot"], indent=1))
 print(out["outsider_sources"][:10])

@@ -37,7 +37,7 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 
 ## Files
 - `rpc.py`              keyless JSON-RPC helper (Tenderly public gateway for wide eth_getLogs ranges; drpc/publicnode fallback)
-- `pull_logs.py`        incremental raw log pull -> `data/logs_*.json` (NUSD, sNUSD, NusdRedemption, AssetReserve, AssetLock, USDC flows to/from reserve)
+- `pull_logs.py`        incremental raw log pull -> `data/logs_*.json` (NUSD, sNUSD, NusdRedemption, AssetReserve, AssetLock, USDC flows to/from reserve, Strata srNUSD/jrNUSD Withdraw+Deposit, NeutrlCDO deposit/withdraw flags)
 - `label_contracts.py`  one-off: EOA / EIP-7702 / contract detection + Blockscout names for snapshot holders -> `data/address_meta.json` (compute.py labels new addresses on the fly)
 - `compute.py`          all metrics -> `data/dashboard_data.json`
 - `build.py` + `template.html` -> `site/index.html` (data embedded, Chart.js from jsDelivr, pre-rendered with headless Chrome),
@@ -49,9 +49,31 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 ## Key onchain facts (Ethereum mainnet)
 - NUSD 0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE; sNUSD 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313 (Silo 0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B)
 - NusdRedemption 0xB3f07D3392102fC23264a78e2A1A8B6421123828 (rate 0.51e18), USDC AssetReserve 0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed
-- AssetLock 0x99161BA892ECae335616624c84FAA418F64FF9A6 (looked through); Strata sNUSDStrategy 0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88
+- AssetLock 0x99161BA892ECae335616624c84FAA418F64FF9A6 (looked through); Strata sNUSDStrategy 0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88; srNUSD 0x65a44528e8868166401eA08b549E19552af589dB; jrNUSD 0xFC807058A352b61aEef6A38e2D0fC3990225E772; NeutrlCDO 0x7b6c960cf185fb27ECb91c174FAe065978beDd10
 - Freeze: sNUSD Paused() block 25,745,732 (2026-08-13 11:14:59 UTC). Snapshot = end of block 25,745,731.
 - Reopen: sNUSD cooldown -> 1s block 25,997,006; NusdRedemption Unpaused block 25,997,438 (2026-09-17 13:14:23 UTC).
+
+## Strata senior / junior (srNUSD / jrNUSD)
+Onchain tranche metrics for Strata's Neutrl market, shown alongside the Neutrl portal holder stats.
+
+**Contracts** (from [Strata docs](https://docs.strata.markets/technical-documentation/contracts-details), Ethereum mainnet):
+- srNUSD `0x65a44528e8868166401eA08b549E19552af589dB` (senior)
+- jrNUSD `0xFC807058A352b61aEef6A38e2D0fC3990225E772` (junior, first-loss)
+- NeutrlCDO `0x7b6c960cf185fb27ECb91c174FAe065978beDd10`
+- NeutrlStrategy / sNUSDStrategy `0x3CeF2c09c4fAD37E9bdD86CD9810c3042fB5DE88` (already tracked as the large sNUSD holder)
+
+**What is measured** (compute.py `strata`, no invented numbers):
+- Outstanding supply and NUSD-denominated assets / exchange rate via ERC-4626 `totalSupply`, `totalAssets`, `convertToAssets(1e18)` at the freeze snapshot, the wipe block, and head
+- Strategy sNUSD `balanceOf` × sNUSD share rate vs srNUSD `totalAssets` (senior coverage)
+- Post-wipe `Withdraw` events (wallet/owner counts, shares burned, assets in NUSD accounting units)
+- Deposit/withdrawal enable flags from CDO `DepositsStateChanged` / `WithdrawalsStateChanged`
+- `usdc_paid_via_strata` = 0 when no USDC Transfer touches strategy/CDO/tranches (Strata exits settle in sNUSD/NUSD, not Neutrl portal USDC)
+
+**Wipe block**: `26013480` — first block where jrNUSD `totalAssets` ≤ 1 NUSD and srNUSD/NUSD ≈ `1.239711522681` (matches Strata's scheduled update / Defiant reporting). Junior is shown as written down (~0 rate), not as a Neutrl redemption %.
+
+**Logs**: `pull_logs.py` stores topic-filtered Deposit/Withdraw on the tranches and state-change events on the CDO into `logs_srnusd.json` / `logs_jrnusd.json` / `logs_strata_cdo.json` (segmented like the other targets).
+
+**Limitations**: contract accounting rates are not a guaranteed USDC recovery at 0.51; junior share supply can remain after write-down; day-over-day Strata deltas need a prior `strata` object in `history_hourly.jsonl`.
 
 ## Local daily summary (optional morning routine; separate from the hourly site refresh)
     ./refresh.sh --pages                 # sync latest data from GitHub (no push unless local is newer)

@@ -9,7 +9,7 @@ Usage:  python logstore.py pack     # logs_*.json -> segments (run before commit
         python logstore.py unpack   # segments -> logs_*.json (run after checkout / git pull)
         python logstore.py verify   # roundtrip check, no writes"""
 import json, os, sys, glob
-NAMES = ["nusd", "snusd", "redemption", "assetreserve", "assetlock"]   # pull_logs.py TARGETS
+NAMES = ["nusd", "snusd", "redemption", "assetreserve", "assetlock", "srnusd", "jrnusd", "strata_cdo"]   # pull_logs.py TARGETS
 SEG = 100_000
 D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 

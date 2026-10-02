@@ -33,7 +33,30 @@ rec = {
                                        "assetlock_nusd_balance", "assetlock_snusd_balance", "silo_nusd_balance")},
     "blacklisted_wallet": None if bl is None else {k: bl.get(k) for k in
         ("nusd", "snusd", "lock_nusd", "lock_snusd", "cooldown", "redeemed_nusd", "usdc", "redeemed", "remaining_value")},
+    "strata": None,
 }
+st = d.get("strata")
+if st:
+    sr, jr, sy = st.get("senior") or {}, st.get("junior") or {}, st.get("strategy") or {}
+    rec["strata"] = {
+        "wipe_block": st.get("wipe_block"),
+        "junior_wiped": jr.get("wiped"),
+        "deposits_enabled_sr": (st.get("deposits_enabled") or {}).get("srNUSD"),
+        "deposits_enabled_jr": (st.get("deposits_enabled") or {}).get("jrNUSD"),
+        "sr_supply": (sr.get("now") or {}).get("supply"),
+        "sr_assets_nusd": (sr.get("now") or {}).get("assets_nusd"),
+        "sr_rate": (sr.get("now") or {}).get("exchange_rate_nusd"),
+        "sr_withdraw_events_since_wipe": (sr.get("withdrawals_since_wipe") or {}).get("events"),
+        "sr_withdraw_shares_since_wipe": (sr.get("withdrawals_since_wipe") or {}).get("shares"),
+        "sr_withdraw_owners_since_wipe": (sr.get("withdrawals_since_wipe") or {}).get("unique_owners"),
+        "jr_supply": (jr.get("now") or {}).get("supply"),
+        "jr_assets_nusd": (jr.get("now") or {}).get("assets_nusd"),
+        "jr_rate": (jr.get("now") or {}).get("exchange_rate_nusd"),
+        "strategy_snusd": sy.get("snusd_balance_now"),
+        "strategy_nusd_value": sy.get("nusd_value_now"),
+        "senior_coverage": sy.get("senior_coverage_now"),
+        "usdc_paid_via_strata": st.get("usdc_paid_via_strata"),
+    }
 prev = None
 if os.path.exists(HIST):
     lines = [l for l in open(HIST) if l.strip()]
@@ -49,7 +72,7 @@ deltas = None
 if prev:
     deltas = {k: diff(prev.get(k), rec[k]) for k in ("snusd", "all", "usdc_paid_total", "nusd_redeemed_total",
               "redeem_events", "unique_redeemers", "usdc_funded_to_reserve", "usdc_reserve_now",
-              "redemption_rate", "snusd_share_rate", "supply")}
+              "redemption_rate", "snusd_share_rate", "supply", "strata")}
 
 since = prev["as_of_block"] if prev else b["as_of"]
 big, n_new = [], 0

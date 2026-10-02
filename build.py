@@ -29,6 +29,8 @@ def et(t, f="%b %-d, %Y, %-I:%M %p ET"):
 b = d["blocks"]
 times = {k: fmt_ts(b[k + "_ts"]) for k in ["snapshot", "freeze", "reopen_cooldown", "redeem_open", "as_of", "first_redeem", "last_redeem"]}
 times["as_of_short"] = et(b["as_of_ts"])
+if d.get("strata") and d["strata"].get("wipe_ts"):
+    times["wipe"] = fmt_ts(d["strata"]["wipe_ts"])
 try: times["generated"] = fmt_ts(datetime.datetime.fromisoformat(d["generated_at_utc"]).timestamp())
 except (KeyError, TypeError, ValueError): pass
 as_of_date = datetime.datetime.fromtimestamp(b["as_of_ts"], datetime.timezone.utc).astimezone(ET).date()
@@ -61,7 +63,8 @@ if prev:
                     "all_pct_capital": prev["all"]["pct_capital"], "snusd_pct_capital": prev["snusd"]["pct_capital"],
                     "usdc_paid_total": prev["usdc_paid_total"], "usdc_reserve_now": prev["usdc_reserve_now"],
                     "unique_redeemers": prev.get("unique_redeemers"),
-                    "snusd_redeemed_wallets": (prev.get("snusd") or {}).get("redeemed_wallets")}
+                    "snusd_redeemed_wallets": (prev.get("snusd") or {}).get("redeemed_wallets"),
+                    "strata": prev.get("strata")}
     except (KeyError, TypeError) as e:
         print("history entry unusable, deltas hidden:", e); prev_out = None
 

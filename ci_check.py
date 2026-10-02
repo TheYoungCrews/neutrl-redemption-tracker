@@ -9,7 +9,7 @@ cur = json.load(open("data/dashboard_data.json")); prev = head_json("data/dashbo
 b, t = cur["blocks"], cur["totals"]
 if len(cur.get("all_wallets", [])) < 1000: errs.append(f"all_wallets has only {len(cur.get('all_wallets', []))} rows")
 if not cur.get("daily"): errs.append("daily is empty")
-for k in ("summary_all", "summary_snusd", "buckets_all", "buckets_snusd", "contracts", "outsiders", "restricted_list", "top_wallets"):
+for k in ("summary_all", "summary_snusd", "buckets_all", "buckets_snusd", "contracts", "outsiders", "restricted_list", "top_wallets", "strata"):
     if not cur.get(k): errs.append(f"{k} missing/empty")
 if prev:
     pb, pt = prev["blocks"], prev["totals"]
@@ -21,14 +21,14 @@ if prev:
     pw, cw = prev["summary_all"]["wallets"], cur["summary_all"]["wallets"]
     if abs(cw - pw) > max(5, 0.02 * pw): errs.append(f"snapshot wallet count jumped {pw} -> {cw}")
 # log state must only grow
-for n in ("nusd", "snusd", "redemption", "assetreserve", "assetlock"):
+for n in ("nusd", "snusd", "redemption", "assetreserve", "assetlock", "srnusd", "jrnusd", "strata_cdo"):
     m = head_json(f"data/segments/{n}/meta.json")
     if m and os.path.exists(f"data/logs_{n}.json"):
         c = len(json.load(open(f"data/logs_{n}.json"))["logs"])
         if c < m["count"]: errs.append(f"logs_{n}: {c} logs < committed {m['count']}")
 # built page
 h = open("site/index.html").read()
-for marker in ('id="hero"', "const D={", "Affected wallets", 'id="qform"', "</footer>"):
+for marker in ('id="hero"', "const D={", "Affected wallets", 'id="qform"', 'id="strata"', "</footer>"):
     if marker not in h: errs.append(f"site/index.html lacks {marker!r}")
 if len(re.findall(r'<button type="button" class="csv" data-csv=', h)) != 8: errs.append("expected 8 CSV buttons")
 if re.search(r'<details class="mdet"[^>]*\bopen', h): errs.append("a Methodology <details> is open by default")

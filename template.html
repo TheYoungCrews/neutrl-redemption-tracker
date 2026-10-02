@@ -170,7 +170,7 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 <a href="#lookup" class="skip">Skip to wallet lookup</a>
 <header><div class="wrap top">
 <div class="brand"><a href="#overview" aria-label="Neutrl Redemption Tracker, back to top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" aria-hidden="true"><rect x=".5" y=".5" width="33" height="33" rx="9" fill="#131119" stroke="#2A2633"/><circle cx="17.00" cy="6.80" r="1.77" fill="#5BE49B"/><circle cx="21.43" cy="7.81" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="10.64" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="14.73" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="19.27" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="21.43" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="17.00" cy="27.20" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="19.27" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="14.73" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="10.64" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="7.81" r="1.77" fill="#3A3546"/><circle cx="17.0" cy="17.0" r="2.55" fill="#F2EEE6"/></svg></a><div><a class="bt" href="#overview"><b>Neutrl Redemption Tracker</b></a><span class="bsub">independent, onchain<span class="cr"><i aria-hidden="true"> · </i>built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></span></span></div></div>
-<nav class="nav" aria-label="Sections"><a href="#overview">overview</a><a href="#lookup">wallet lookup</a><a href="#holders">holders</a><a href="#methodology">methodology</a></nav>
+<nav class="nav" aria-label="Sections"><a href="#overview">overview</a><a href="#strata">strata</a><a href="#lookup">wallet lookup</a><a href="#holders">holders</a><a href="#methodology">methodology</a></nav>
 </div></header>
 <div class="tickbar"><div class="wrap updated" id="updated"></div></div>
 <main>
@@ -192,6 +192,12 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 <div class="src" id="srcline"></div>
 </section>
 <div class="wrap">
+<h2 id="strata"><span class="kick" aria-hidden="true">strata</span>Strata senior vs junior (srNUSD / jrNUSD)</h2>
+<div class="cap" style="margin:-4px 0 14px">Strata tranches Neutrl sNUSD into a senior (srNUSD) and first-loss junior (jrNUSD). After Neutrl's 0.51 rate, onchain accounting wrote the junior claim to ~0 and left residual strategy sNUSD covering senior. Strata withdrawals settle in sNUSD/NUSD — not Neutrl portal USDC. Deposits are disabled onchain.</div>
+<div class="cards" id="strata-cards"></div>
+<div class="tw" style="margin-top:14px"><table id="strata-tbl"></table></div>
+<div class="small mut" id="strata-note" style="margin-top:10px"></div>
+
 <h2 id="lookup"><span class="kick" aria-hidden="true">wallet lookup</span>Check your wallet</h2>
 <div class="lookup">
 <form class="lkrow" id="qform" autocomplete="off"><input type="text" id="q" placeholder="0x address or ENS name (e.g. name.eth)" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Ethereum address or ENS name"><button class="btn" type="submit">Check</button></form>
@@ -307,6 +313,28 @@ function hero(){
   win();ring();
 }
 
+function strata(){
+  const S=D.strata; if(!S){document.getElementById("strata-cards").innerHTML='<div class="card"><div class="s">Strata metrics unavailable in this build.</div></div>';return}
+  const sr=S.senior, jr=S.junior, sy=S.strategy, Pstr=P&&P.strata;
+  const rateTxt=v=>v==null?"n/a":(v<1e-4?"~0":num(v,6));
+  const cov=sy.senior_coverage_now, covPct=cov==null?null:100*cov;
+  const depOff=(S.deposits_enabled.srNUSD===false&&S.deposits_enabled.jrNUSD===false);
+  const dRate=(cur,prv)=>{if(!P||prv==null||cur==null)return"";const dv=cur-prv,a=Math.abs(dv),sg=dv>0?"+":dv<0?"−":"±";
+    const lab=P.kind==="24h"?"24h":(P.label||"");return `<span class="dl" title="Change since block ${num(P.as_of_block)} (${P.as_of_short})">${sg}${num(a,6)} · ${lab}</span>`};
+  const dCov=(cur,prv)=>{if(!P||prv==null||cur==null)return"";const dv=(cur-prv)*100,a=Math.abs(dv),sg=dv>0?"+":dv<0?"−":"±";
+    const lab=P.kind==="24h"?"24h":(P.label||"");return `<span class="dl">${sg}${a.toFixed(2)} pp · ${lab}</span>`};
+  document.getElementById("strata-cards").innerHTML=`
+  <div class="card"><div class="k">srNUSD exchange rate</div><div class="v">${rateTxt(sr.now.exchange_rate_nusd)}</div><div class="s">NUSD per srNUSD (ERC-4626 convertToAssets). At wipe: ${rateTxt(sr.at_wipe.exchange_rate_nusd)}</div>${dRate(sr.now.exchange_rate_nusd,Pstr&&Pstr.sr_rate)}</div>
+  <div class="card"><div class="k">jrNUSD exchange rate</div><div class="v">${jr.wiped?"~0":rateTxt(jr.now.exchange_rate_nusd)}</div><div class="s">${jr.wiped?"Junior written down onchain (first-loss). Assets ≈ "+num(jr.now.assets_nusd,2)+" NUSD against "+num(jr.now.supply,0)+" shares.":"NUSD per jrNUSD"}</div>${jr.wiped?"":dRate(jr.now.exchange_rate_nusd,Pstr&&Pstr.jr_rate)}</div>
+  <div class="card"><div class="k">Senior coverage</div><div class="v">${covPct==null?"n/a":pct(covPct)}</div><div class="s">Strategy sNUSD × share rate / srNUSD totalAssets (${num(sy.snusd_balance_now,0)} sNUSD ≈ ${usdc(sy.nusd_value_now)} NUSD vs ${usdc(sr.now.assets_nusd)} senior assets)</div>${dCov(cov,Pstr&&Pstr.senior_coverage)}</div>
+  <div class="card"><div class="k">Senior withdrawals since wipe</div><div class="v">${num(sr.withdrawals_since_wipe.unique_owners)}</div><div class="s">${num(sr.withdrawals_since_wipe.events)} Withdraw events, ${num(sr.withdrawals_since_wipe.shares,0)} srNUSD shares burned (settle in sNUSD/NUSD). Junior post-wipe withdrawals: ${num(jr.withdrawals_since_wipe.events)}</div>${delta(sr.withdrawals_since_wipe.unique_owners,Pstr&&Pstr.sr_withdraw_owners_since_wipe,"wallets")}</div>
+  <div class="card"><div class="k">USDC via Strata</div><div class="v">${usd(S.usdc_paid_via_strata)}</div><div class="s">No USDC paid through Strata contracts — exits are sNUSD/NUSD. Neutrl portal USDC is separate (above).</div></div>`;
+  let h=`<tr><th class="tl">Tranche</th><th>Supply now</th><th>Assets (NUSD)</th><th>Rate (NUSD/share)</th><th>Supply at wipe</th><th>Supply at freeze</th><th class="tl">Status</th></tr>`;
+  h+=`<tr><td class="tl"><b>Senior (srNUSD)</b> ${al(sr.address)}</td><td>${num(sr.now.supply,2)}</td><td>${num(sr.now.assets_nusd,2)}</td><td>${rateTxt(sr.now.exchange_rate_nusd)}</td><td>${num(sr.at_wipe.supply,2)}</td><td>${num(sr.snapshot.supply,2)}</td><td class="tl ok">Withdrawals ${S.withdrawals_enabled.srNUSD===true?"enabled":S.withdrawals_enabled.srNUSD===false?"disabled":"n/a"}; deposits ${S.deposits_enabled.srNUSD===false?"disabled":S.deposits_enabled.srNUSD===true?"enabled":"n/a"}</td></tr>`;
+  h+=`<tr><td class="tl"><b>Junior (jrNUSD)</b> ${al(jr.address)}</td><td>${num(jr.now.supply,2)}</td><td>${num(jr.now.assets_nusd,2)}</td><td>${jr.wiped?"~0":rateTxt(jr.now.exchange_rate_nusd)}</td><td>${num(jr.at_wipe.supply,2)}</td><td>${num(jr.snapshot.supply,2)}</td><td class="tl ${jr.wiped?"bad":"warn"}">${jr.wiped?"Written down (first-loss)":"Active"}; deposits ${S.deposits_enabled.jrNUSD===false?"disabled":S.deposits_enabled.jrNUSD===true?"enabled":"n/a"}</td></tr>`;
+  document.getElementById("strata-tbl").innerHTML=h;
+  document.getElementById("strata-note").innerHTML=`Wipe accounting update at block ${blk(S.wipe_block)} (${T.wipe||new Date(S.wipe_ts*1000).toISOString().replace("T"," ").slice(0,19)+" UTC"}). Strategy ${al(sy.address)}; CDO ${al(S.contracts.cdo)}. ${depOff?"Deposits disabled for both tranches (DepositsStateChanged). ":""}${jr.note||""} Coverage and rates are contract accounting values in NUSD units — not a guaranteed USDC recovery. See <a href="${S.contracts.docs}" target="_blank" rel="noopener">Strata contract docs</a>.`;
+}
 function headline(s){
   const S=D["summary_"+s],U=D["summary_"+s+"_unrestricted"],N=D["summary_"+s+"_nodust"];
   const who=s==="snusd"?"sNUSD holders":"NUSD + sNUSD holders";
@@ -400,7 +428,10 @@ function method(){
 <li>sNUSD (Staked NUSD, an ERC-4626 vault with an unstaking cooldown): ${al("0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313")}. Cooldown silo ${al("0x6cdFC009AB1c5f8114A8aA0117A7E6FCbB35bb9B")}</li>
 <li>NusdRedemption (redemption contract, rate 0.51e18 = 0.51 USDC per NUSD): ${al("0xB3f07D3392102fC23264a78e2A1A8B6421123828")}. USDC AssetReserve ${al("0xfEE69fa9C94B9D967390a4F4144E2746603eC1Ed")}</li>
 <li>Neutrl AssetLock (locked NUSD/sNUSD; each locker is counted as a wallet): ${al("0x99161BA892ECae335616624c84FAA418F64FF9A6")}</li>
-<li>Strata sNUSDStrategy (srNUSD/jrNUSD collateral): ${al("0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")}</li></ul>
+<li>Strata sNUSDStrategy (srNUSD/jrNUSD collateral): ${al("0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")}</li>
+<li>Strata srNUSD (senior tranche, ERC-4626): ${al("0x65a44528e8868166401eA08b549E19552af589dB")}</li>
+<li>Strata jrNUSD (junior / first-loss tranche, ERC-4626): ${al("0xFC807058A352b61aEef6A38e2D0fC3990225E772")}</li>
+<li>Strata NeutrlCDO: ${al("0x7b6c960cf185fb27ECb91c174FAe065978beDd10")}</li></ul>
 </details>
 <details class="mdet"><summary>Timeline (onchain)</summary><ul>
 <li><b>Freeze</b>: sNUSD <span class="mono">Paused()</span> at block ${blk(B.freeze)}, ${T.freeze}. The Curve NUSD/USDC pool was denylisted 5 blocks earlier; the Uniswap v4 PoolManager, Balancer V2 Vault and a LayerZero adapter were denylisted on Aug 14. AssetLock was paused at block ${blk(25745747)}.</li>
@@ -420,15 +451,24 @@ function method(){
 <details class="mdet"><summary>Caveats and unknowns</summary><ul>
 <li><b>Ethereum mainnet only.</b> NUSD bridged elsewhere through the LayerZero OFT adapters is excluded (the adapters held about $70 of NUSD/sNUSD combined at the snapshot, so this is negligible).</li>
 <li><b>Holders behind protocols are not broken out individually</b> (Pendle PT/YT/LP holders, Strata srNUSD/jrNUSD holders, Morpho/Euler lenders). About ${usdc(D.totals.protocol_contract_value_snapshot)} sat in such contracts at the snapshot. Their users show up under "Redeemers who did not hold at the snapshot" once they withdraw and redeem.</li>
-<li><b>Strata</b>: the Strata sNUSDStrategy held ${num(D.contracts.find(c=>c.address==="0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88")?.snusd||0)} sNUSD at the snapshot. Per The Defiant and The Crypto Times, the 0.51 rate writes the junior tranche (jrNUSD) to zero and senior (srNUSD) withdrawals settle in sNUSD. Individual srNUSD/jrNUSD holders are out of scope here.</li>
+<li><b>Strata holder list</b>: individual srNUSD/jrNUSD holders are still not broken out in the Neutrl wallet tables (the strategy contract is one row there). The dedicated Strata section above reports tranche-level onchain state instead.</li>
 <li>One person can control several wallets, and tokens can move between wallets after the snapshot, so wallet counts are not person counts.</li>
 <li>The redemption contract takes the rate as an admin parameter; it has been 0.51 since deployment (one RedemptionRateSet event). Neutrl says the program is expected to run until Nov 14, 2026. ${num(D.totals.signed_not_redeemed)} ${D.totals.signed_not_redeemed===1?"wallet has":"wallets have"} signed the message but not redeemed.</li>
 <li>Wallet type is read from each address's current onchain code (EOA / 7702 / Safe). A few unverified contracts may be smart-contract wallets and are excluded as contracts.</li></ul>
 </details>
+<details class="mdet"><summary>Strata senior / junior metrics</summary><ul>
+<li><b>What is measured</b>: outstanding srNUSD and jrNUSD supply (<span class="mono">totalSupply</span>), claim in NUSD units (<span class="mono">totalAssets</span>), exchange rate (<span class="mono">convertToAssets(1e18)</span>), strategy sNUSD balance vs senior assets (coverage), post-wipe ERC-4626 <span class="mono">Withdraw</span> activity (events, shares burned, unique owners), and deposit/withdrawal enable flags from the NeutrlCDO.</li>
+<li><b>Wipe block</b>: ${blk((D.strata&&D.strata.wipe_block)||26013480)} — onchain jrNUSD <span class="mono">totalAssets</span> fell to 1 NUSD and srNUSD/NUSD rate moved to ~1.239711522681 (matches the value Strata scheduled / Defiant reported). Junior rate ~0 is shown as a write-down, not as a fake Neutrl redemption percentage.</li>
+<li><b>Settlement</b>: Strata docs and onchain flows show tranche exits in sNUSD/NUSD. There is <b>no USDC</b> paid through Strata strategy/CDO/tranche contracts (USDC Transfer count to/from those addresses since the Neutrl redemption reopen is zero). Neutrl portal USDC at 0.51 is a separate path.</li>
+<li><b>Deposits</b>: both tranches show deposits disabled via <span class="mono">DepositsStateChanged</span> (and <span class="mono">maxDeposit</span> reads as 0), consistent with Sep 2026 reporting.</li>
+<li><b>Limitations</b>: rates and coverage are contract accounting values in NUSD units, not guaranteed cash recovery at the Neutrl 0.51 USDC rate. Junior outstanding supply can remain after the write-down. Day-over-day Strata deltas appear once hourly history includes a prior <span class="mono">strata</span> snapshot.</li>
+</ul></details>
 <details class="mdet"><summary>Sources</summary><ul>
+
 <li><a href="https://www.neutrl.finance/" target="_blank" rel="noopener">neutrl.finance</a>; Neutrl on X: <a href="https://x.com/Neutrl/status/2087863440136147224" target="_blank" rel="noopener">pause announcement, Aug 13, 2026</a>; <a href="https://x.com/Neutrl/status/2100614848241414280" target="_blank" rel="noopener">redemption announcement, Sep 17, 2026</a></li>
 <li><a href="https://thedefiant.io/news/defi/neutrl-opens-nusd-redemptions-at-51-cents-as-strata-junior-tranche-faces-wipeout" target="_blank" rel="noopener">The Defiant, Sep 18, 2026</a>; <a href="https://www.cryptotimes.io/2026/09/18/neutrl-opens-nusd-snusd-redemptions-as-on-chain-rate-reads-0-51/" target="_blank" rel="noopener">The Crypto Times, Sep 18, 2026</a>; <a href="https://crypto.news/neutrl-opens-nusd-redemptions-as-contract-reads-0-51/" target="_blank" rel="noopener">crypto.news, Sep 18, 2026</a>; <a href="https://www.cryptotimes.io/2026/08/29/neutrl-reveals-only-27m-liquid-against-137m-book-as-redemptions-approach/" target="_blank" rel="noopener">The Crypto Times, Aug 29, 2026 (pause, $27M liquid)</a></li>
-<li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract" target="_blank" rel="noopener">Blockscout</a> / <a href="https://etherscan.io/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828#code" target="_blank" rel="noopener">Etherscan</a>.</li></ul>
+<li>Verified contract source code on <a href="https://eth.blockscout.com/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828?tab=contract" target="_blank" rel="noopener">Blockscout</a> / <a href="https://etherscan.io/address/0xB3f07D3392102fC23264a78e2A1A8B6421123828#code" target="_blank" rel="noopener">Etherscan</a>.</li>
+<li>Strata: <a href="https://docs.strata.markets/markets/neutrl-nusd" target="_blank" rel="noopener">Neutrl NUSD market docs</a>; <a href="https://docs.strata.markets/technical-documentation/contracts-details" target="_blank" rel="noopener">contract addresses</a>; <a href="https://docs.strata.markets/markets/neutrl-nusd/srnusd" target="_blank" rel="noopener">srNUSD</a>; <a href="https://docs.strata.markets/markets/neutrl-nusd/jrnusd" target="_blank" rel="noopener">jrNUSD</a>.</li></ul>
 </details>
 <p class="mut">Page generated ${T.generated||D.generated_at_utc+" (UTC)"}. Refreshed hourly by a <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/actions/workflows/refresh.yml" target="_blank" rel="noopener">GitHub Actions workflow</a> (pull_logs.py → compute.py → build.py; code and data on the <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/tree/tracker" target="_blank" rel="noopener">tracker branch</a>).</p>`;
 }
@@ -557,7 +597,7 @@ window.neutrlCSV={keys:Object.keys(CSV),build:buildCSV,download:downloadCSV};
 function fitCharts(){for(const c of [tc,bc])if(c&&c.canvas&&c.canvas.isConnected){c.resize();c.update("none")}}
 requestAnimationFrame(()=>requestAnimationFrame(fitCharts));window.addEventListener("load",fitCharts);window.addEventListener("pageshow",fitCharts);
 window.addEventListener("orientationchange",()=>setTimeout(fitCharts,200));if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitCharts);
-hero();headline("snusd");totals();timeChart("cum");buckets("snusd");topTable(50);contracts();outsiders();restricted();method();
+hero();strata();headline("snusd");totals();timeChart("cum");buckets("snusd");topTable(50);contracts();outsiders();restricted();method();
 (()=>{const a=new URLSearchParams(location.search).get("address");if(a){const i=document.getElementById("q");i.value=a.trim();lookup(true);requestAnimationFrame(()=>document.querySelector(".lookup").scrollIntoView({block:"center"}))}})();
 </script>
 </body></html>
