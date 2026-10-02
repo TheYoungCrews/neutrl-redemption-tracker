@@ -84,11 +84,11 @@ jobs:
 
       - name: Publish site to main
         run: |
-          for f in index.html og.png favicon.svg apple-touch-icon.png; do cp "tracker/site/$f" "site/$f"; done
+          for f in index.html og.png favicon.svg apple-touch-icon.png llms.txt; do cp "tracker/site/$f" "site/$f"; done
           cd site
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git add index.html og.png favicon.svg apple-touch-icon.png
+          git add index.html og.png favicon.svg apple-touch-icon.png llms.txt
           if git diff --cached --quiet; then echo "site unchanged"; exit 0; fi
           BLOCK=$(python -c 'import json;print(json.load(open("../tracker/data/dashboard_data.json"))["blocks"]["as_of"])')
           git commit -qm "Refresh data $(date '+%Y-%m-%d %H:%M %Z') (block $BLOCK)"
