@@ -1,0 +1,31 @@
+# Neutrl Redemption Tracker
+> Independent onchain tracker of NUSD and sNUSD redemption progress after Neutrl froze on Aug 13, 2026.
+
+Site: https://theyoungcrews.github.io/neutrl-redemption-tracker/
+Source: https://github.com/TheYoungCrews/neutrl-redemption-tracker
+README: https://github.com/TheYoungCrews/neutrl-redemption-tracker/blob/tracker/README.md
+Updates: hourly (GitHub Actions on the tracker branch → GitHub Pages)
+
+## What it is
+A static dashboard that rebuilds freeze-snapshot holder positions and Neutrl portal redemptions from Ethereum mainnet event logs. Not affiliated with Neutrl or Strata. Not financial advice.
+
+## Key facts
+- Freeze: Aug 13, 2026 (sNUSD pause); snapshot = end of prior block
+- Redemption rate: 0.51 USDC per NUSD (51¢), fixed onchain since reopen (Sep 17, 2026)
+- Expected close: ~end of Nov 14 / ~Nov 14–15, 2026 (Neutrl schedule; not an onchain deadline)
+- Data as of: 2026-10-02 (block 26105779); page dateModified 2026-10-02T16:17:56Z
+
+## Key definitions
+- Snapshot capital: NUSD + sNUSD×share price + AssetLock + cooldown silo at freeze, valued at $1/NUSD pre-freeze par
+- Capital redeemed (capped): NUSD burned via redeem(), counted only up to each wallet's snapshot value
+- USDC paid: actual USDC from Redeemed events at 0.51
+- Wallets ≠ people: address counts (EOAs / some smart wallets / AssetLock lockers); protocols listed separately
+- Blacklist/denylist: Neutrl-restricted addresses that cannot unstake and/or redeem
+- Strata srNUSD/jrNUSD: separate tranche accounting; exits settle in sNUSD/NUSD, not Neutrl portal USDC
+
+## Useful anchors
+- Overview: https://theyoungcrews.github.io/neutrl-redemption-tracker/#overview
+- Reserve (USDC left): https://theyoungcrews.github.io/neutrl-redemption-tracker/#reserve
+- Strata: https://theyoungcrews.github.io/neutrl-redemption-tracker/#strata
+- FAQ: https://theyoungcrews.github.io/neutrl-redemption-tracker/#faq
+- Methodology: https://theyoungcrews.github.io/neutrl-redemption-tracker/#methodology
