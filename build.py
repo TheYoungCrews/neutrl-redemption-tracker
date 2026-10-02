@@ -1,5 +1,5 @@
 """Render site/index.html from data/dashboard_data.json (single static page, data embedded).
-Also writes site/og.png (1200x630 social card), site/favicon.svg and site/apple-touch-icon.png on every build.
+Also writes site/og.png (1200x630 social card), site/favicon.svg, site/apple-touch-icon.png and site/llms.txt on every build.
 publish_pages.sh copies everything listed in SITE_ASSETS to the GitHub Pages repo."""
 import json, datetime, html, os, re, shutil, struct, subprocess, http.server, threading, functools
 from zoneinfo import ZoneInfo
@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 # ---------------------------------------------------------------- config
 SITE_URL = "https://theyoungcrews.github.io/neutrl-redemption-tracker/"   # absolute URL used for og:url / og:image
 REDEMPTION_CLOSE = datetime.date(2026, 11, 14)  # Neutrl: "expected to remain open until 14 November 2026"; counts to END of this day (ET)
-SITE_ASSETS = ["index.html", "og.png", "favicon.svg", "apple-touch-icon.png"]  # files publish_pages.sh ships
+SITE_ASSETS = ["index.html", "og.png", "favicon.svg", "apple-touch-icon.png", "llms.txt"]  # files publish_pages.sh ships
 
 # ---------------------------------------------------------------- ANALYTICS HOOK (Cloudflare Web Analytics enabled)
 # Both options are cookieless and need no consent banner. Fill in ONE value and rebuild/publish; nothing else changes.
@@ -84,25 +84,85 @@ payload.pop("snusd_wallet_first_redeem_ts", None)   # only the derived counts ar
 def usdc_short(v):
     return f"${v/1e6:.2f}M" if v >= 1e6 else f"${v/1e3:.1f}k" if v >= 1e3 else f"${v:.0f}"
 SA, SS, T = d["summary_all"], d["summary_snusd"], d["totals"]
-meta_desc = (f"{SA['pct_capital']:.1f}% of snapshot NUSD/sNUSD capital redeemed (sNUSD holders {SS['pct_capital']:.1f}%). "
-             f"{usdc_short(T['usdc_paid'])} USDC paid out at 0.51 USDC per NUSD, {usdc_short(T['usdc_reserve_now'])} left in the reserve, "
-             f"{days_left} days left until the expected Nov 14, 2026 close. Onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly. Check your wallet.")
-og_desc = ("Neutrl froze NUSD and sNUSD on Aug 13, 2026. Redemptions reopened Sep 17 at 0.51 USDC per NUSD and are expected to close Nov 14. "
-           "Onchain tracker, updated hourly, of how many freeze-snapshot holders have redeemed.")
+meta_desc = (f"Neutrl Redemption Tracker: freeze Aug 13, 2026; redemptions at 51¢ (0.51 USDC per NUSD); expected close ~Nov 14/15, 2026. "
+             f"{SA['pct_capital']:.1f}% of snapshot NUSD/sNUSD capital redeemed (sNUSD holders {SS['pct_capital']:.1f}%). "
+             f"{usdc_short(T['usdc_paid'])} USDC paid out, {usdc_short(T['usdc_reserve_now'])} left in reserve, "
+             f"{days_left} days left. Onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly.")
+og_desc = ("Neutrl froze NUSD and sNUSD on Aug 13, 2026 after a reserve shortfall. Redemptions reopened Sep 17 at 51¢ "
+           "(0.51 USDC per NUSD) and are expected to close ~Nov 14/15, 2026. Independent onchain tracker, updated hourly.")
 tokens = {"__SITE_URL__": SITE_URL, "__META_DESC__": meta_desc, "__OG_DESC__": og_desc,
           "__OG_IMAGE__": f"{SITE_URL}og.png?v=__OG_HASH__",   # filled in after og.png is rendered
           "__OG_ALT__": (f"Neutrl Redemption Tracker share card: dot ring of {SS['redeemed_wallets']:,} of {SS['wallets']:,} sNUSD snapshot wallets redeemed; "
                          f"{SA['pct_capital']:.1f}% of snapshot capital redeemed (all holders), "
                          f"{SS['pct_capital']:.1f}% (sNUSD holders); {usdc_short(T['usdc_paid'])} USDC paid out; {usdc_short(T['usdc_reserve_now'])} USDC left in reserve; "
-                         f"{days_left} days left until the expected Nov 14, 2026 close; onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly")}
+                         f"{days_left} days left until the expected ~Nov 14/15, 2026 close; onchain data as of {as_of_date.strftime('%b %-d, %Y')}, updated hourly")}
 tpl = open("template.html").read()
 for k, v in tokens.items():
     tpl = tpl.replace(k, html.escape(v, quote=True))
 page = tpl.replace("/*__DATA__*/null", json.dumps(payload, separators=(",", ":")))
 os.makedirs("site", exist_ok=True)
+# JSON-LD (WebApplication) — injected raw, not html.escaped
+try:
+    _mod = datetime.datetime.fromisoformat(d["generated_at_utc"])
+    if _mod.tzinfo is None: _mod = _mod.replace(tzinfo=datetime.timezone.utc)
+except (KeyError, TypeError, ValueError):
+    _mod = datetime.datetime.fromtimestamp(b["as_of_ts"], datetime.timezone.utc)
+_date_mod = _mod.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+_json_ld = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Neutrl Redemption Tracker",
+    "url": SITE_URL,
+    "description": og_desc,
+    "dateModified": _date_mod,
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": True,
+    "creator": {"@type": "Person", "name": "theyoungcrews", "url": "https://x.com/theyoungcrews"},
+    "codeRepository": "https://github.com/TheYoungCrews/neutrl-redemption-tracker",
+}
+page = page.replace("<!--__JSON_LD__-->",
+                    '<script type="application/ld+json">' + json.dumps(_json_ld, ensure_ascii=False, separators=(",", ":")) + "</script>")
+
 open("site/index.html", "w").write(page)
 print("wrote site/index.html", len(page), "bytes; as of block", b["as_of"], times["as_of"], "| previous run:",
       f"block {prev_out['as_of_block']} ({prev_out['kind']})" if prev_out else "none (deltas hidden)")
+
+# ---------------------------------------------------------------- llms.txt (AEO/GEO: plain-text site brief for AI crawlers)
+_llms = f"""# Neutrl Redemption Tracker
+> Independent onchain tracker of NUSD and sNUSD redemption progress after Neutrl froze on Aug 13, 2026.
+
+Site: {SITE_URL}
+Source: https://github.com/TheYoungCrews/neutrl-redemption-tracker
+README: https://github.com/TheYoungCrews/neutrl-redemption-tracker/blob/tracker/README.md
+Updates: hourly (GitHub Actions on the tracker branch → GitHub Pages)
+
+## What it is
+A static dashboard that rebuilds freeze-snapshot holder positions and Neutrl portal redemptions from Ethereum mainnet event logs. Not affiliated with Neutrl or Strata. Not financial advice.
+
+## Key facts
+- Freeze: Aug 13, 2026 (sNUSD pause); snapshot = end of prior block
+- Redemption rate: 0.51 USDC per NUSD (51¢), fixed onchain since reopen (Sep 17, 2026)
+- Expected close: ~end of Nov 14 / ~Nov 14–15, 2026 (Neutrl schedule; not an onchain deadline)
+- Data as of: {as_of_date.isoformat()} (block {b['as_of']}); page dateModified {_date_mod}
+
+## Key definitions
+- Snapshot capital: NUSD + sNUSD×share price + AssetLock + cooldown silo at freeze, valued at $1/NUSD pre-freeze par
+- Capital redeemed (capped): NUSD burned via redeem(), counted only up to each wallet's snapshot value
+- USDC paid: actual USDC from Redeemed events at 0.51
+- Wallets ≠ people: address counts (EOAs / some smart wallets / AssetLock lockers); protocols listed separately
+- Blacklist/denylist: Neutrl-restricted addresses that cannot unstake and/or redeem
+- Strata srNUSD/jrNUSD: separate tranche accounting; exits settle in sNUSD/NUSD, not Neutrl portal USDC
+
+## Useful anchors
+- Overview: {SITE_URL}#overview
+- Reserve (USDC left): {SITE_URL}#reserve
+- Strata: {SITE_URL}#strata
+- FAQ: {SITE_URL}#faq
+- Methodology: {SITE_URL}#methodology
+"""
+open("site/llms.txt", "w").write(_llms)
+print("wrote site/llms.txt", len(_llms), "bytes")
 
 # ---------------------------------------------------------------- favicon (static SVG: neutral dot-ring mark, font-independent)
 def _mark_svg(size=64, rx=14, bg=True):

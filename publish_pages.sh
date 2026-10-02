@@ -8,7 +8,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 FORCE=0; [ "${1:-}" = "--force" ] && FORCE=1
-ASSETS=(index.html og.png favicon.svg apple-touch-icon.png)   # keep in sync with SITE_ASSETS in build.py
+ASSETS=(index.html og.png favicon.svg apple-touch-icon.png llms.txt)   # keep in sync with SITE_ASSETS in build.py
 DEST=/workspace/neutrl-pages
 asof() { grep -o '"as_of":[0-9]*' "$1" 2>/dev/null | head -1 | cut -d: -f2; }
 git -C "$DEST" pull -q --rebase --autostash origin main

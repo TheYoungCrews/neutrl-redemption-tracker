@@ -28,7 +28,7 @@ for n in ("nusd", "snusd", "redemption", "assetreserve", "assetlock", "srnusd", 
         if c < m["count"]: errs.append(f"logs_{n}: {c} logs < committed {m['count']}")
 # built page
 h = open("site/index.html").read()
-for marker in ('id="hero"', "const D={", "Affected wallets", 'id="qform"', 'id="strata"', "</footer>"):
+for marker in ('id="hero"', "const D={", "Affected wallets", 'id="qform"', 'id="strata"', 'id="faq"', 'id="methodology"', 'id="reserve"', "application/ld+json", "</footer>"):
     if marker not in h: errs.append(f"site/index.html lacks {marker!r}")
 if len(re.findall(r'<button type="button" class="csv" data-csv=', h)) != 8: errs.append("expected 8 CSV buttons")
 if re.search(r'<details class="mdet"[^>]*\bopen', h): errs.append("a Methodology <details> is open by default")
@@ -37,8 +37,10 @@ try:
     with open("site/og.png", "rb") as f: hd = f.read(24)
     if struct.unpack(">II", hd[16:24]) != (1200, 630): errs.append("og.png is not 1200x630")
 except Exception as e: errs.append(f"og.png unreadable: {e}")
-for f in ("favicon.svg", "apple-touch-icon.png"):
+for f in ("favicon.svg", "apple-touch-icon.png", "llms.txt"):
     if not os.path.exists("site/" + f): errs.append(f"site/{f} missing")
+if os.path.exists("site/llms.txt") and "Neutrl Redemption Tracker" not in open("site/llms.txt").read():
+    errs.append("site/llms.txt missing expected title")
 print(json.dumps({"as_of": b["as_of"], "prev_as_of": prev and prev["blocks"]["as_of"], "redeem_events": t["redeem_events"],
                   "errors": errs, "warnings": warns}, indent=1))
 sys.exit(1 if errs else 0)

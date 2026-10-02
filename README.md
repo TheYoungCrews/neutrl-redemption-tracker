@@ -41,7 +41,8 @@ free Actions minutes, default GITHUB_TOKEN, no secrets).
 - `label_contracts.py`  one-off: EOA / EIP-7702 / contract detection + Blockscout names for snapshot holders -> `data/address_meta.json` (compute.py labels new addresses on the fly)
 - `compute.py`          all metrics -> `data/dashboard_data.json`
 - `build.py` + `template.html` -> `site/index.html` (data embedded, Chart.js from jsDelivr, pre-rendered with headless Chrome),
-  `site/og.png` (1200x630 share card), favicon. Config at the top of build.py (SITE_URL, close date, analytics token)
+  `site/og.png` (1200x630 share card), favicon, `site/llms.txt` (AEO brief). Config at the top of build.py (SITE_URL, close date, analytics token).
+  Page SEO: title/meta/OG/Twitter, JSON-LD WebApplication, FAQ (`#faq`), anchors `#methodology` `#reserve` `#strata`.
 - `logstore.py`         log state <-> git-friendly segments; `ci_check.py` pre-publish sanity checks (Actions)
 - `publish_pages.sh`    manual/local publish of site/ to the `main` branch (Actions normally does this)
 - `refresh.sh`          local sync/rebuild wrapper (see above)

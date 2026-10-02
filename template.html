@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neutrl Redemption Tracker</title>
+<title>Neutrl Redemption Tracker — NUSD &amp; sNUSD redemption progress</title>
 <meta name="description" content="__META_DESC__">
 <meta name="theme-color" content="#0B0A0F">
 <link rel="canonical" href="__SITE_URL__">
@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Neutrl Redemption Tracker">
-<meta property="og:title" content="Neutrl Redemption Tracker: how much NUSD / sNUSD has been redeemed">
+<meta property="og:title" content="Neutrl Redemption Tracker — NUSD &amp; sNUSD redemption progress">
 <meta property="og:description" content="__OG_DESC__">
 <meta property="og:url" content="__SITE_URL__">
 <meta property="og:image" content="__OG_IMAGE__">
@@ -19,10 +19,11 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="__OG_ALT__">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Neutrl Redemption Tracker: how much NUSD / sNUSD has been redeemed">
+<meta name="twitter:title" content="Neutrl Redemption Tracker — NUSD &amp; sNUSD redemption progress">
 <meta name="twitter:description" content="__OG_DESC__">
 <meta name="twitter:image" content="__OG_IMAGE__">
 <meta name="twitter:image:alt" content="__OG_ALT__">
+<!--__JSON_LD__-->
 <!--__ANALYTICS__-->
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -162,6 +163,9 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 }
 @media(max-width:560px){.brand span.bsub{white-space:normal}.bsub .cr{display:block}.bsub .cr i{display:none}}
 @media(max-width:380px){.hv{font-size:30px}.lkrow{flex-direction:column}.tabs button{padding:8px 11px}}
+#faq{margin-top:8px}#faq .faq-q{scroll-margin-top:80px}
+.faq-blurb,.meth-blurb{color:var(--ink2);font-size:14.5px;line-height:1.6;max-width:900px;margin:0 0 14px}
+.faq-blurb a,.meth-blurb a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .skip{position:absolute;left:-9999px;top:8px;z-index:20}.skip:focus{left:12px;background:var(--ink);color:var(--bg);padding:8px 12px;border-radius:8px}
 
 </style>
@@ -170,7 +174,7 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 <a href="#lookup" class="skip">Skip to wallet lookup</a>
 <header><div class="wrap top">
 <div class="brand"><a href="#overview" aria-label="Neutrl Redemption Tracker, back to top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" aria-hidden="true"><rect x=".5" y=".5" width="33" height="33" rx="9" fill="#131119" stroke="#2A2633"/><circle cx="17.00" cy="6.80" r="1.77" fill="#5BE49B"/><circle cx="21.43" cy="7.81" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="10.64" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="14.73" r="1.77" fill="#5BE49B"/><circle cx="26.94" cy="19.27" r="1.77" fill="#5BE49B"/><circle cx="24.97" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="21.43" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="17.00" cy="27.20" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="26.19" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="23.36" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="19.27" r="1.77" fill="#3A3546"/><circle cx="7.06" cy="14.73" r="1.77" fill="#3A3546"/><circle cx="9.03" cy="10.64" r="1.77" fill="#3A3546"/><circle cx="12.57" cy="7.81" r="1.77" fill="#3A3546"/><circle cx="17.0" cy="17.0" r="2.55" fill="#F2EEE6"/></svg></a><div><a class="bt" href="#overview"><b>Neutrl Redemption Tracker</b></a><span class="bsub">independent, onchain<span class="cr"><i aria-hidden="true"> · </i>built by <a href="https://x.com/theyoungcrews" target="_blank" rel="noopener">@theyoungcrews</a></span></span></div></div>
-<nav class="nav" aria-label="Sections"><a href="#overview">overview</a><a href="#strata">strata</a><a href="#lookup">wallet lookup</a><a href="#holders">holders</a><a href="#methodology">methodology</a></nav>
+<nav class="nav" aria-label="Sections"><a href="#overview">overview</a><a href="#strata">strata</a><a href="#lookup">wallet lookup</a><a href="#holders">holders</a><a href="#faq">faq</a><a href="#methodology">methodology</a></nav>
 </div></header>
 <div class="tickbar"><div class="wrap updated" id="updated"></div></div>
 <main>
@@ -187,7 +191,7 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 <div class="ringd" id="ringd"></div>
 </div>
 </section>
-<section class="wrap">
+<section class="wrap" id="reserve">
 <div class="panel" id="hero"></div>
 <div class="src" id="srcline"></div>
 </section>
@@ -234,8 +238,30 @@ footer{margin:72px 0 0;padding:22px 0 34px;color:var(--mut);font-size:13px;borde
 <h2><span class="kick" aria-hidden="true">outside redeemers</span>Redeemers who did not hold at the snapshot<span class="csvs"><button type="button" class="csv" data-csv="outsiders" title="Every redeemer that held nothing at the snapshot">Redeemers CSV</button><button type="button" class="csv" data-csv="sources" title="Inbound NUSD/sNUSD to these redeemers, by sender (all senders)">Senders CSV</button></span></h2>
 <div id="outsiders" class="small"></div>
 
-<h2><span class="kick" aria-hidden="true">restrictions</span>Blacklisted / denylisted addresses<span class="csvs"><button type="button" class="csv" data-csv="restricted" title="All blacklisted / denylisted addresses">Download CSV</button></span></h2>
+<h2 id="restrictions"><span class="kick" aria-hidden="true">restrictions</span>Blacklisted / denylisted addresses<span class="csvs"><button type="button" class="csv" data-csv="restricted" title="All blacklisted / denylisted addresses">Download CSV</button></span></h2>
 <div id="restricted" class="small"></div>
+
+
+<h2 id="faq"><span class="kick" aria-hidden="true">faq</span>FAQ</h2>
+<p class="faq-blurb">Short answers to the questions people ask most about Neutrl redemptions and this tracker. Deeper caveats live in <a href="#methodology">Methodology</a>.</p>
+<details class="mdet faq-q" id="faq-freeze"><summary>What froze on Aug 13?</summary>
+<p>Neutrl paused sNUSD (and related transfers / AssetLock) on Aug 13, 2026 after a reserve shortfall. This tracker’s “snapshot” is the onchain state at the end of the block before that pause. NUSD and sNUSD could not move freely until redemptions reopened on Sep 17.</p>
+</details>
+<details class="mdet faq-q" id="faq-rate"><summary>What does 51¢ (0.51 USDC per NUSD) mean?</summary>
+<p>When redemptions reopened, Neutrl’s onchain redemption contract pays a fixed <b>0.51 USDC per NUSD</b> burned — not $1. Holders unstake sNUSD to NUSD if needed, then redeem; USDC comes from the protocol’s AssetReserve. The rate has been 0.51 since the contract was set.</p>
+</details>
+<details class="mdet faq-q" id="faq-blacklist"><summary>Can every wallet redeem? (blacklist / denylist)</summary>
+<p>No. Neutrl can blacklist addresses on sNUSD (blocking unstake/transfer) and denylist them on NUSD (blocking transfers, which blocks redemption). Restricted addresses are listed under <a href="#restrictions">Blacklisted / denylisted</a>. Onchain data does not publish Neutrl’s reasons.</p>
+</details>
+<details class="mdet faq-q" id="faq-wallets"><summary>Do wallet counts equal people?</summary>
+<p>No. Counts are addresses (EOAs, some smart wallets, and AssetLock lockers), not unique humans. One person can control several wallets; tokens can move after the snapshot. Protocol contracts (Pendle, Strata, Morpho, etc.) are excluded from wallet totals and shown separately.</p>
+</details>
+<details class="mdet faq-q" id="faq-shortfall"><summary>What about the reserve shortfall?</summary>
+<p>Neutrl froze after reporting that liquid reserves were far below book value of NUSD/sNUSD. Redemptions later reopened at 51¢ rather than par. This site tracks onchain redemption progress and reserve USDC left in the contract; it does not appraise off-chain assets or give recovery advice. See the hero <a href="#reserve">USDC reserve</a> figures.</p>
+</details>
+<details class="mdet faq-q" id="faq-source"><summary>Where does the data come from?</summary>
+<p>Public Ethereum mainnet event logs (NUSD/sNUSD transfers, Redeemed events, reserve USDC flows, Strata tranche state), pulled via keyless RPC and recomputed hourly. Expected close date (~end of Nov 14 / ~Nov 14–15, 2026) is Neutrl’s stated schedule, not an onchain deadline. Pipeline and definitions: <a href="https://github.com/TheYoungCrews/neutrl-redemption-tracker/blob/tracker/README.md" target="_blank" rel="noopener">GitHub README</a>.</p>
+</details>
 
 <h2 id="methodology"><span class="kick" aria-hidden="true">methodology</span>Methodology, sources and caveats</h2>
 <div id="method" class="small"></div>
