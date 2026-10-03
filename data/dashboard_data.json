@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-03T17:19:43+00:00",
+ "generated_at_utc": "2026-10-03T21:22:45+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26113262,
-  "as_of_ts": 1791047963,
+  "as_of": 26114474,
+  "as_of_ts": 1791062543,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26112785,
