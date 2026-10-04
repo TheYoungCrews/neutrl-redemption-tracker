@@ -13,7 +13,7 @@ A static dashboard that rebuilds freeze-snapshot holder positions and Neutrl por
 - Freeze: Aug 13, 2026 (sNUSD pause); snapshot = end of prior block
 - Redemption rate: 0.51 USDC per NUSD (51¢), fixed onchain since reopen (Sep 17, 2026)
 - Expected close: ~end of Nov 14 / ~Nov 14–15, 2026 (Neutrl schedule; not an onchain deadline)
-- Data as of: 2026-10-03 (block 26115466); page dateModified 2026-10-04T00:41:37Z
+- Data as of: 2026-10-04 (block 26117350); page dateModified 2026-10-04T06:59:13Z
 
 ## Key definitions
 - Snapshot capital: NUSD + sNUSD×share price + AssetLock + cooldown silo at freeze, valued at $1/NUSD pre-freeze par
