@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-06T17:14:24+00:00",
+ "generated_at_utc": "2026-10-06T21:41:48+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26134754,
-  "as_of_ts": 1791306839,
+  "as_of": 26136091,
+  "as_of_ts": 1791322883,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26134055,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 7126838.200546554,
    "assetlock_nusd_locks_sum": 7126838.200546554,
    "nusd_supply": 35557505.51776137,
-   "snusd_supply": 20012052.070137464,
-   "snusd_vault_nusd": 21300571.31905964,
-   "snusd_raw_holders": 418,
-   "nusd_raw_holders": 601
+   "snusd_supply": 19893574.037803784,
+   "snusd_vault_nusd": 21174464.822403494,
+   "snusd_raw_holders": 417,
+   "nusd_raw_holders": 602
   }
  },
  "totals": {
@@ -65,8 +65,8 @@
   "usdc_funded_to_reserve": 13009297.016202,
   "usdc_out_of_reserve": 9094603.695949,
   "usdc_reserve_now": 3914693.320253,
-  "snusd_shares_unstaked_since_reopen": 11893598.17247189,
-  "snusd_nusd_unstaked_since_reopen": 12659393.210904952,
+  "snusd_shares_unstaked_since_reopen": 12012076.204805573,
+  "snusd_nusd_unstaked_since_reopen": 12785499.7075611,
   "snusd_unstakers_since_reopen": 34,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -21297,7 +21297,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 258813.5601297477,
+   "remaining_value": 200667.0332932723,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
@@ -23674,17 +23674,17 @@
     "exchange_rate_nusd": 1.2397115226810287
    },
    "now": {
-    "supply": 208233.73966355145,
-    "assets_nusd": 258149.7664718663,
+    "supply": 161330.46759366995,
+    "assets_nusd": 200003.23963539096,
     "exchange_rate_nusd": 1.2397115226810287
    },
    "withdrawals_since_wipe": {
-    "events": 114,
-    "assets_nusd": 1412027.28063781,
-    "shares": 1138996.657532171,
+    "events": 115,
+    "assets_nusd": 1470173.8074742854,
+    "shares": 1185899.9296020526,
     "unique_owners": 108
    },
-   "supply_change_since_wipe": -1138996.6575321709
+   "supply_change_since_wipe": -1185899.9296020526
   },
   "junior": {
    "symbol": "jrNUSD",
@@ -23719,11 +23719,11 @@
    "address": "0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88",
    "snusd_balance_snapshot": 1600280.2269591026,
    "snusd_balance_at_wipe": 1569767.9374652926,
-   "snusd_balance_now": 243157.34842002444,
+   "snusd_balance_now": 188528.23517610034,
    "nusd_value_snapshot": 1702314.1864743622,
    "nusd_value_at_wipe": 1670840.8407675575,
-   "nusd_value_now": 258813.5601297477,
-   "senior_coverage_now": 1.0025713509911454,
+   "nusd_value_now": 200667.0332932723,
+   "senior_coverage_now": 1.003318914529042,
    "senior_coverage_at_wipe": 1.000397439097268,
    "note": "Coverage = strategy sNUSD \u00d7 sNUSD share rate / srNUSD totalAssets (NUSD units). After junior write-down, residual collateral is allocated to senior."
   }
