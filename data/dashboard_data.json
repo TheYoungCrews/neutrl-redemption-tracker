@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-09T02:13:47+00:00",
+ "generated_at_utc": "2026-10-09T09:12:22+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26151787,
-  "as_of_ts": 1791512003,
+  "as_of": 26153873,
+  "as_of_ts": 1791537119,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26150620,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 7122475.292948992,
    "assetlock_nusd_locks_sum": 7122475.292948992,
    "nusd_supply": 35511510.38546886,
-   "snusd_supply": 19866141.481136113,
-   "snusd_vault_nusd": 21145265.961251426,
-   "snusd_raw_holders": 410,
-   "nusd_raw_holders": 595
+   "snusd_supply": 19860544.021768983,
+   "snusd_vault_nusd": 21139308.09735835,
+   "snusd_raw_holders": 409,
+   "nusd_raw_holders": 597
   }
  },
  "totals": {
@@ -65,8 +65,8 @@
   "usdc_funded_to_reserve": 13009297.016202,
   "usdc_out_of_reserve": 9118061.213408,
   "usdc_reserve_now": 3891235.802794,
-  "snusd_shares_unstaked_since_reopen": 12044227.311278032,
-  "snusd_nusd_unstaked_since_reopen": 12819720.932551073,
+  "snusd_shares_unstaked_since_reopen": 12049824.77064516,
+  "snusd_nusd_unstaked_since_reopen": 12825678.796444152,
   "snusd_unstakers_since_reopen": 36,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -6877,7 +6877,7 @@
    0.0,
    0.0,
    0.0,
-   199.96,
+   201.02,
    "Not redeemed",
    "EOA",
    ""
@@ -19223,6 +19223,18 @@
    "cum_nusd": 17878551.399552032,
    "cum_usdc": 9118061.213407995,
    "cum_snapshot_capital": 11038779.656721177
+  },
+  {
+   "date": "2026-10-09",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 679,
+   "cum_snapshot_wallets": 487,
+   "cum_nusd": 17878551.399552032,
+   "cum_usdc": 9118061.213407995,
+   "cum_snapshot_capital": 11038779.656721177
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -21504,7 +21516,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 7402.743240597002,
+   "remaining_value": 7401.678270527961,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
