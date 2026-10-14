@@ -29036,5 +29036,13 @@
  "0xf3b5379a6a272893b89294a1a5a888552097f3a5": {
   "kind": "eoa",
   "code_len": 0
+ },
+ "0xb88d424d48ed9183ff9c9b26f52f75a02c790137": {
+  "kind": "contract",
+  "code_len": 45,
+  "name": null,
+  "proxy": null,
+  "impl": [],
+  "clone_of": null
  }
 }
