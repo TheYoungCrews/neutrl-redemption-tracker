@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-13T21:19:17+00:00",
+ "generated_at_utc": "2026-10-14T01:15:57+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26186214,
-  "as_of_ts": 1791926339,
+  "as_of": 26187390,
+  "as_of_ts": 1791940535,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26186083,
@@ -46,7 +46,7 @@
    "snusd_supply": 19675569.115698885,
    "snusd_vault_nusd": 20942423.1819497,
    "snusd_raw_holders": 402,
-   "nusd_raw_holders": 594
+   "nusd_raw_holders": 595
   }
  },
  "totals": {
@@ -21470,7 +21470,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 102042.86405265583,
+   "remaining_value": 101942.13642961522,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
