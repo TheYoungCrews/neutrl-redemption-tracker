@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-16T12:30:56+00:00",
+ "generated_at_utc": "2026-10-16T17:28:18+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,12 +9,12 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26205106,
-  "as_of_ts": 1792153835,
+  "as_of": 26206591,
+  "as_of_ts": 1792171679,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
-  "last_redeem": 26204683,
-  "last_redeem_ts": 1792148747
+  "last_redeem": 26205557,
+  "last_redeem_ts": 1792159247
  },
  "rates": {
   "snusd_share_rate_snapshot": 1.0637600576426214,
@@ -42,31 +42,31 @@
    "assetlock_snusd_locks_sum": 12607897.253145948,
    "assetlock_nusd_balance": 7113233.711775208,
    "assetlock_nusd_locks_sum": 7113233.711775208,
-   "nusd_supply": 32457128.76856619,
-   "snusd_supply": 17507156.358107295,
-   "snusd_vault_nusd": 18634392.479732905,
-   "snusd_raw_holders": 404,
+   "nusd_supply": 32456459.684647653,
+   "snusd_supply": 17506527.748573,
+   "snusd_vault_nusd": 18633723.39581437,
+   "snusd_raw_holders": 403,
    "nusd_raw_holders": 590
   }
  },
  "totals": {
-  "redeem_events": 766,
-  "unique_redeemers": 704,
-  "nusd_redeemed": 20932933.01645472,
-  "usdc_paid": 10675795.838015,
-  "pct_of_nusd_supply_redeemed": 39.20754596752995,
-  "signed_message_wallets": 705,
+  "redeem_events": 767,
+  "unique_redeemers": 705,
+  "nusd_redeemed": 20933602.100373253,
+  "usdc_paid": 10676137.070813,
+  "pct_of_nusd_supply_redeemed": 39.20879916690109,
+  "signed_message_wallets": 706,
   "signed_not_redeemed": 1,
-  "outsider_redeemers": 200,
-  "outsider_nusd": 7662258.406321287,
-  "outsider_usdc": 3907751.787102,
+  "outsider_redeemers": 201,
+  "outsider_nusd": 7662927.490239823,
+  "outsider_usdc": 3908093.0199,
   "contract_redeemers": 0,
   "contract_redeemer_nusd": 0,
   "usdc_funded_to_reserve": 13009297.016202,
-  "usdc_out_of_reserve": 10675795.838015,
-  "usdc_reserve_now": 2333501.178187,
-  "snusd_shares_unstaked_since_reopen": 14403521.089798719,
-  "snusd_nusd_unstaked_since_reopen": 15330922.94301278,
+  "usdc_out_of_reserve": 10676137.070813,
+  "usdc_reserve_now": 2333159.945389,
+  "snusd_shares_unstaked_since_reopen": 14404149.69933301,
+  "snusd_nusd_unstaked_since_reopen": 15331592.026931316,
   "snusd_unstakers_since_reopen": 40,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -18515,6 +18515,11 @@
    358.51
   ],
   [
+   "0x532f2ad6b6ed99008ed21793ab41aab35bdf3df5",
+   669.08,
+   341.23
+  ],
+  [
    "0xa1b2d4591982cb6d4d11649c6aab666873390042",
    668.25,
    340.81
@@ -19350,14 +19355,14 @@
   },
   {
    "date": "2026-10-16",
-   "redemptions": 1,
-   "new_wallets": 1,
-   "nusd": 425978.89543840056,
-   "usdc": 217249.236673,
-   "cum_wallets": 704,
+   "redemptions": 2,
+   "new_wallets": 2,
+   "nusd": 426647.9793569363,
+   "usdc": 217590.46947100002,
+   "cum_wallets": 705,
    "cum_snapshot_wallets": 504,
-   "cum_nusd": 20932933.01645471,
-   "cum_usdc": 10675795.838014998,
+   "cum_nusd": 20933602.100373246,
+   "cum_usdc": 10676137.070812998,
    "cum_snapshot_capital": 11676763.833224598
   }
  ],
@@ -19503,7 +19508,7 @@
  "outsider_sources": [
   [
    "Pendle SY-sNUSD",
-   4696242.967724988
+   4696912.051643523
   ],
   [
    "Morpho Blue",
