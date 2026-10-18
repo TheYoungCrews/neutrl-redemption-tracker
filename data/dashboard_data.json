@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-18T11:13:28+00:00",
+ "generated_at_utc": "2026-10-18T14:38:43+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26219072,
-  "as_of_ts": 1792321979,
+  "as_of": 26220094,
+  "as_of_ts": 1792334303,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26218108,
@@ -46,7 +46,7 @@
    "snusd_supply": 17272712.675013226,
    "snusd_vault_nusd": 18384853.633114565,
    "snusd_raw_holders": 401,
-   "nusd_raw_holders": 586
+   "nusd_raw_holders": 587
   }
  },
  "totals": {
@@ -6195,7 +6195,7 @@
    0.0,
    0.0,
    0.0,
-   246.94,
+   248.25,
    "Not redeemed",
    "EOA (EIP-7702)",
    ""
@@ -21687,7 +21687,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 7255.910393037341,
+   "remaining_value": 7254.595204294938,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
