@@ -1,7 +1,7 @@
 {
  "address": "0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313",
  "from_block": 23495849,
- "to_block": 26251432,
- "count": 68798,
+ "to_block": 26253079,
+ "count": 68800,
  "segment_blocks": 100000
 }
