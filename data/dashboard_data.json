@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-25T01:14:28+00:00",
+ "generated_at_utc": "2026-10-25T06:14:24+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26266328,
-  "as_of_ts": 1792890851,
+  "as_of": 26267825,
+  "as_of_ts": 1792908839,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26265644,
@@ -19515,6 +19515,18 @@
    "new_wallets": 4,
    "nusd": 18631.443977859697,
    "usdc": 9502.036424,
+   "cum_wallets": 820,
+   "cum_snapshot_wallets": 607,
+   "cum_nusd": 25061073.944386963,
+   "cum_usdc": 12781147.711198006,
+   "cum_snapshot_capital": 12418115.816924606
+  },
+  {
+   "date": "2026-10-25",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
    "cum_wallets": 820,
    "cum_snapshot_wallets": 607,
    "cum_nusd": 25061073.944386963,
