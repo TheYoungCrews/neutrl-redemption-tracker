@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-26T06:23:59+00:00",
+ "generated_at_utc": "2026-10-26T14:19:58+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26275046,
-  "as_of_ts": 1792995815,
+  "as_of": 26277415,
+  "as_of_ts": 1793024375,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26274452,
@@ -45,7 +45,7 @@
    "nusd_supply": 28328787.945669938,
    "snusd_supply": 14066473.946270641,
    "snusd_vault_nusd": 14972174.290278764,
-   "snusd_raw_holders": 393,
+   "snusd_raw_holders": 394,
    "nusd_raw_holders": 582
   }
  },
@@ -10298,8 +10298,8 @@
    59.64,
    59.67,
    30.43,
-   0.0,
-   "Redeemed",
+   3.2,
+   "Redeemed (still holds some)",
    "EOA (EIP-7702)",
    ""
   ],
@@ -21673,7 +21673,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 122448.11550852412,
+   "remaining_value": 122444.91964839645,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
