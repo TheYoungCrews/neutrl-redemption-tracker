@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-27T18:45:59+00:00",
+ "generated_at_utc": "2026-10-27T22:58:46+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26285929,
-  "as_of_ts": 1793126735,
+  "as_of": 26287188,
+  "as_of_ts": 1793141903,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26285036,
@@ -40,8 +40,8 @@
    "silo_cooldowns_sum": 22440.4535747865,
    "assetlock_snusd_balance": 12479762.098442733,
    "assetlock_snusd_locks_sum": 12479762.098442733,
-   "assetlock_nusd_balance": 7069801.28716195,
-   "assetlock_nusd_locks_sum": 7069801.28716195,
+   "assetlock_nusd_balance": 7069701.318446951,
+   "assetlock_nusd_locks_sum": 7069701.318446951,
    "nusd_supply": 28326566.8069999,
    "snusd_supply": 14066699.61565296,
    "snusd_vault_nusd": 14972414.489872277,
@@ -9748,7 +9748,7 @@
    0.0,
    0.0,
    0.0,
-   151.39,
+   151.92,
    "Not redeemed",
    "EOA (EIP-7702)",
    ""
@@ -21858,7 +21858,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 7254.595204294938,
+   "remaining_value": 7254.06276817998,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
