@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-10-26T20:32:30+00:00",
+ "generated_at_utc": "2026-10-27T00:29:48+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26279274,
-  "as_of_ts": 1793046731,
+  "as_of": 26280459,
+  "as_of_ts": 1793060963,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26278013,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 7069801.28716195,
    "assetlock_nusd_locks_sum": 7069801.28716195,
    "nusd_supply": 28328275.144237436,
-   "snusd_supply": 14066273.946270641,
-   "snusd_vault_nusd": 14971961.412846262,
-   "snusd_raw_holders": 394,
-   "nusd_raw_holders": 582
+   "snusd_supply": 14066225.637602793,
+   "snusd_vault_nusd": 14971909.993720366,
+   "snusd_raw_holders": 393,
+   "nusd_raw_holders": 583
   }
  },
  "totals": {
@@ -65,8 +65,8 @@
   "usdc_funded_to_reserve": 17569919.962687,
   "usdc_out_of_reserve": 12781511.186359,
   "usdc_reserve_now": 4788408.776328,
-  "snusd_shares_unstaked_since_reopen": 17848852.09866438,
-  "snusd_nusd_unstaked_since_reopen": 18998089.03946831,
+  "snusd_shares_unstaked_since_reopen": 17848900.40733223,
+  "snusd_nusd_unstaked_since_reopen": 18998140.458594207,
   "snusd_unstakers_since_reopen": 49,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
