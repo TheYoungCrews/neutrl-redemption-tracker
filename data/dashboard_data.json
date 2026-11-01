@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-01T01:16:20+00:00",
+ "generated_at_utc": "2026-11-01T07:38:36+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26316567,
-  "as_of_ts": 1793495759,
+  "as_of": 26318474,
+  "as_of_ts": 1793518691,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26314891,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 7069020.479703857,
    "assetlock_nusd_locks_sum": 7069020.479703857,
    "nusd_supply": 28229009.299950764,
-   "snusd_supply": 14021341.485725721,
-   "snusd_vault_nusd": 14924135.878661986,
+   "snusd_supply": 13992715.951885479,
+   "snusd_vault_nusd": 14893667.227922257,
    "snusd_raw_holders": 391,
-   "nusd_raw_holders": 583
+   "nusd_raw_holders": 584
   }
  },
  "totals": {
@@ -65,8 +65,8 @@
   "usdc_funded_to_reserve": 17569919.962687,
   "usdc_out_of_reserve": 12832136.766937,
   "usdc_reserve_now": 4737783.19575,
-  "snusd_shares_unstaked_since_reopen": 17894652.724451445,
-  "snusd_nusd_unstaked_since_reopen": 19046838.63759127,
+  "snusd_shares_unstaked_since_reopen": 17923278.258291688,
+  "snusd_nusd_unstaked_since_reopen": 19077307.288330995,
   "snusd_unstakers_since_reopen": 51,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -2719,8 +2719,8 @@
    2659.4,
    0.0,
    0.0,
-   0.0,
-   "Not redeemed (tokens moved out)",
+   30468.65,
+   "Not redeemed",
    "EOA",
    ""
   ],
@@ -19619,6 +19619,18 @@
    "cum_nusd": 25161052.48507014,
    "cum_usdc": 12832136.766937004,
    "cum_snapshot_capital": 12476780.541320993
+  },
+  {
+   "date": "2026-11-01",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 833,
+   "cum_snapshot_wallets": 617,
+   "cum_nusd": 25161052.48507014,
+   "cum_usdc": 12832136.766937004,
+   "cum_snapshot_capital": 12476780.541320993
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -21773,7 +21785,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 62769.63121771755,
+   "remaining_value": 32300.98047798984,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
@@ -24150,17 +24162,17 @@
     "exchange_rate_nusd": 1.2397115226810287
    },
    "now": {
-    "supply": 50097.00758893056,
-    "assets_nusd": 62105.83755983617,
+    "supply": 25519.797340988764,
+    "assets_nusd": 31637.18682010845,
     "exchange_rate_nusd": 1.2397115226810287
    },
    "withdrawals_since_wipe": {
-    "events": 132,
-    "assets_nusd": 1608071.20954984,
-    "shares": 1297133.3896067918,
+    "events": 133,
+    "assets_nusd": 1638539.8602895678,
+    "shares": 1321710.5998547336,
     "unique_owners": 125
    },
-   "supply_change_since_wipe": -1297133.3896067918
+   "supply_change_since_wipe": -1321710.5998547338
   },
   "junior": {
    "symbol": "jrNUSD",
@@ -24195,11 +24207,11 @@
    "address": "0x3cef2c09c4fad37e9bdd86cd9810c3042fb5de88",
    "snusd_balance_snapshot": 1600280.2269591026,
    "snusd_balance_at_wipe": 1569767.9374652926,
-   "snusd_balance_now": 58972.55569048019,
+   "snusd_balance_now": 30347.021850236622,
    "nusd_value_snapshot": 1702314.1864743622,
    "nusd_value_at_wipe": 1670840.8407675575,
-   "nusd_value_now": 62769.63121771755,
-   "senior_coverage_now": 1.0106881041132703,
+   "nusd_value_now": 32300.98047798984,
+   "senior_coverage_now": 1.0209814374980863,
    "senior_coverage_at_wipe": 1.000397439097268,
    "note": "Coverage = strategy sNUSD \u00d7 sNUSD share rate / srNUSD totalAssets (NUSD units). After junior write-down, residual collateral is allocated to senior."
   }
