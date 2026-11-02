@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-02T16:10:09+00:00",
+ "generated_at_utc": "2026-11-02T23:35:46+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26328198,
-  "as_of_ts": 1793635787,
+  "as_of": 26330417,
+  "as_of_ts": 1793662523,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26325136,
@@ -36,8 +36,8 @@
    "nusd_raw_holders": 627
   },
   "now": {
-   "silo_nusd_balance": 18378.430422100664,
-   "silo_cooldowns_sum": 18378.430422100664,
+   "silo_nusd_balance": 18368.074639500992,
+   "silo_cooldowns_sum": 18368.074639500992,
    "assetlock_snusd_balance": 12479734.509782882,
    "assetlock_snusd_locks_sum": 12479734.509782882,
    "assetlock_nusd_balance": 7069020.479703857,
@@ -46,7 +46,7 @@
    "snusd_supply": 13992671.265581312,
    "snusd_vault_nusd": 14893619.664393764,
    "snusd_raw_holders": 390,
-   "nusd_raw_holders": 582
+   "nusd_raw_holders": 583
   }
  },
  "totals": {
