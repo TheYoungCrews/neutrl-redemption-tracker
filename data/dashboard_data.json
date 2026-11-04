@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-04T01:26:35+00:00",
+ "generated_at_utc": "2026-11-04T09:21:34+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26338150,
-  "as_of_ts": 1793755571,
+  "as_of": 26340516,
+  "as_of_ts": 1793784071,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26337237,
@@ -40,8 +40,8 @@
    "silo_cooldowns_sum": 18368.074639500992,
    "assetlock_snusd_balance": 12479734.509782882,
    "assetlock_snusd_locks_sum": 12479734.509782882,
-   "assetlock_nusd_balance": 7067437.193939657,
-   "assetlock_nusd_locks_sum": 7067437.193939657,
+   "assetlock_nusd_balance": 7067649.296181068,
+   "assetlock_nusd_locks_sum": 7067649.296181068,
    "nusd_supply": 27210636.793466996,
    "snusd_supply": 12948973.150445241,
    "snusd_vault_nusd": 13782720.789100597,
@@ -19670,6 +19670,18 @@
    "cum_nusd": 26179424.991553903,
    "cum_usdc": 13351506.745236004,
    "cum_snapshot_capital": 12610646.822274836
+  },
+  {
+   "date": "2026-11-04",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 849,
+   "cum_snapshot_wallets": 630,
+   "cum_nusd": 26179424.991553903,
+   "cum_usdc": 13351506.745236004,
+   "cum_snapshot_capital": 12610646.822274836
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -21813,7 +21825,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 122365.00866654157,
+   "remaining_value": 122266.71849862716,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
@@ -21870,7 +21882,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 1136.8685839625894,
+   "remaining_value": 924.766342550779,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
