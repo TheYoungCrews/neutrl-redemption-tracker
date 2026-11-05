@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-05T06:54:01+00:00",
+ "generated_at_utc": "2026-11-05T15:33:42+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26346965,
-  "as_of_ts": 1793861627,
+  "as_of": 26349554,
+  "as_of_ts": 1793892791,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26345038,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 7067312.888176629,
    "assetlock_nusd_locks_sum": 7067312.888176629,
    "nusd_supply": 27188163.491894417,
-   "snusd_supply": 12928500.894096075,
-   "snusd_vault_nusd": 13760930.382254805,
-   "snusd_raw_holders": 385,
-   "nusd_raw_holders": 579
+   "snusd_supply": 12928544.982607238,
+   "snusd_vault_nusd": 13760977.3095001,
+   "snusd_raw_holders": 386,
+   "nusd_raw_holders": 578
   }
  },
  "totals": {
@@ -5414,8 +5414,8 @@
    353.49,
    0.0,
    0.0,
-   42.43,
-   "Not redeemed",
+   0.0,
+   "Not redeemed (tokens moved out)",
    "EOA (EIP-7702)",
    ""
   ],
@@ -13587,7 +13587,7 @@
    1.11,
    0.0,
    0.0,
-   1.91,
+   1.63,
    "Not redeemed",
    "EOA",
    ""
@@ -21853,7 +21853,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 122266.71849862716,
+   "remaining_value": 122266.44362498428,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
@@ -21929,7 +21929,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 18917.645652649695,
+   "remaining_value": 18913.70284247729,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
@@ -22138,7 +22138,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 2931.1572046953997,
+   "remaining_value": 2935.6559314472224,
    "signed": false,
    "restricted": "NUSD denylisted",
    "status": "Not redeemed"
@@ -22898,10 +22898,10 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 0.01064387162516179,
+   "remaining_value": 42.43916241692429,
    "signed": false,
    "restricted": null,
-   "status": "Not redeemed (tokens moved out)"
+   "status": "Not redeemed"
   },
   {
    "address": "0x3ef238c36035880efbdfa239d218186b79ad1d6f",
