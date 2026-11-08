@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-08T15:17:33+00:00",
+ "generated_at_utc": "2026-11-08T20:30:38+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,12 +9,12 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26370997,
-  "as_of_ts": 1794151031,
+  "as_of": 26372558,
+  "as_of_ts": 1794169811,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
-  "last_redeem": 26370818,
-  "last_redeem_ts": 1794148883
+  "last_redeem": 26371263,
+  "last_redeem_ts": 1794154223
  },
  "rates": {
   "snusd_share_rate_snapshot": 1.0637600576426214,
@@ -40,33 +40,33 @@
    "silo_cooldowns_sum": 18368.074639500992,
    "assetlock_snusd_balance": 12473918.29524414,
    "assetlock_snusd_locks_sum": 12473918.29524414,
-   "assetlock_nusd_balance": 7066811.92524682,
-   "assetlock_nusd_locks_sum": 7066811.92524682,
-   "nusd_supply": 25839660.224970154,
-   "snusd_supply": 12921078.585535556,
-   "snusd_vault_nusd": 13753030.172306754,
-   "snusd_raw_holders": 382,
-   "nusd_raw_holders": 573
+   "assetlock_nusd_balance": 7066806.92524682,
+   "assetlock_nusd_locks_sum": 7066806.92524682,
+   "nusd_supply": 25839583.08683104,
+   "snusd_supply": 12920756.929744918,
+   "snusd_vault_nusd": 13752687.80601245,
+   "snusd_raw_holders": 381,
+   "nusd_raw_holders": 574
   }
  },
  "totals": {
-  "redeem_events": 944,
-  "unique_redeemers": 866,
-  "nusd_redeemed": 27550401.560050756,
-  "usdc_paid": 14050704.795161,
-  "pct_of_nusd_supply_redeemed": 51.602115897495146,
-  "signed_message_wallets": 867,
+  "redeem_events": 945,
+  "unique_redeemers": 867,
+  "nusd_redeemed": 27550478.69818987,
+  "usdc_paid": 14050744.135611,
+  "pct_of_nusd_supply_redeemed": 51.60226037782826,
+  "signed_message_wallets": 868,
   "signed_not_redeemed": 1,
-  "outsider_redeemers": 228,
-  "outsider_nusd": 11950016.95921471,
-  "outsider_usdc": 6094508.649059,
+  "outsider_redeemers": 229,
+  "outsider_nusd": 11950094.097353823,
+  "outsider_usdc": 6094547.989509,
   "contract_redeemers": 0,
   "contract_redeemer_nusd": 0,
   "usdc_funded_to_reserve": 17569919.962687,
-  "usdc_out_of_reserve": 14050704.795161,
-  "usdc_reserve_now": 3519215.167526,
-  "snusd_shares_unstaked_since_reopen": 19001117.20741759,
-  "snusd_nusd_unstaked_since_reopen": 20224545.22904053,
+  "usdc_out_of_reserve": 14050744.135611,
+  "usdc_reserve_now": 3519175.827076,
+  "snusd_shares_unstaked_since_reopen": 19001438.863208227,
+  "snusd_nusd_unstaked_since_reopen": 20224887.59533483,
   "snusd_unstakers_since_reopen": 55,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -18900,6 +18900,11 @@
    39.64
   ],
   [
+   "0x7fb207fee49e3055f98987064aa302c24f7ee760",
+   77.14,
+   39.34
+  ],
+  [
    "0x8489b7bfa6c7054b9aa23457f766b34511da40d7",
    64.09,
    32.69
@@ -19766,14 +19771,14 @@
   },
   {
    "date": "2026-11-08",
-   "redemptions": 4,
-   "new_wallets": 3,
-   "nusd": 7608.872813842445,
-   "usdc": 3880.5251329999996,
-   "cum_wallets": 866,
+   "redemptions": 5,
+   "new_wallets": 4,
+   "nusd": 7686.010952956349,
+   "usdc": 3919.865583,
+   "cum_wallets": 867,
    "cum_snapshot_wallets": 638,
-   "cum_nusd": 27550401.560050745,
-   "cum_usdc": 14050704.795161003,
+   "cum_nusd": 27550478.69818986,
+   "cum_usdc": 14050744.135611003,
    "cum_snapshot_capital": 13951982.933612606
   }
  ],
@@ -19980,7 +19985,7 @@
   ],
   [
    "TokenizedVault",
-   10827.981310345418
+   10905.119449459322
   ],
   [
    "AggregationRouterV6",
@@ -22034,7 +22039,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 1143955.569921365,
+   "remaining_value": 1143878.4317822512,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
