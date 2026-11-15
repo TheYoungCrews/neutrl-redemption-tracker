@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-15T11:01:40+00:00",
+ "generated_at_utc": "2026-11-15T17:46:33+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,12 +9,12 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26419969,
-  "as_of_ts": 1794740471,
+  "as_of": 26421988,
+  "as_of_ts": 1794764771,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
-  "last_redeem": 26419187,
-  "last_redeem_ts": 1794731075
+  "last_redeem": 26421116,
+  "last_redeem_ts": 1794754283
  },
  "rates": {
   "snusd_share_rate_snapshot": 1.0637600576426214,
@@ -40,33 +40,33 @@
    "silo_cooldowns_sum": 12812.926936053243,
    "assetlock_snusd_balance": 12467742.362511735,
    "assetlock_snusd_locks_sum": 12467742.362511735,
-   "assetlock_nusd_balance": 5760540.951907859,
-   "assetlock_nusd_locks_sum": 5760540.951907859,
-   "nusd_supply": 22794079.31636608,
-   "snusd_supply": 12882137.345096456,
-   "snusd_vault_nusd": 13711581.615890922,
-   "snusd_raw_holders": 373,
-   "nusd_raw_holders": 565
+   "assetlock_nusd_balance": 5760489.181806525,
+   "assetlock_nusd_locks_sum": 5760489.181806525,
+   "nusd_supply": 22733464.9810057,
+   "snusd_supply": 12825189.70659141,
+   "snusd_vault_nusd": 13650967.280530538,
+   "snusd_raw_holders": 372,
+   "nusd_raw_holders": 567
   }
  },
  "totals": {
-  "redeem_events": 1033,
-  "unique_redeemers": 948,
-  "nusd_redeemed": 30595982.46865483,
-  "usdc_paid": 15603951.058507,
-  "pct_of_nusd_supply_redeemed": 57.306512571294355,
-  "signed_message_wallets": 949,
+  "redeem_events": 1034,
+  "unique_redeemers": 949,
+  "nusd_redeemed": 30656596.80401521,
+  "usdc_paid": 15634864.36954,
+  "pct_of_nusd_supply_redeemed": 57.42004369175727,
+  "signed_message_wallets": 950,
   "signed_not_redeemed": 1,
-  "outsider_redeemers": 265,
-  "outsider_nusd": 12572098.090037692,
-  "outsider_usdc": 6411770.025758,
+  "outsider_redeemers": 266,
+  "outsider_nusd": 12632712.425398074,
+  "outsider_usdc": 6442683.336791,
   "contract_redeemers": 0,
   "contract_redeemer_nusd": 0,
   "usdc_funded_to_reserve": 17569919.962687,
-  "usdc_out_of_reserve": 15603951.058507,
-  "usdc_reserve_now": 1965968.90418,
-  "snusd_shares_unstaked_since_reopen": 19042515.61651245,
-  "snusd_nusd_unstaked_since_reopen": 20268609.164229695,
+  "usdc_out_of_reserve": 15634864.36954,
+  "usdc_reserve_now": 1935055.593147,
+  "snusd_shares_unstaked_since_reopen": 19099463.255017497,
+  "snusd_nusd_unstaked_since_reopen": 20329223.499590077,
   "snusd_unstakers_since_reopen": 57,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -18025,6 +18025,11 @@
    30963.97
   ],
   [
+   "0x1429ae34844b7dc55e33817f8b42085b49afe453",
+   60614.34,
+   30913.31
+  ],
+  [
    "0x9f3802d31ae3659b80d45f34803da73764dbfdf5",
    57546.82,
    29348.88
@@ -20035,14 +20040,14 @@
   },
   {
    "date": "2026-11-15",
-   "redemptions": 2,
-   "new_wallets": 2,
-   "nusd": 5407.951539541524,
-   "usdc": 2758.055284,
-   "cum_wallets": 948,
+   "redemptions": 3,
+   "new_wallets": 3,
+   "nusd": 66022.28689992389,
+   "usdc": 33671.366317,
+   "cum_wallets": 949,
    "cum_snapshot_wallets": 683,
-   "cum_nusd": 30595982.468654834,
-   "cum_usdc": 15603951.058507018,
+   "cum_nusd": 30656596.804015215,
+   "cum_usdc": 15634864.369540017,
    "cum_snapshot_capital": 16375052.41900438
   }
  ],
@@ -20221,7 +20226,7 @@
  "outsider_sources": [
   [
    "Pendle SY-sNUSD",
-   8527668.900084227
+   8588283.23544461
   ],
   [
    "Morpho Blue",
@@ -22197,7 +22202,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 122240.56900284321,
+   "remaining_value": 66352.04452276746,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
@@ -22311,7 +22316,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 1088029.6418969948,
+   "remaining_value": 1086104.2148005017,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
