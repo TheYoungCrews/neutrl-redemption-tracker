@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-21T11:14:48+00:00",
+ "generated_at_utc": "2026-11-21T18:00:29+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26463098,
-  "as_of_ts": 1795259507,
+  "as_of": 26465129,
+  "as_of_ts": 1795283999,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26461326,
@@ -38,15 +38,15 @@
   "now": {
    "silo_nusd_balance": 12765.363407559928,
    "silo_cooldowns_sum": 12765.363407559928,
-   "assetlock_snusd_balance": 12456314.96367662,
-   "assetlock_snusd_locks_sum": 12456314.96367662,
-   "assetlock_nusd_balance": 5751746.878080709,
-   "assetlock_nusd_locks_sum": 5751746.878080709,
+   "assetlock_snusd_balance": 12452405.904902117,
+   "assetlock_snusd_locks_sum": 12452405.904902117,
+   "assetlock_nusd_balance": 5747388.854860821,
+   "assetlock_nusd_locks_sum": 5747388.854860821,
    "nusd_supply": 22690186.53429989,
-   "snusd_supply": 12812672.445957163,
-   "snusd_vault_nusd": 13637644.069001576,
+   "snusd_supply": 12808772.749780163,
+   "snusd_vault_nusd": 13633493.282453064,
    "snusd_raw_holders": 375,
-   "nusd_raw_holders": 559
+   "nusd_raw_holders": 561
   }
  },
  "totals": {
@@ -65,8 +65,8 @@
   "usdc_funded_to_reserve": 17569919.962687,
   "usdc_out_of_reserve": 15656936.377347,
   "usdc_reserve_now": 1912983.58534,
-  "snusd_shares_unstaked_since_reopen": 19112308.23662762,
-  "snusd_nusd_unstaked_since_reopen": 20342895.533118643,
+  "snusd_shares_unstaked_since_reopen": 19116217.29540212,
+  "snusd_nusd_unstaked_since_reopen": 20347056.285095744,
   "snusd_unstakers_since_reopen": 59,
   "strata_snusd_unstaked": 0,
   "protocol_contract_value_snapshot": 14087394.244306589,
@@ -1619,7 +1619,7 @@
    4158.3,
    0.0,
    0.0,
-   10161.86,
+   10172.4,
    "Not redeemed",
    "EOA",
    ""
@@ -5942,7 +5942,7 @@
    252.28,
    0.0,
    0.0,
-   330.87,
+   330.89,
    "Not redeemed",
    "EOA",
    ""
@@ -12322,8 +12322,8 @@
    0.0,
    0.0,
    0.0,
-   9.99,
-   "Not redeemed",
+   0.0,
+   "Not redeemed (tokens moved out)",
    "EOA",
    ""
   ],
@@ -22496,7 +22496,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 7245.943455088682,
+   "remaining_value": 7235.408996524137,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
@@ -22610,7 +22610,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 2897.228640060144,
+   "remaining_value": 2907.1940686486437,
    "signed": false,
    "restricted": "NUSD denylisted",
    "status": "Not redeemed"
