@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-24T00:57:20+00:00",
+ "generated_at_utc": "2026-11-24T11:00:11+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26481563,
-  "as_of_ts": 1795481783,
+  "as_of": 26484576,
+  "as_of_ts": 1795517987,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26477542,
@@ -46,7 +46,7 @@
    "snusd_supply": 12808356.769856052,
    "snusd_vault_nusd": 13633050.518761974,
    "snusd_raw_holders": 376,
-   "nusd_raw_holders": 561
+   "nusd_raw_holders": 563
   }
  },
  "totals": {
@@ -20200,6 +20200,18 @@
    "cum_nusd": 30712726.191070937,
    "cum_usdc": 15663490.356924018,
    "cum_snapshot_capital": 16402096.67547873
+  },
+  {
+   "date": "2026-11-24",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 978,
+   "cum_snapshot_wallets": 701,
+   "cum_nusd": 30712726.191070937,
+   "cum_usdc": 15663490.356924018,
+   "cum_snapshot_capital": 16402096.67547873
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -22475,7 +22487,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 1081351.352254958,
+   "remaining_value": 1080623.8618006788,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed"
