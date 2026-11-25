@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-24T21:17:36+00:00",
+ "generated_at_utc": "2026-11-25T04:21:19+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26487654,
-  "as_of_ts": 1795555031,
+  "as_of": 26489769,
+  "as_of_ts": 1795580459,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26487404,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 5747202.708650479,
    "assetlock_nusd_locks_sum": 5747202.708650479,
    "nusd_supply": 22676664.299413417,
-   "snusd_supply": 12808377.900833827,
-   "snusd_vault_nusd": 13633073.010303449,
+   "snusd_supply": 12808414.641923938,
+   "snusd_vault_nusd": 13633112.117048101,
    "snusd_raw_holders": 377,
-   "nusd_raw_holders": 563
+   "nusd_raw_holders": 562
   }
  },
  "totals": {
@@ -22668,7 +22668,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 2752.8073741733706,
+   "remaining_value": 2791.9141188242206,
    "signed": false,
    "restricted": "NUSD denylisted",
    "status": "Not redeemed"
