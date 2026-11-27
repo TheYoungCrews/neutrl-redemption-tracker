@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-27T02:54:00+00:00",
+ "generated_at_utc": "2026-11-27T12:31:30+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26503684,
-  "as_of_ts": 1795748027,
+  "as_of": 26506556,
+  "as_of_ts": 1795782671,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26499724,
@@ -43,10 +43,10 @@
    "assetlock_nusd_balance": 5745201.812718263,
    "assetlock_nusd_locks_sum": 5745201.812718263,
    "nusd_supply": 22674577.67025988,
-   "snusd_supply": 12809208.24604347,
-   "snusd_vault_nusd": 13633956.819085052,
-   "snusd_raw_holders": 378,
-   "nusd_raw_holders": 564
+   "snusd_supply": 12809209.25692573,
+   "snusd_vault_nusd": 13633957.895055152,
+   "snusd_raw_holders": 379,
+   "nusd_raw_holders": 563
   }
  },
  "totals": {
@@ -13851,8 +13851,8 @@
    0.0,
    0.0,
    0.0,
-   1.08,
-   "Not redeemed",
+   0.0,
+   "Not redeemed (tokens moved out)",
    "EOA (EIP-7702)",
    ""
   ],
@@ -20251,6 +20251,18 @@
    "cum_nusd": 30715484.11476102,
    "cum_usdc": 15664896.898000022,
    "cum_snapshot_capital": 16402154.00000868
+  },
+  {
+   "date": "2026-11-27",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 983,
+   "cum_snapshot_wallets": 702,
+   "cum_nusd": 30715484.11476102,
+   "cum_usdc": 15664896.898000022,
+   "cum_snapshot_capital": 16402154.00000868
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -22413,7 +22425,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 42188.994671992485,
+   "remaining_value": 42188.62276288488,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
@@ -22698,7 +22710,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 3694.7003398821403,
+   "remaining_value": 3695.7763099834306,
    "signed": false,
    "restricted": "NUSD denylisted",
    "status": "Not redeemed"
