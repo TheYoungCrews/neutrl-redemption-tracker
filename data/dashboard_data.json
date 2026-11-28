@@ -1,5 +1,5 @@
 {
- "generated_at_utc": "2026-11-28T03:56:34+00:00",
+ "generated_at_utc": "2026-11-28T13:07:13+00:00",
  "blocks": {
   "snapshot": 25745731,
   "snapshot_ts": 1786619687,
@@ -9,8 +9,8 @@
   "reopen_cooldown_ts": 1789645631,
   "redeem_open": 25997438,
   "redeem_open_ts": 1789650863,
-  "as_of": 26511170,
-  "as_of_ts": 1795838171,
+  "as_of": 26513915,
+  "as_of_ts": 1795871135,
   "first_redeem": 25997444,
   "first_redeem_ts": 1789650935,
   "last_redeem": 26508746,
@@ -43,9 +43,9 @@
    "assetlock_nusd_balance": 5744644.862391391,
    "assetlock_nusd_locks_sum": 5744644.862391391,
    "nusd_supply": 22673706.755135506,
-   "snusd_supply": 12809864.230975572,
-   "snusd_vault_nusd": 13634655.041025585,
-   "snusd_raw_holders": 378,
+   "snusd_supply": 12809864.796713738,
+   "snusd_vault_nusd": 13634655.643190026,
+   "snusd_raw_holders": 379,
    "nusd_raw_holders": 563
   }
  },
@@ -13620,8 +13620,8 @@
    0.0,
    0.0,
    0.0,
-   1.56,
-   "Not redeemed",
+   0.0,
+   "Not redeemed (tokens moved out)",
    "EOA",
    ""
   ],
@@ -15182,8 +15182,8 @@
    0.0,
    0.0,
    0.0,
-   0.6,
-   "Not redeemed",
+   0.0,
+   "Not redeemed (tokens moved out)",
    "EOA",
    ""
   ],
@@ -20263,6 +20263,18 @@
    "cum_nusd": 30716355.029885396,
    "cum_usdc": 15665341.064712021,
    "cum_snapshot_capital": 16402961.337126153
+  },
+  {
+   "date": "2026-11-28",
+   "redemptions": 0,
+   "new_wallets": 0,
+   "nusd": 0,
+   "usdc": 0,
+   "cum_wallets": 985,
+   "cum_snapshot_wallets": 704,
+   "cum_nusd": 30716355.029885396,
+   "cum_usdc": 15665341.064712021,
+   "cum_snapshot_capital": 16402961.337126153
   }
  ],
  "snusd_wallet_first_redeem_ts": [
@@ -22464,7 +22476,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 4648.712460379171,
+   "remaining_value": 4669.873318732696,
    "signed": false,
    "restricted": null,
    "status": "Not redeemed (tokens moved out)"
@@ -22711,7 +22723,7 @@
    "redeemed_nusd": 0.0,
    "usdc": 0.0,
    "redeemed": false,
-   "remaining_value": 4652.809627194534,
+   "remaining_value": 4632.102283074727,
    "signed": false,
    "restricted": "NUSD denylisted",
    "status": "Not redeemed"
